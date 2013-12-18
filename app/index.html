@@ -1,0 +1,60 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Tunk!</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.css"></link>
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css"></link>
+</head>
+<body ng-app="tunk" ng-controller="MainCtrl">
+	<div class="container">
+		<section ng-controller="GameCtrl">
+			<div class="row">
+				<div class="col-sm-2">
+					<h2>
+						Deck
+					</h2>
+
+					<div class="cards">
+						<div class="card" ng-class="card" ng-repeat="card in deck.cards">{{ card }}</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<h2>
+						Discard
+					</h2>
+
+					<div class="cards">
+						<div class="card" ng-class="card" ng-repeat="card in discardPile">{{ card }}</div>
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<h2>Players</h2>
+					<div ng-repeat="player in players" ng-controller="PlayerCtrl">
+						<h4>{{ player.name }}</h4>
+						<div class="btn-group" ng-class="{highlight: (player.id === turn.playerId)}">
+							<button type="button" class="btn btn-default" ng-repeat="card in player.hand" ng-click="discard(card)">
+								{{ card }}
+							</button>
+							<button type="button" class="btn btn-primary" ng-click="drawCard()">Draw</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<script type="text/javascript" src="/bower_components/underscore/underscore.js" data-env="dev"></script>
+	<script type="text/javascript" src="/bower_components/angular/angular.js" data-env="dev"></script>
+	<script type="text/javascript" src="/scripts/app.js"></script>
+	<script type="text/javascript" src="/scripts/services/deck.js"></script>
+	<script type="text/javascript" src="/scripts/controllers/main.js"></script>
+	<script type="text/javascript" src="/scripts/controllers/game.js"></script>
+	<script type="text/javascript" src="/scripts/controllers/player.js"></script>
+</body>
