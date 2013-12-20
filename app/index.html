@@ -11,6 +11,7 @@
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="/css/bootstrap.css"></link>
 	<link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css"></link>
+	<link rel="stylesheet" type="text/sass" href="/css/tunk.scss"></link>
 </head>
 <body ng-app="tunk" ng-controller="MainCtrl">
 	<div class="container">
@@ -36,14 +37,31 @@
 				</div>
 				<div class="col-sm-8">
 					<h2>Players</h2>
-					<div ng-repeat="player in players" ng-controller="PlayerCtrl">
+					<div
+						class="player"
+						ng-repeat="player in players"
+						ng-controller="PlayerCtrl"
+						ng-class="{
+							'has-turn':     (player.id === turn.playerId),
+							'can-draw':     (player.id === turn.playerId && !turn.hasDrawn),
+							'can-discard':  (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded)
+						}"
+					>
 						<h4>{{ player.name }}</h4>
-						<div class="btn-group" ng-class="{highlight: (player.id === turn.playerId)}">
-							<button type="button" class="btn btn-default" ng-repeat="card in player.hand" ng-click="discard(card)">
-								{{ card }}
+						<div class="hand btn-group">
+							<button
+								type="button"
+								class="card btn btn-default"
+								ng-repeat="card in player.hand|sortHand"
+								ng-click="discard(card)"
+								ng-class="card|suit"
+							>
+								{{ card|cardValue }}
+
+								<span ng-bind-html="card|suit|suitEntity"></span>
 							</button>
-							<button type="button" class="btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
+						<button type="button" class="draw-button pull-right btn btn-primary" ng-click="drawCard()">Draw</button>
 					</div>
 				</div>
 			</div>
@@ -52,9 +70,14 @@
 
 	<script type="text/javascript" src="/bower_components/underscore/underscore.js" data-env="dev"></script>
 	<script type="text/javascript" src="/bower_components/angular/angular.js" data-env="dev"></script>
+	<script type="text/javascript" src="/bower_components/angular-sanitize/angular-sanitize.js" data-env="dev"></script>
 	<script type="text/javascript" src="/scripts/app.js"></script>
 	<script type="text/javascript" src="/scripts/services/deck.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/main.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/game.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/player.js"></script>
+	<script type="text/javascript" src="/scripts/filters/cardvalue.js"></script>
+	<script type="text/javascript" src="/scripts/filters/suit.js"></script>
+	<script type="text/javascript" src="/scripts/filters/suitentity.js"></script>
+	<script type="text/javascript" src="/scripts/filters/sorthand.js"></script>
 </body>

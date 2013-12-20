@@ -22,9 +22,13 @@ angular.module('tunk')
 		var ind = $scope.player.hand.indexOf(card);
 		if (ind === 1) return;
 
+		//remove card from hand
 		$scope.player.hand.splice(ind, 1);
 
+		// put card in discardPile
 		$scope.discardPile.unshift(card);
 		$scope.turn.hasDiscarded = true;
+
+		$scope.advanceTurn();
 	};
 }]);

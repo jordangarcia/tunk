@@ -1,0 +1,23 @@
+@import '_mixins.scss';
+
+.player {
+	@include player;
+
+	.hand {
+		@include player-hand;
+	}
+
+	.draw-button {
+		display: none;
+	}
+
+	&.can-draw {
+		.draw-button {
+			display: block;
+		}
+	}
+}
+
+.card {
+	@include card;
+}

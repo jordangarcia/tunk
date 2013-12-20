@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var watch = require('node-watch');
 
 var env = process.argv[2];
 var input = process.argv[3];
@@ -11,12 +12,7 @@ if (env == 'dev') {
 	var doBuild = build.bind(null, input, appRoot, outputDir);
 
 	doBuild();
-
-	fs.watch(appRoot, doBuild);
-	fs.watch(path.join(appRoot, 'scripts'), doBuild);
-	fs.watch(path.join(appRoot, 'scripts/services'), doBuild);
-	fs.watch(path.join(appRoot, 'scripts/controllers'), doBuild);
-	fs.watch(path.join(appRoot, 'scripts/directives'), doBuild);
+	watch(appRoot, doBuild);
 } else if (env == 'prod') {
 	var build = require('./lib/build-prod');
 	var outputDir = __dirname + '/build/prod';

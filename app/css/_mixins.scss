@@ -1,0 +1,34 @@
+$diamonds-color: red;
+$hearts-color: red;
+$spades-color: black;
+$clubs-color: black;
+
+@mixin card {
+	&.diamonds {
+		color: $diamonds-color;
+	}
+	&.hearts {
+		color: $hearts-color;
+	}
+	&.clubs {
+		color: $clubs-color;
+	}
+	&.spades {
+		color: $spades-color;
+	}
+}
+
+@mixin highlight {
+	background-color: #eee;
+}
+
+@mixin player {
+	padding: 20px;
+
+	&.has-turn {
+		@include highlight;
+	}
+}
+
+@mixin player-hand {
+}

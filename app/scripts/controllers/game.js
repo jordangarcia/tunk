@@ -1,10 +1,7 @@
 'use strict';
 
 function getNextPlayerId(players, currentId) {
-	var ind = players.indexOf(_.findWhere(players, function(player) {
-		return playerId === currentId;
-	}));
-
+	var ind = players.indexOf(_.findWhere(players, { id: currentId }));
 	return (ind + 1) % players.length;
 }
 
