@@ -1,4 +1,4 @@
-angular.module('tonk')
+angular.module('tunk')
 .filter('sortHand', ['$filter', function($filter) {
 	var getCardValue = $filter('cardValue');
 	var values = {

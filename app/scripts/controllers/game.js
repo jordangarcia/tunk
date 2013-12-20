@@ -5,7 +5,7 @@ function getNextPlayerId(players, currentId) {
 	return (ind + 1) % players.length;
 }
 
-angular.module('tonk')
+angular.module('tunk')
 .controller('GameCtrl', ['$scope', 'deck', 'HAND_SIZE', function($scope, Deck, HAND_SIZE) {
 
 	$scope.deck = new Deck();

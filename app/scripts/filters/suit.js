@@ -1,4 +1,4 @@
-angular.module('tonk')
+angular.module('tunk')
 .filter('suit', function() {
 	var suits = {
 		's': 'spades',

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tonk')
+angular.module('tunk')
 .controller('PlayerCtrl', ['$scope', function($scope) {
 	function isPlayersTurn() {
 		return ($scope.turn.playerId === $scope.player.id);
