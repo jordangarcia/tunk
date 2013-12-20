@@ -47,12 +47,15 @@
 							'can-discard':  (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded)
 						}"
 					>
-						<h4>{{ player.name }}</h4>
+						<div class="player-info">
+							<h4 class="name">{{ player.name }}</h4>
+							score: <span class="score" ng-bind="{{ player.hand|handScore }}"></span>
+						</div>
 						<div class="hand btn-group">
 							<button
 								type="button"
 								class="card btn btn-default"
-								ng-repeat="card in player.hand|sortHand"
+								ng-repeat="card in player.hand"
 								ng-click="discard(card)"
 								ng-class="card|suit"
 							>
@@ -80,4 +83,5 @@
 	<script type="text/javascript" src="/scripts/filters/suit.js"></script>
 	<script type="text/javascript" src="/scripts/filters/suitentity.js"></script>
 	<script type="text/javascript" src="/scripts/filters/sorthand.js"></script>
+	<script type="text/javascript" src="/scripts/filters/handscore.js"></script>
 </body>

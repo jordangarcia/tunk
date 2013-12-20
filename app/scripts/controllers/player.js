@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('tunk')
-.controller('PlayerCtrl', ['$scope', function($scope) {
+.controller('PlayerCtrl', ['$scope', '$filter', function($scope, $filter) {
+	var sortHand = $filter('sortHand');
+
+	$scope.player.hand = sortHand($scope.player.hand);
+
 	function isPlayersTurn() {
 		return ($scope.turn.playerId === $scope.player.id);
 	}
@@ -12,6 +16,7 @@ angular.module('tunk')
 
 		$scope.player.hand.push($scope.deck.draw());
 		$scope.turn.hasDrawn = true;
+		$scope.player.hand = sortHand($scope.player.hand);
 	};
 
 	$scope.discard = function(card) {
