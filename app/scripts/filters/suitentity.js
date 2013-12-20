@@ -1,4 +1,4 @@
-angular.module('tunk')
+angular.module('tonk')
 .filter('suitEntity', ['$sce', function($sce) {
 	var suits = {
 		'spades':    '&spades;',

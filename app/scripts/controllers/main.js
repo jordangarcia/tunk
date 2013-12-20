@@ -4,7 +4,7 @@ var pid = 0;
 function newPlayer(name) {
 }
 
-angular.module('tunk')
+angular.module('tonk')
 .controller('MainCtrl', ['$scope', function($scope) {
 	var pid = 0;
 
