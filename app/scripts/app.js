@@ -1,6 +1,6 @@
 'use strict';
 
 
-angular.module('tunk', [])
+angular.module('tonk', [])
 .constant('HAND_SIZE', 5)
 ;

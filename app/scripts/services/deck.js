@@ -15,7 +15,7 @@ function generateCards(cards, suits) {
 	return deck;
 }
 
-angular.module('tunk')
+angular.module('tonk')
 .factory('deck', function() {
 	var self;
 
