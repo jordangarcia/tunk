@@ -51,20 +51,41 @@
 							<h4 class="name">{{ player.name }}</h4>
 							score: <span class="score" ng-bind="{{ player.hand|handScore }}"></span>
 						</div>
-						<div class="hand btn-group">
-							<button
-								type="button"
-								class="card btn btn-default"
-								ng-repeat="card in player.hand"
-								ng-click="discard(card)"
-								ng-class="card|suit"
-							>
-								{{ card|cardValue }}
+						<div class="player-hand-control">
+							<div class="hand btn-group">
+								<button
+									type="button"
+									class="card btn btn-default"
+									ng-repeat="card in player.hand"
+									ng-click="discard(card)"
+									ng-class="card|suit"
+								>
+									{{ card|cardValue }}
 
-								<span ng-bind-html="card|suit|suitEntity"></span>
-							</button>
+									<span ng-bind-html="card|suit|suitEntity"></span>
+								</button>
+							</div>
+							<button type="button" class="draw-button pull-right btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
-						<button type="button" class="draw-button pull-right btn btn-primary" ng-click="drawCard()">Draw</button>
+
+						<div class="go-down-stuff">
+							<h5>Sets:</h5>
+							<div class="sets">
+								<div class="set" ng-repeat="set in player.sets">
+									<span class="card" ng-repeat="card in set">
+										{{ card }}
+									</span>
+								</div>
+							</div>
+							<h5>runs:</h5>
+							<div class="runs">
+								<div class="run" ng-repeat="run in player.runs">
+									<span class="card" ng-repeat="card in run">
+										{{ card }}
+									</span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -84,4 +105,6 @@
 	<script type="text/javascript" src="/scripts/filters/suitentity.js"></script>
 	<script type="text/javascript" src="/scripts/filters/sorthand.js"></script>
 	<script type="text/javascript" src="/scripts/filters/handscore.js"></script>
+	<script type="text/javascript" src="/scripts/filters/cardorder.js"></script>
+	<script type="text/javascript" src="/scripts/services/handtester.js"></script>
 </body>

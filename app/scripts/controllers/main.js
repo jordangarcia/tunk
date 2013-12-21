@@ -19,7 +19,8 @@ angular.module('tunk')
 	$scope.players = [
 		$scope.newPlayer('Jordan'),
 		$scope.newPlayer('Logan'),
-		$scope.newPlayer('Scott')
+		$scope.newPlayer('Scott'),
+		$scope.newPlayer('Parsha')
 	];
 
 	$scope.removePlayer = function(id) {
