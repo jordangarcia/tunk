@@ -29,5 +29,11 @@ angular.module('tunk')
 			: _.find($scope.players, function(player) { return player.id === id });
 
 		$scope.players.splice($scope.players.indexOf(player), 1);
+	};
+
+	$scope.win = function(player, id) {
+		var ind = $scope.players.indexOf(player);
+		if (ind === -1) return;
+
 	}
 }]);

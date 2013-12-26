@@ -16,6 +16,9 @@
 <body ng-app="tunk" ng-controller="MainCtrl">
 	<div class="container">
 		<section ng-controller="GameCtrl">
+			<div class="alert alert-success" ng-show="message.length">{{ message }}</div>
+
+			<p class="message"></p>
 			<div
 				class="row game"
 				ng-repeat="player in players"
@@ -31,7 +34,6 @@
 					<h2>
 						Deck
 					</h2>
-
 					<div class="cards">
 						<!--<div class="card" ng-class="card" ng-repeat="card in deck.cards">{{ card }}</div>-->
 					</div>
@@ -63,10 +65,18 @@
 							<table class="details">
 								<tr>
 									<td>
-										Score
+										Game Score
 									</td>
 									<td>
-										<span class="score">{{ player.hand|handScore }}</span>
+										<span class="score">{{ player.score }}</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Hand Score
+									</td>
+									<td>
+										<span class="score">{{ player.handScore }}</span>
 									</td>
 								</tr>
 							</table>

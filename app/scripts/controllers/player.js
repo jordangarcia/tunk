@@ -2,14 +2,8 @@
 
 angular.module('tunk')
 .controller('PlayerCtrl', ['$scope', '$filter', 'handTester', function($scope, $filter, handTester) {
-	var doHandSort = $filter('sortHand');
-
-	/**
-	 * Checks if there are any sets/runs in players hand
-	 */
-	function updatePotentialSets(hand) {
-		$scope.player.potentialSets = handTester.getSets(hand);
-	}
+	var sortHand = $filter('sortHand');
+	var scoreHand = $filter('handScore');
 
 	function isPlayersTurn() {
 		return ($scope.turn.playerId === $scope.player.id);
@@ -19,17 +13,14 @@ angular.module('tunk')
 		return (isPlayersTurn() && $scope.turn.hasDrawn && !$scope.turn.hasDiscarded);
 	}
 
-	function sortHand() {
-		$scope.player.hand = doHandSort($scope.player.hand);
-	}
-
-	sortHand();
 	$scope.player.playedSets    = [];
 	$scope.player.potentialSets = [];
 
-	$scope.$watch('player.hand', updatePotentialSets);
-
-	updatePotentialSets($scope.player.hand);
+	$scope.$watchCollection('player.hand', function(hand) {
+		$scope.player.hand          = sortHand($scope.player.hand);
+		$scope.player.handScore     = scoreHand(hand);
+		$scope.player.potentialSets = handTester.getSets(hand);
+	});
 
 	/**
 	 * Draws card from deck and puts in hand
@@ -40,7 +31,6 @@ angular.module('tunk')
 
 		$scope.player.hand.push($scope.deck.draw());
 		$scope.turn.hasDrawn = true;
-		sortHand();
 	};
 
 	/**
@@ -51,10 +41,10 @@ angular.module('tunk')
 		if (!isPlayersTurn()) return
 		if ($scope.turn.hasDrawn) return;
 
-		if ($scope.pickupDiscard(card)) {
+		if ($scope.canPickupDiscard(card)) {
+			$scope.discardPile.splice($scope.discardPile.indexOf(card), 1);
 			$scope.player.hand.push(card);
 			$scope.turn.hasDrawn = true;
-			sortHand();
 		}
 	}
 
@@ -73,6 +63,11 @@ angular.module('tunk')
 
 		// add set to playedSets
 		$scope.player.playedSets.push(set);
+
+		if ($scope.player.hand.length === 0) {
+			$scope.showMessage(player.name + ' TUNKED OUT!');
+			$scope.win($scope.player, 2);
+		}
 	};
 
 	/**
@@ -86,7 +81,7 @@ angular.module('tunk')
 		if ($scope.turn.hasDiscarded) return;
 
 		var ind = $scope.player.hand.indexOf(card);
-		if (ind === 1) return;
+		if (ind === -1) return;
 
 		//remove card from hand
 		$scope.player.hand.splice(ind, 1);
@@ -95,6 +90,19 @@ angular.module('tunk')
 		$scope.discardPile.push(card);
 		$scope.turn.hasDiscarded = true;
 
-		$scope.advanceTurn();
+		// check if the player won
+		if ($scope.player.hand.length === 0) {
+			$scope.showMessage($scope.player.name + ' won!');
+			$scope.win($scope.player, 1);
+		} else {
+			$scope.advanceTurn();
+		}
+	};
+
+	$scope.goDown = function() {
+		if (!isPlayersTurn()) return;
+		if ($scope.turn.hasDrawn) return;
+
+		$scope.$parent.goDown($scope.player);
 	};
 }]);

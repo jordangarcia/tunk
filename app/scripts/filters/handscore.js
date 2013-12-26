@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('tunk')
 .filter('handScore', ['$filter', function($filter) {
 	var getCardValue = $filter('cardValue');
