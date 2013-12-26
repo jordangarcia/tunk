@@ -3,6 +3,10 @@ $hearts-color: red;
 $spades-color: black;
 $clubs-color: black;
 
+$card-border: #ccc;
+$card-bg: #fff;
+
+
 @mixin card {
 	&.diamonds {
 		color: $diamonds-color;
@@ -16,7 +20,19 @@ $clubs-color: black;
 	&.spades {
 		color: $spades-color;
 	}
+
+	box-sizing: border-box;
+	margin: 5px auto;
+	padding: 5px;
+	width: 80px;
+	height: 130px;
+	border-radius: 6px;
+	border: 1px solid $card-border;
+	background-color: $card-bg;
+	box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
 }
+
+
 
 @mixin highlight {
 	background-color: #eee;
@@ -31,4 +47,12 @@ $clubs-color: black;
 }
 
 @mixin player-hand {
+	margin-bottom: 20px;
+	&:after {
+		clear: both;
+	}
+}
+
+@mixin player-board {
+	margin-bottom: 20px;
 }

@@ -1,16 +1,30 @@
 @import '_mixins.scss';
 
+.game {
+	margin-bottom: 20px;
+	padding-bottom: 40px;
+	border-bottom: 1px solid #ccc;
+}
 .player {
 	@include player;
 
-	.hand {
+	.player-hand {
 		@include player-hand;
+
+		.card {
+			font-size: 140%;
+			padding: 5px;
+			width: 32px;
+		}
+	}
+
+	.player-board {
+		@include player-board;
 	}
 
 	.draw-button {
 		display: none;
 	}
-
 	&.can-draw {
 		.draw-button {
 			display: block;
@@ -20,4 +34,18 @@
 
 .card {
 	@include card;
+}
+.discard-pile {
+	.cards {
+		padding-bottom: 80px;
+	}
+
+	.card {
+		margin-bottom: -80px;
+
+		&:hover {
+			background-color: darken($card-bg, 5%);
+			cursor: pointer;
+		}
+	}
 }

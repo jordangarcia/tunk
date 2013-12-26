@@ -16,14 +16,14 @@
 <body ng-app="tunk" ng-controller="MainCtrl">
 	<div class="container">
 		<section ng-controller="GameCtrl">
-			<div class="row">
+			<div class="row game" ng-repeat="player in players" ng-controller="PlayerCtrl">
 				<div class="col-sm-2">
 					<h2>
 						Deck
 					</h2>
 
 					<div class="cards">
-						<div class="card" ng-class="card" ng-repeat="card in deck.cards">{{ card }}</div>
+						<!--<div class="card" ng-class="card" ng-repeat="card in deck.cards">{{ card }}</div>-->
 					</div>
 				</div>
 				<div class="col-sm-2">
@@ -31,31 +31,78 @@
 						Discard
 					</h2>
 
-					<div class="cards">
-						<div class="card" ng-class="card" ng-repeat="card in discardPile">{{ card }}</div>
+					<div class="discard-pile cards">
+						<div class="card"
+							ng-class="card|suit"
+							ng-repeat="card in discardPile"
+							ng-click="drawDiscard(card)"
+						>
+							{{ card|cardValue }}
+
+							<span ng-bind-html="card|suit|suitEntity"></span>
+						</div>
 					</div>
 				</div>
 				<div class="col-sm-8">
-					<h2>Players</h2>
+					<h2>Player</h2>
 					<div
 						class="player"
-						ng-repeat="player in players"
-						ng-controller="PlayerCtrl"
 						ng-class="{
 							'has-turn':     (player.id === turn.playerId),
 							'can-draw':     (player.id === turn.playerId && !turn.hasDrawn),
 							'can-discard':  (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded)
 						}"
 					>
-						<div class="player-info">
+						<div class="header">
 							<h4 class="name">{{ player.name }}</h4>
-							score: <span class="score" ng-bind="{{ player.hand|handScore }}"></span>
+							<table class="details">
+								<tr>
+									<td>
+										Score
+									</td>
+									<td>
+										<span class="score">{{ player.hand|handScore }}</span>
+									</td>
+								</tr>
+							</table>
 						</div>
-						<div class="player-hand-control">
-							<div class="hand btn-group">
-								<button
-									type="button"
-									class="card btn btn-default"
+						<div class="player-board row">
+							<div class="col-sm-6">
+								<h5>Potential Sets</h5>
+								<div class="set"
+									ng-repeat="set in player.potentialSets"
+									ng-click="playSet(set)"
+								>
+										<span class="card"
+											ng-class="card|suit"
+											ng-repeat="card in set"
+											ng-click="drawDiscard(card)"
+										>
+											{{ card|cardValue }}
+
+											<span ng-bind-html="card|suit|suitEntity"></span>
+										</span>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<h5>Played Sets</h5>
+								<div class="set" ng-repeat="set in player.playedSets">
+									<span class="card"
+										ng-class="card|suit"
+										ng-repeat="card in set"
+										ng-click="drawDiscard(card)"
+									>
+										{{ card|cardValue }}
+
+										<span ng-bind-html="card|suit|suitEntity"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="player-hand">
+							<div class="hand">
+								<span
+									class="card"
 									ng-repeat="card in player.hand"
 									ng-click="discard(card)"
 									ng-class="card|suit"
@@ -63,32 +110,16 @@
 									{{ card|cardValue }}
 
 									<span ng-bind-html="card|suit|suitEntity"></span>
-								</button>
+								</span>
 							</div>
-							<button type="button" class="draw-button pull-right btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
-
-						<div class="go-down-stuff">
-							<h5>Sets:</h5>
-							<div class="sets">
-								<div class="set" ng-repeat="set in player.sets">
-									<span class="card" ng-repeat="card in set">
-										{{ card }}
-									</span>
-								</div>
-							</div>
-							<h5>runs:</h5>
-							<div class="runs">
-								<div class="run" ng-repeat="run in player.runs">
-									<span class="card" ng-repeat="card in run">
-										{{ card }}
-									</span>
-								</div>
-							</div>
+						<div class="player-actions">
+							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
 					</div>
 				</div>
 			</div>
+				<hr />
 		</section>
 	</div>
 

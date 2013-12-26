@@ -3,6 +3,9 @@
 var SET_MINIMUM = 3;
 var RUN_MINIMUM = 3;
 
+var BOOKS_ALLOWED = true;
+var RUNS_ALLOWED = true;
+
 angular.module('tunk')
 .factory('handTester', ['$filter', 'deck', function($filter, deck) {
 	var sortHand = $filter('sortHand');
@@ -16,7 +19,7 @@ angular.module('tunk')
 	 * @param {Array} cards
 	 * @return {Array}
 	 */
-	function getSets(hand) {
+	function getBooks(hand) {
 		return _.values(_.groupBy(hand, function(card) {
 			return getValue(card);
 		})).filter(function(group) {
@@ -112,8 +115,35 @@ angular.module('tunk')
 		return runs;
 	}
 
+	/**
+	 * Get all potential sets and runs for an array of cards
+	 *
+	 * @param {Array} cards
+	 * @return {Array}
+	 */
+	function getSets(cards) {
+		var sets = [];
+		if (BOOKS_ALLOWED) {
+			sets = sets.concat(getBooks(cards));
+		}
+		if (RUNS_ALLOWED) {
+			sets = sets.concat(getRuns(cards));
+		}
+		return sets;
+	}
+
+	/**
+	 * Checks whether a group of cards is a set
+	 *
+	 * @param {Array} cards
+	 * @return {Boolean}
+	 */
+	function isSet(cards) {
+		return getSets(cards).length > 0;
+	}
+
 	return {
 		getSets: getSets,
-		getRuns: getRuns
+		isSet: isSet
 	};
 }]);

@@ -7,6 +7,9 @@ function getNextPlayerId(players, currentId) {
 
 angular.module('tunk')
 .controller('GameCtrl', ['$scope', 'deck', 'HAND_SIZE', function($scope, Deck, HAND_SIZE) {
+	function updateCurrentPlayer(id) {
+		$scope.player = _.findWhere($scope.players, {id: id});
+	}
 
 	$scope.deck = new Deck();
 
@@ -19,6 +22,7 @@ angular.module('tunk')
 			hasDrawn: false,
 			hasDiscarded: false,
 		};
+		updateCurrentPlayer($scope.turn.playerId);
 
 		$scope.deck.reset().shuffle();
 		$scope.deal(HAND_SIZE);
@@ -27,9 +31,11 @@ angular.module('tunk')
 	$scope.advanceTurn = function() {
 		if (!$scope.turn.hasDrawn || !$scope.turn.hasDiscarded) return;
 
+		var nextPlayerId = getNextPlayerId($scope.players, $scope.turn.playerId);
 		$scope.turn.hasDrawn     = false;
 		$scope.turn.hasDiscarded = false;
-		$scope.turn.playerId     = getNextPlayerId($scope.players, $scope.turn.playerId);
+		$scope.turn.playerId     = nextPlayerId;
+		updateCurrentPlayer(nextPlayerId);
 	};
 
 	/**
