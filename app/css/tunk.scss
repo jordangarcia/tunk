@@ -4,7 +4,27 @@
 	margin-bottom: 20px;
 	padding-bottom: 40px;
 	border-bottom: 1px solid #ccc;
+
+	&.has-turn {
+		.player {
+			@include highlight;
+		}
+	}
+
+	.go-down-button,
+	.draw-button {
+		display: none;
+	}
+
+	&.can-draw {
+		.draw-button,
+		.go-down-button
+		{
+			display: inline-block;
+		}
+	}
 }
+
 .player {
 	@include player;
 
@@ -21,20 +41,12 @@
 	.player-board {
 		@include player-board;
 	}
-
-	.draw-button {
-		display: none;
-	}
-	&.can-draw {
-		.draw-button {
-			display: block;
-		}
-	}
 }
 
 .card {
 	@include card;
 }
+
 .discard-pile {
 	.cards {
 		padding-bottom: 80px;

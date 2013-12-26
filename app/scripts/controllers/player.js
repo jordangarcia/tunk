@@ -1,9 +1,9 @@
 'use strict';
 
-var PICKUP_DISCARD_LIMIT = 2;
 angular.module('tunk')
 .controller('PlayerCtrl', ['$scope', '$filter', 'handTester', function($scope, $filter, handTester) {
 	var doHandSort = $filter('sortHand');
+
 	/**
 	 * Checks if there are any sets/runs in players hand
 	 */
@@ -13,6 +13,10 @@ angular.module('tunk')
 
 	function isPlayersTurn() {
 		return ($scope.turn.playerId === $scope.player.id);
+	}
+
+	function canPlaySet() {
+		return (isPlayersTurn() && $scope.turn.hasDrawn && !$scope.turn.hasDiscarded);
 	}
 
 	function sortHand() {
@@ -27,6 +31,9 @@ angular.module('tunk')
 
 	updatePotentialSets($scope.player.hand);
 
+	/**
+	 * Draws card from deck and puts in hand
+	 */
 	$scope.drawCard = function() {
 		if (!isPlayersTurn()) return
 		if ($scope.turn.hasDrawn) return;
@@ -37,17 +44,14 @@ angular.module('tunk')
 	};
 
 	/**
+	 * Picks up a card from the discard pile and puts in hand
 	 * @param {String} card
 	 */
 	$scope.drawDiscard = function(card) {
-		var ind = $scope.discardPile.indexOf(card);
-		var len = $scope.discardPile.length;
-		if (ind === -1) return;
-		// if PICKUP_DISCARD_LIMIT is 2 then only pickup the last two cards in discardPile
-		if (len - ind - 1 < PICKUP_DISCARD_LIMIT) {
-			// remove card from discardPile
-			$scope.discardPile.splice(ind, 1);
-			// add to hand
+		if (!isPlayersTurn()) return
+		if ($scope.turn.hasDrawn) return;
+
+		if ($scope.pickupDiscard(card)) {
 			$scope.player.hand.push(card);
 			$scope.turn.hasDrawn = true;
 			sortHand();
@@ -56,9 +60,13 @@ angular.module('tunk')
 
 	/**
 	 * Play a set from hand and put it in playedSets
+	 *
+	 * @param {Array} set
 	 */
 	$scope.playSet = function(set) {
+		if (!isPlayersTurn()) return;
 		if (!handTester.isSet(set)) return;
+		if (!canPlaySet()) return;
 
 		// remove the set from player's hand
 		$scope.player.hand = _.difference($scope.player.hand, set);
@@ -67,6 +75,11 @@ angular.module('tunk')
 		$scope.player.playedSets.push(set);
 	};
 
+	/**
+	 * Removes a card from hand and puts in discardPile
+	 *
+	 * @param {String} card
+	 */
 	$scope.discard = function(card) {
 		if (!isPlayersTurn()) return
 		if (!$scope.turn.hasDrawn) return;

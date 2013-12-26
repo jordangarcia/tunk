@@ -6,7 +6,6 @@ $clubs-color: black;
 $card-border: #ccc;
 $card-bg: #fff;
 
-
 @mixin card {
 	&.diamonds {
 		color: $diamonds-color;
@@ -32,18 +31,12 @@ $card-bg: #fff;
 	box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
 }
 
-
-
 @mixin highlight {
 	background-color: #eee;
 }
 
 @mixin player {
 	padding: 20px;
-
-	&.has-turn {
-		@include highlight;
-	}
 }
 
 @mixin player-hand {

@@ -16,7 +16,17 @@
 <body ng-app="tunk" ng-controller="MainCtrl">
 	<div class="container">
 		<section ng-controller="GameCtrl">
-			<div class="row game" ng-repeat="player in players" ng-controller="PlayerCtrl">
+			<div
+				class="row game"
+				ng-repeat="player in players"
+				ng-controller="PlayerCtrl"
+				ng-class="{
+					'has-turn':     (player.id === turn.playerId),
+					'can-draw':     (player.id === turn.playerId && !turn.hasDrawn),
+					'can-discard':  (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded),
+					'is-frozen':    (player.isFrozen)
+				}"
+			>
 				<div class="col-sm-2">
 					<h2>
 						Deck
@@ -47,11 +57,6 @@
 					<h2>Player</h2>
 					<div
 						class="player"
-						ng-class="{
-							'has-turn':     (player.id === turn.playerId),
-							'can-draw':     (player.id === turn.playerId && !turn.hasDrawn),
-							'can-discard':  (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded)
-						}"
 					>
 						<div class="header">
 							<h4 class="name">{{ player.name }}</h4>
@@ -114,6 +119,7 @@
 							</div>
 						</div>
 						<div class="player-actions">
+							<button type="button" class="go-down-button btn btn-primary" ng-click="goDown()">Go Down</button>
 							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
 					</div>
