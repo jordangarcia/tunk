@@ -17,12 +17,10 @@
 	<div class="container">
 		<section ng-controller="GameCtrl">
 			<div class="alert alert-success" ng-show="message.length">{{ message }}</div>
-
-			<p class="message"></p>
 			<div
 				class="row game"
 				ng-repeat="player in players"
-				ng-controller="PlayerCtrl"
+				ng-controller="ClientCtrl"
 				ng-class="{
 					'has-turn':     (player.id === turn.playerId),
 					'can-draw':     (player.id === turn.playerId && !turn.hasDrawn),
@@ -133,6 +131,8 @@
 							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
 					</div>
+			<div gamelog="gamelog.log"></div>
+
 				</div>
 			</div>
 				<hr />
@@ -144,14 +144,16 @@
 	<script type="text/javascript" src="/bower_components/angular-sanitize/angular-sanitize.js" data-env="dev"></script>
 	<script type="text/javascript" src="/scripts/app.js"></script>
 	<script type="text/javascript" src="/scripts/services/deck.js"></script>
+	<script type="text/javascript" src="/scripts/services/gamelog.js"></script>
+	<script type="text/javascript" src="/scripts/services/handtester.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/main.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/game.js"></script>
-	<script type="text/javascript" src="/scripts/controllers/player.js"></script>
+	<script type="text/javascript" src="/scripts/controllers/client.js"></script>
 	<script type="text/javascript" src="/scripts/filters/cardvalue.js"></script>
 	<script type="text/javascript" src="/scripts/filters/suit.js"></script>
 	<script type="text/javascript" src="/scripts/filters/suitentity.js"></script>
 	<script type="text/javascript" src="/scripts/filters/sorthand.js"></script>
 	<script type="text/javascript" src="/scripts/filters/handscore.js"></script>
 	<script type="text/javascript" src="/scripts/filters/cardorder.js"></script>
-	<script type="text/javascript" src="/scripts/services/handtester.js"></script>
+	<script type="text/javascript" src="/scripts/directives/gamelog.js"></script>
 </body>

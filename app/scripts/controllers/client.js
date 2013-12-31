@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tunk')
-.controller('PlayerCtrl', ['$scope', '$filter', 'handTester', function($scope, $filter, handTester) {
+.controller('ClientCtrl', ['$scope', '$filter', 'handTester', 'gamelog', function($scope, $filter, handTester, gamelog) {
 	var sortHand = $filter('sortHand');
 	var scoreHand = $filter('handScore');
 
@@ -12,6 +12,8 @@ angular.module('tunk')
 	function canPlaySet() {
 		return (isPlayersTurn() && $scope.turn.hasDrawn && !$scope.turn.hasDiscarded);
 	}
+
+	$scope.otherPlayers = _.without($scope.players, $scope.player);
 
 	$scope.player.playedSets    = [];
 	$scope.player.potentialSets = [];
@@ -65,7 +67,8 @@ angular.module('tunk')
 		$scope.player.playedSets.push(set);
 
 		if ($scope.player.hand.length === 0) {
-			$scope.showMessage(player.name + ' TUNKED OUT!');
+			gamelog.write(player.name + ' TUNKED OUT!');
+			gamelog.write(player.name + ' wins 2 points');
 			$scope.win($scope.player, 2);
 		}
 	};
@@ -92,7 +95,7 @@ angular.module('tunk')
 
 		// check if the player won
 		if ($scope.player.hand.length === 0) {
-			$scope.showMessage($scope.player.name + ' won!');
+			gamelog.write($scope.player.name + ' won!');
 			$scope.win($scope.player, 1);
 		} else {
 			$scope.advanceTurn();

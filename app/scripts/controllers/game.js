@@ -9,31 +9,19 @@ function getNextPlayerId(players, currentId) {
 }
 
 angular.module('tunk')
-.controller('GameCtrl', ['$scope', 'deck', 'HAND_SIZE', function($scope, Deck, HAND_SIZE) {
-	$scope.message = '';
+.controller('GameCtrl', ['$scope', 'deck', 'gamelog', 'HAND_SIZE', function($scope, Deck, gamelog, HAND_SIZE) {
+	$scope.gamelog = gamelog;
 
 	$scope.deck = new Deck();
 
 	$scope.discardPile = [];
 
 	/**
-	 * Shows a message for *timeout* ms
-	 *
-	 * @param {String} message
-	 * @param {Integer} timeout
-	 */
-	$scope.showMessage = function(message, timeout) {
-		timeout = timeout || DEFAULT_MESSAGE_TIMEOUT;
-		$scope.message = message;
-		setTimeout(function() {
-			$scope.message = '';
-		}, timeout);
-	}
-
-	/**
 	 * @param {Integer} playerToGo
 	 */
 	$scope.newGame = function(playerToGo) {
+		gamelog.write('Starting a new game');
+
 		$scope.resetPlayers();
 		$scope.turn = {
 			playerId: playerToGo || 0,
@@ -78,11 +66,18 @@ angular.module('tunk')
 			return player.handScore;
 		});
 
+		gamelog.write(player.name + ' went down with ' + player.handScore);
+
 		if (sorted[0].id === player.id) {
 			// current player won
+			gamelog.write(player.name + ' wins');
+
 			$scope.win(player, 1);
 		} else if (sorted[0].handScore < sorted[1].handScore) {
 			// was a unanimous winner, give them two points
+			gamelog.write(sorted[0].name + ' has a lower hand score');
+			gamelog.write(sorted[0].name + ' wins 2 points');
+
 			$scope.win(sorted[0].id, 2);
 		} else {
 			// there are multiple winners
@@ -92,6 +87,9 @@ angular.module('tunk')
 
 			// shuffle to randomly see who goes first
 			winners.map(function(player) {
+				gamelog.write(player.name + ' tied for the win');
+				gamelog.write(player.name + ' wins 2 points');
+
 				$scope.addPoints(_.findWhere($scope.players, {id: player.id}), 2);
 			});
 
@@ -145,7 +143,6 @@ angular.module('tunk')
 		
 		// if PICKUP_DISCARD_LIMIT is 2 then only pickup the last two cards in discardPile
 		return (ind !== -1 && (len - 1 - ind < PICKUP_DISCARD_LIMIT));
-
 	};
 
 	$scope.newGame();
