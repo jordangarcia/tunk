@@ -15,6 +15,7 @@ angular.module('tunk')
 
 	$scope.otherPlayers = _.without($scope.players, $scope.player);
 
+	$scope.selectedCards = [];
 	$scope.player.playedSets    = [];
 	$scope.player.potentialSets = [];
 

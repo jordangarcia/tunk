@@ -5,6 +5,6 @@ angular.module('tunk')
 		scope: {
 			gamelog: '='
 		},
-		templateUrl: '/views/gamelog.html'
+		templateUrl: '/views/directives/gamelog.html'
 	};
 }]);

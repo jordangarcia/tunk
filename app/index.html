@@ -112,30 +112,16 @@
 								</div>
 							</div>
 						</div>
-						<div class="player-hand">
-							<div class="hand">
-								<span
-									class="card"
-									ng-repeat="card in player.hand"
-									ng-click="discard(card)"
-									ng-class="card|suit"
-								>
-									{{ card|cardValue }}
-
-									<span ng-bind-html="card|suit|suitEntity"></span>
-								</span>
-							</div>
-						</div>
+						<t-player-hand hand="player.hand" selected-cards="selectedCards"></t-player-hand>
 						<div class="player-actions">
 							<button type="button" class="go-down-button btn btn-primary" ng-click="goDown()">Go Down</button>
 							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
 						</div>
 					</div>
-			<div gamelog="gamelog.log"></div>
-
+					<div t-game-log="gamelog.log"></div>
 				</div>
 			</div>
-				<hr />
+			<hr />
 		</section>
 	</div>
 
@@ -156,4 +142,6 @@
 	<script type="text/javascript" src="/scripts/filters/handscore.js"></script>
 	<script type="text/javascript" src="/scripts/filters/cardorder.js"></script>
 	<script type="text/javascript" src="/scripts/directives/gamelog.js"></script>
+	<script type="text/javascript" src="/scripts/directives/playerhand.js"></script>
+	<script type="text/javascript" src="/scripts/directives/card.js"></script>
 </body>
