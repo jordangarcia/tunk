@@ -1,0 +1,15 @@
+{
+  "name": "tunk",
+  "version": "0.1.0",
+  "dependencies": {
+    "angular": "~1.2.7",
+    "angular-sanitize": "~1.2.7",
+    "underscore": "~1.5.2"
+  },
+  "main": "app/index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ]
+}

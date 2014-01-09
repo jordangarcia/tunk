@@ -1,6 +1,7 @@
 {
   "name": "tunk",
-  "version": "0.0.0",
+  "repository": "jordangarcia/tunk",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
