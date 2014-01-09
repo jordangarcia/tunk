@@ -53,7 +53,7 @@ angular.module('tunk')
 	 */
 	$scope.addPoints = function(player, points) {
 		if (_.isNumber(player)) {
-			player = $scope.players[$scope.players.indexOf]
+			player = _.findWhere($scope.players, {id :player});
 		}
 		var ind = $scope.players.indexOf(player);
 		if (ind === -1) return;
@@ -78,7 +78,7 @@ angular.module('tunk')
 			gamelog.write(sorted[0].name + ' has a lower hand score');
 			gamelog.write(sorted[0].name + ' wins 2 points');
 
-			$scope.win(sorted[0].id, 2);
+			$scope.win(sorted[0], 2);
 		} else {
 			// there are multiple winners
 			var winners = _.groupBy(sorted, function(player) {
@@ -93,7 +93,6 @@ angular.module('tunk')
 				$scope.addPoints(_.findWhere($scope.players, {id: player.id}), 2);
 			});
 
-			$scope.setMessage(_.pluck(winners, 'name').join(' ') + ' tied');
 			$scope.newGame(_.shuffle(winners)[0].id);
 		}
 	};

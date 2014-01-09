@@ -16,7 +16,8 @@
 <body ng-app="tunk" ng-controller="MainCtrl">
 	<div class="container">
 		<section ng-controller="GameCtrl">
-			<div class="alert alert-success" ng-show="message.length">{{ message }}</div>
+			<div gamelog="gamelog.log" style="float: left;"></div>
+
 			<div
 				class="game"
 				ng-repeat="player in players"
@@ -30,18 +31,18 @@
 				}"
 			>
 
-					<div class="discard-pile cards">
-						<div class="card"
-							ng-class="card|suit"
-							ng-repeat="card in discardPile"
-							ng-click="drawDiscard(card)"
-						>
-							{{ card|cardValue }}
+				<div class="discard-pile cards">
+					<div class="card"
+						ng-class="card|suit"
+						ng-repeat="card in discardPile"
+						ng-click="drawDiscard(card)"
+					>
+						{{ card|cardValue }}
 
-							<span ng-bind-html="card|suit|suitEntity"></span>
-						</div>
+						<span ng-bind-html="card|suit|suitEntity"></span>
 					</div>
-					<div t-game-log="gamelog.log"></div>
+				</div>
+
 				<div
 					class="player"
 				>
