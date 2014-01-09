@@ -14,15 +14,27 @@
 		}
 	}
 
-	.go-down-button,
-	.draw-button {
+	.player-actions button {
 		display: none;
+		margin-left: 5px;
 	}
 
 	&.can-draw {
 		.draw-button,
 		.go-down-button
 		{
+			display: inline-block;
+		}
+	}
+
+	&.can-discard {
+		.discard-button {
+			display: inline-block;
+		}
+	}
+
+	&.can-play-set {
+		.play-set-button {
 			display: inline-block;
 		}
 	}

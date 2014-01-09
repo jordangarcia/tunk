@@ -39,9 +39,6 @@ $card-bg: #fff;
 	box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
 }
 
-@mixin full-size-card {
-}
-
 @mixin player-card {
 	font-size: 140%;
 	padding: 0 5px;

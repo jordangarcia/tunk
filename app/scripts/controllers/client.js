@@ -13,6 +13,17 @@ angular.module('tunk')
 		return (isPlayersTurn() && $scope.turn.hasDrawn && !$scope.turn.hasDiscarded);
 	}
 
+	/**
+	 * Exposed function to use in attribute
+	 *
+	 * @param {Array} cards
+	 * @return {Boolean}
+	 */
+	$scope.isSet = function(cards) {
+		console.log("testing set for %o", cards);
+		return handTester.isSet(cards);
+	}
+
 	$scope.otherPlayers = _.without($scope.players, $scope.player);
 
 	$scope.selectedCards = [];
@@ -67,6 +78,9 @@ angular.module('tunk')
 		// add set to playedSets
 		$scope.player.playedSets.push(set);
 
+		// reset selected cards
+		$scope.selectedCards = [];
+
 		if ($scope.player.hand.length === 0) {
 			gamelog.write(player.name + ' TUNKED OUT!');
 			gamelog.write(player.name + ' wins 2 points');
@@ -94,6 +108,9 @@ angular.module('tunk')
 		$scope.discardPile.push(card);
 		$scope.turn.hasDiscarded = true;
 
+		// reset selected cards
+		$scope.selectedCards = [];
+
 		// check if the player won
 		if ($scope.player.hand.length === 0) {
 			gamelog.write($scope.player.name + ' won!');
@@ -106,6 +123,9 @@ angular.module('tunk')
 	$scope.goDown = function() {
 		if (!isPlayersTurn()) return;
 		if ($scope.turn.hasDrawn) return;
+
+		// reset selected cards
+		$scope.selectedCards = [];
 
 		$scope.$parent.goDown($scope.player);
 	};

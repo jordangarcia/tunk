@@ -115,6 +115,7 @@ angular.module('tunk')
 	 */
 	$scope.resetPlayers = function() {
 		$scope.players.forEach(function(player) {
+			player.playdSets = [];
 			player.hand = [];
 			player.isFrozen = false;
 		});
