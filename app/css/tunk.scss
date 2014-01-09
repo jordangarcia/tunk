@@ -70,13 +70,10 @@
 }
 
 .discard-pile {
-	.cards {
-		padding-bottom: 80px;
-	}
+	@include clear;
+	width: 40px;
 
 	.card {
-		margin-bottom: -80px;
-
 		&:hover {
 			background-color: darken($card-bg, 5%);
 			cursor: pointer;
