@@ -1,12 +1,15 @@
 @import '_mixins.scss';
 
 .game {
-	margin-bottom: 20px;
-	padding-bottom: 40px;
-	border-bottom: 1px solid #ccc;
+	width: 320px;
+	height: 480px;
+	margin: 0 auto;
+	margin-bottom: 40px;
+	border: 1px solid #ccc;
+	position: relative;
 
 	&.has-turn {
-		.player {
+		.player-area {
 			@include highlight;
 		}
 	}
@@ -28,18 +31,21 @@
 .player {
 	@include player;
 
+	.player-info {
+		@include clear;
+		margin-bottom: 10px;
+
+		.player-name {
+			margin-top: 0;
+			float: left;
+		}
+		.player-details {
+			float: right;
+		}
+	}
+
 	.player-hand {
 		@include player-hand;
-		@include clear;
-
-		.card {
-			font-size: 140%;
-			@include full-size-card;
-
-			&.selected {
-				@include selected-card;
-			}
-		}
 	}
 
 	.player-board {

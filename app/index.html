@@ -18,7 +18,7 @@
 		<section ng-controller="GameCtrl">
 			<div class="alert alert-success" ng-show="message.length">{{ message }}</div>
 			<div
-				class="row game"
+				class="game"
 				ng-repeat="player in players"
 				ng-controller="ClientCtrl"
 				ng-class="{
@@ -28,18 +28,6 @@
 					'is-frozen':    (player.isFrozen)
 				}"
 			>
-				<div class="col-sm-2">
-					<h2>
-						Deck
-					</h2>
-					<div class="cards">
-						<!--<div class="card" ng-class="card" ng-repeat="card in deck.cards">{{ card }}</div>-->
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<h2>
-						Discard
-					</h2>
 
 					<div class="discard-pile cards">
 						<div class="card"
@@ -52,15 +40,31 @@
 							<span ng-bind-html="card|suit|suitEntity"></span>
 						</div>
 					</div>
-				</div>
-				<div class="col-sm-8">
-					<h2>Player</h2>
-					<div
-						class="player"
-					>
-						<div class="header">
-							<h4 class="name">{{ player.name }}</h4>
-							<table class="details">
+					<div t-game-log="gamelog.log"></div>
+				<div
+					class="player"
+				>
+					<div class="played-sets">
+						<div class="set" ng-repeat="set in player.playedSets">
+							<span class="card"
+								ng-class="card|suit"
+								ng-repeat="card in set"
+								ng-click="drawDiscard(card)"
+								>
+								{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>
+							</span>
+						</div>
+					</div>
+					<div class="player-front">
+						<div class="player-actions">
+							<button type="button" class="go-down-button btn btn-primary" ng-click="goDown()">Go Down</button>
+							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
+						</div>
+					</div>
+					<div class="player-area">
+						<div class="player-info">
+							<h4 class="player-name">{{ player.name }}</h4>
+							<table class="player-details">
 								<tr>
 									<td>
 										Game Score
@@ -79,46 +83,8 @@
 								</tr>
 							</table>
 						</div>
-						<div class="player-board row">
-							<div class="col-sm-6">
-								<h5>Potential Sets</h5>
-								<div class="set"
-									ng-repeat="set in player.potentialSets"
-									ng-click="playSet(set)"
-								>
-										<span class="card"
-											ng-class="card|suit"
-											ng-repeat="card in set"
-											ng-click="drawDiscard(card)"
-										>
-											{{ card|cardValue }}
-
-											<span ng-bind-html="card|suit|suitEntity"></span>
-										</span>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<h5>Played Sets</h5>
-								<div class="set" ng-repeat="set in player.playedSets">
-									<span class="card"
-										ng-class="card|suit"
-										ng-repeat="card in set"
-										ng-click="drawDiscard(card)"
-									>
-										{{ card|cardValue }}
-
-										<span ng-bind-html="card|suit|suitEntity"></span>
-									</span>
-								</div>
-							</div>
-						</div>
 						<t-player-hand hand="player.hand" selected-cards="selectedCards"></t-player-hand>
-						<div class="player-actions">
-							<button type="button" class="go-down-button btn btn-primary" ng-click="goDown()">Go Down</button>
-							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
-						</div>
 					</div>
-					<div t-game-log="gamelog.log"></div>
 				</div>
 			</div>
 			<hr />
