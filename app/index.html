@@ -31,17 +31,12 @@
 				}"
 			>
 
-				<div class="discard-pile cards">
-					<div class="card"
-						ng-class="card|suit"
-						ng-repeat="card in discardPile"
-						ng-click="drawDiscard(card)"
+				<discard-pile
+					class="discard-pile cards"
+					cards="discardPile.cards"
+					on-card-click="drawDiscard"
 					>
-						{{ card|cardValue }}
-
-						<span ng-bind-html="card|suit|suitEntity"></span>
-					</div>
-				</div>
+				</discard-pile>
 
 				<div
 					class="player"
@@ -100,6 +95,7 @@
 	<script type="text/javascript" src="/bower_components/angular-sanitize/angular-sanitize.js" data-env="dev"></script>
 	<script type="text/javascript" src="/scripts/app.js"></script>
 	<script type="text/javascript" src="/scripts/services/deck.js"></script>
+	<script type="text/javascript" src="/scripts/services/discardpile.js"></script>
 	<script type="text/javascript" src="/scripts/services/gamelog.js"></script>
 	<script type="text/javascript" src="/scripts/services/handtester.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/main.js"></script>
@@ -114,4 +110,5 @@
 	<script type="text/javascript" src="/scripts/directives/gamelog.js"></script>
 	<script type="text/javascript" src="/scripts/directives/playerhand.js"></script>
 	<script type="text/javascript" src="/scripts/directives/card.js"></script>
+	<script type="text/javascript" src="/scripts/directives/discardpile.js"></script>
 </body>

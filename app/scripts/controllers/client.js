@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('tunk')
-.controller('ClientCtrl', ['$scope', '$filter', 'handTester', 'gamelog', function($scope, $filter, handTester, gamelog) {
+.controller('ClientCtrl',
+['$scope', '$filter', 'handTester', 'gamelog',
+function($scope, $filter, handTester, gamelog) {
 	var sortHand = $filter('sortHand');
 	var scoreHand = $filter('handScore');
 
@@ -20,20 +22,16 @@ angular.module('tunk')
 	 * @return {Boolean}
 	 */
 	$scope.isSet = function(cards) {
-		console.log("testing set for %o", cards);
 		return handTester.isSet(cards);
 	}
 
-	$scope.otherPlayers = _.without($scope.players, $scope.player);
-
-	$scope.selectedCards = [];
-	$scope.player.playedSets    = [];
-	$scope.player.potentialSets = [];
+	$scope.otherPlayers      = _.without($scope.players, $scope.player);
+	$scope.selectedCards     = [];
+	$scope.player.playedSets = [];
 
 	$scope.$watchCollection('player.hand', function(hand) {
 		$scope.player.hand          = sortHand($scope.player.hand);
 		$scope.player.handScore     = scoreHand(hand);
-		$scope.player.potentialSets = handTester.getSets(hand);
 	});
 
 	/**
@@ -55,9 +53,10 @@ angular.module('tunk')
 		if (!isPlayersTurn()) return
 		if ($scope.turn.hasDrawn) return;
 
-		if ($scope.canPickupDiscard(card)) {
-			$scope.discardPile.splice($scope.discardPile.indexOf(card), 1);
-			$scope.player.hand.push(card);
+		var card = $scope.discardPile.pickup(card);
+		if (card) {
+			// pickup was successful
+			$scope.player.hand.push(card)
 			$scope.turn.hasDrawn = true;
 		}
 	}

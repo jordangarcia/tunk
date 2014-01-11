@@ -1,0 +1,7 @@
+<div class="card"
+	ng-class="card|suit"
+	ng-repeat="card in cards"
+	ng-click="onCardClick(card)"
+	>
+	{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>
+</div>

@@ -1,6 +1,5 @@
 'use strict';
 
-var PICKUP_DISCARD_LIMIT = 2;
 var DEFAULT_MESSAGE_TIMEOUT = 3000;
 
 function getNextPlayerId(players, currentId) {
@@ -9,12 +8,12 @@ function getNextPlayerId(players, currentId) {
 }
 
 angular.module('tunk')
-.controller('GameCtrl', ['$scope', 'deck', 'gamelog', 'HAND_SIZE', function($scope, Deck, gamelog, HAND_SIZE) {
+.controller('GameCtrl', ['$scope', 'deck', 'discardPile', 'gamelog', 'HAND_SIZE',
+function($scope, deckService, discardPileService, gamelog, HAND_SIZE) {
 	$scope.gamelog = gamelog;
 
-	$scope.deck = new Deck();
-
-	$scope.discardPile = [];
+	$scope.deck = deckService.create()
+	$scope.discardPile = discardPileService.create();
 
 	/**
 	 * @param {Integer} playerToGo
@@ -30,7 +29,7 @@ angular.module('tunk')
 		};
 
 		$scope.deck.reset().shuffle();
-		$scope.discardPile = [];
+		$scope.discardPile.reset();
 		$scope.deal(HAND_SIZE);
 	};
 
@@ -114,9 +113,9 @@ angular.module('tunk')
 	 */
 	$scope.resetPlayers = function() {
 		$scope.players.forEach(function(player) {
-			player.playdSets = [];
-			player.hand = [];
-			player.isFrozen = false;
+			player.playedSets = [];
+			player.hand       = [];
+			player.isFrozen   = false;
 		});
 	};
 
@@ -129,20 +128,6 @@ angular.module('tunk')
 				player.hand.push($scope.deck.draw());
 			});
 		});
-	};
-
-	/**
-	 * Checks that the card can be removed from the discard pile and removes
-	 *
-	 * @param {String} card
-	 * @return {Boolean} whether the card was successfully picked up
-	 */
-	$scope.canPickupDiscard = function(card) {
-		var ind = $scope.discardPile.indexOf(card);
-		var len = $scope.discardPile.length;
-		
-		// if PICKUP_DISCARD_LIMIT is 2 then only pickup the last two cards in discardPile
-		return (ind !== -1 && (len - 1 - ind < PICKUP_DISCARD_LIMIT));
 	};
 
 	$scope.newGame();

@@ -74,5 +74,9 @@ angular.module('tunk')
 		return self.cards.shift();
 	};
 
-	return Deck;
+	return {
+		create: function() {
+			return new Deck();
+		}
+	};
 });
