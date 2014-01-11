@@ -1,0 +1,5 @@
+<span class="card {{ card|suit }}"
+	ng-repeat="card in set"
+>
+	{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>
+</span>

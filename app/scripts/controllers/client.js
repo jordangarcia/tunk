@@ -25,9 +25,8 @@ function($scope, $filter, handTester, gamelog) {
 		return handTester.isSet(cards);
 	}
 
-	$scope.otherPlayers      = _.without($scope.players, $scope.player);
+	$scope.opponents         = _.without($scope.players, $scope.player);
 	$scope.selectedCards     = [];
-	$scope.player.playedSets = [];
 
 	$scope.$watchCollection('player.hand', function(hand) {
 		$scope.player.hand          = sortHand($scope.player.hand);

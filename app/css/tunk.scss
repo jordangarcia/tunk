@@ -71,5 +71,17 @@
 
 .discard-pile {
 	@include discard-pile(60px, 60px);
+	height: 100%;
+	float: left;
+	padding: 5px;
+}
 
+.opponents {
+	$opponents-col-width: 240px;
+	width: $opponents-col-width;
+	float: right;
+
+	.opponent {
+		@include opponent;
+	}
 }

@@ -1,0 +1,13 @@
+<div class="header">
+	<span class="name">{{ player.name }}</span>
+	<span class="game-score">{{ player.score }}</span>
+</div>
+<div class="details">
+	<span class="cards-left">
+		{{ player.hand.length }} <span class="cards-left-icon"></span>
+	</span>
+	<div class="played-sets">
+		<div class="set" played-set="set" ng-repeat="set in player.playedSets"></div>
+	</div>
+</div>
+

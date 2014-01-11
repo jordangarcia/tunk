@@ -38,19 +38,19 @@
 				>
 				</div>
 
+				<div class="opponents">
+					<div
+						ng-repeat="opponent in opponents"
+						opponent="opponent"
+						class="opponent"
+					></div>
+				</div>
+
 				<div
 					class="player"
 				>
 					<div class="played-sets">
-						<div class="set" ng-repeat="set in player.playedSets">
-							<span class="card"
-								ng-class="card|suit"
-								ng-repeat="card in set"
-								ng-click="drawDiscard(card)"
-								>
-								{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>
-							</span>
-						</div>
+						<div class="set" ng-repeat="set in player.playedSets" played-set="set"></div>
 					</div>
 					<div class="player-front">
 						<div class="player-actions">
@@ -111,4 +111,6 @@
 	<script type="text/javascript" src="/scripts/directives/playerhand.js"></script>
 	<script type="text/javascript" src="/scripts/directives/card.js"></script>
 	<script type="text/javascript" src="/scripts/directives/discardpile.js"></script>
+	<script type="text/javascript" src="/scripts/directives/opponent.js"></script>
+	<script type="text/javascript" src="/scripts/directives/playedset.js"></script>
 </body>

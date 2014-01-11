@@ -6,6 +6,9 @@ $clubs-color: black;
 $card-border: #ccc;
 $card-bg: #fff;
 
+$player-bg: #eee;
+$active-player-bg: #E1EEF7;
+
 @mixin border-box {
 	box-sizing: border-box;
 }
@@ -40,6 +43,9 @@ $card-bg: #fff;
 	border-radius: 6px;
 	border: 1px solid $card-border;
 	background-color: $card-bg;
+}
+
+@mixin card-shadow {
 	box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
 }
 
@@ -66,7 +72,7 @@ $card-bg: #fff;
 	width: 100%;
 
 	.player-area {
-		background: #eee;
+		background: $player-bg;
 		padding: 5px 5px 0;
 	}
 
@@ -103,8 +109,6 @@ $card-bg: #fff;
 @mixin discard-pile($width, $height) {
 	@include clear;
 	width: $width;
-	margin: 5px;
-
 
 	.card {
 		@include border-box;
@@ -120,6 +124,56 @@ $card-bg: #fff;
 		&:hover {
 			background-color: darken($card-bg, 5%);
 			cursor: pointer;
+		}
+	}
+}
+
+@mixin opponent {
+	padding: 10px 7px 5px;
+	background: $player-bg;
+	margin-bottom: 5px;
+	min-height: 50px;
+
+	&.has-turn {
+		background: $active-player-bg;
+	}
+
+	.header {
+		@include clear;
+		font-size: 18px;
+		line-height: 18px;
+		margin-bottom: 5px;
+
+		.name {
+			float: left;
+		}
+
+		.game-score {
+			float: right;
+		}
+	}
+
+	.details {
+		@include clear;
+		$line-height: 24px;
+
+		.cards-left {
+			float:        left;
+			line-height:  $line-height;
+		}
+
+		.played-sets {
+			float: right;
+			.set {
+				float:         right;
+				margin-left:   5px;
+
+				.card {
+					padding: 0 4px;
+					margin: 0;
+					line-height: $line-height - 2px; // for border-top/bottom
+				}
+			}
 		}
 	}
 }
