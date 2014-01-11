@@ -1,7 +1,9 @@
-<div class="card"
-	ng-class="card|suit"
-	ng-repeat="card in cards"
+<div class="card {{card|suit}}"
+	ng-repeat="card in discardPile.cards"
 	ng-click="onCardClick(card)"
-	>
+	ng-class="{
+		tucked: !discardPile.canPickup(card)
+	}"
+>
 	{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>
 </div>

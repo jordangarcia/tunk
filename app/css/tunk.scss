@@ -70,13 +70,6 @@
 }
 
 .discard-pile {
-	@include clear;
-	width: 40px;
+	@include discard-pile(60px, 60px);
 
-	.card {
-		&:hover {
-			background-color: darken($card-bg, 5%);
-			cursor: pointer;
-		}
-	}
 }

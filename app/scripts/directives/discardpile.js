@@ -1,9 +1,9 @@
 angular.module('tunk')
 .directive('discardPile', ['PICKUP_DISCARD_LIMIT', function(limit) {
 	return {
-		restrict: 'E',
+		restrict: 'A',
 		scope: {
-			cards: '=',
+			discardPile: '=',
 			onCardClick: '=',
 		},
 		templateUrl: '/views/directives/discardPile.html',
