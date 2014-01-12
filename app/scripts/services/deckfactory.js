@@ -36,18 +36,8 @@ angular.module('tunk')
 
 	var Deck = function() {
 		self = this;
-		this.cards = [];
-		this.reset();
+		this.cards = generateCards(CARDS, SUITS);
 	}
-
-	/**
-	 * Resets all cards in order
-	 * @return {Deck}
-	 */
-	Deck.prototype.reset = function() {
-		self.cards = generateCards(CARDS, SUITS);
-		return self;
-	};
 
 	/**
 	 * @return {Integer}

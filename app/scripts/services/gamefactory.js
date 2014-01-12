@@ -21,15 +21,15 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	Game.prototype.newGame = function(playerToGo) {
 		self.log.write('Starting a new game');
 
-		self.playerList.resetPlayers();
 		self.turn = {
 			playerId: playerToGo || 0,
 			hasDrawn: false,
 			hasDiscarded: false,
 		};
 
-		self.deck.reset().shuffle();
+		self.playerList.resetPlayers();
 		self.discardPile.reset();
+		self.deck.shuffle();
 		self.deal(HAND_SIZE);
 	};
 
