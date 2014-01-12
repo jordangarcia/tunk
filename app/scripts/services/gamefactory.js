@@ -36,7 +36,7 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	/**
 	 * Advances the state of the game to the next player
 	 */
-	Game.prototype.advanceTurn = function{
+	Game.prototype.advanceTurn = function() {
 		// unfreeze player who just finished turn
 		self.playerList.find(self.turn.playerId).frozen = false;
 		self.turn = {
@@ -49,7 +49,7 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	/**
 	 * Gives each player some number of cards
 	 */
-	Gmae.prototype.deal = function(numCards) {
+	Game.prototype.deal = function(numCards) {
 		_.times(HAND_SIZE, function() {
 			self.playerList.players.forEach(function(player) {
 				player.hand.push(self.deck.draw());

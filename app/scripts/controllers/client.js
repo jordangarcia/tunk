@@ -2,8 +2,8 @@
 
 angular.module('tunk')
 .controller('ClientCtrl',
-['$scope', '$filter', 'handTester', 'gamelog',
-function($scope, $filter, handTester, gamelog) {
+['$scope', '$filter', 'handTester', 'gamelog', 'playerActions', 'actionValidator'
+function($scope, $filter, handTester, gamelog, playerActions, actionValidator) {
 	var sortHand = $filter('sortHand');
 	var scoreHand = $filter('handScore');
 
@@ -84,11 +84,9 @@ function($scope, $filter, handTester, gamelog) {
 	 * Draws card from deck and puts in hand
 	 */
 	$scope.drawCard = function() {
-		if (!isPlayersTurn()) return
-		if ($scope.turn.hasDrawn) return;
+		if (!actionValidator.canDrawCard($scope.game, $scope.player)) return;
 
-		$scope.player.hand.push($scope.deck.draw());
-		$scope.turn.hasDrawn = true;
+		playerActions.drawCard($scope.game, $scope.player);
 	};
 
 	/**
