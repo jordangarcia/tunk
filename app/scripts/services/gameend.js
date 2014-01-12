@@ -26,4 +26,10 @@ angular.module('tunk')
 
 	function goDown(game, player) {
 	}
+
+	return {
+		goDown: goDown,
+		tunkOut: tunkOut,
+		outOfCards: outOfCards,
+	};
 }]);

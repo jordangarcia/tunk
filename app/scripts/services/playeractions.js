@@ -94,6 +94,12 @@ function($filter, handTester, gameEnd) {
 	}
 
 	return {
-
-	}
+		drawCard: drawCard,
+		drawDiscard: drawDiscard,
+		discard: discard,
+		playSet: playSet,
+		freeze: freeze,
+		playOnSet: playOnSet,
+		goDown: goDown,
+	};
 }]);
