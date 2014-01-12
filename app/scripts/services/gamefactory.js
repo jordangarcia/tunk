@@ -22,7 +22,7 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 		self.log.write('Starting a new game');
 
 		self.turn = {
-			playerId: playerToGo || 0,
+			playerId: playerToGo,
 			hasDrawn: false,
 			hasDiscarded: false,
 		};

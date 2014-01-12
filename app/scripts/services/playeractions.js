@@ -1,5 +1,5 @@
 angular.module('tunk')
-.factory('playerActions', ['$filter', 'handTester', 'gameEnd'
+.factory('playerActions', ['$filter', 'handTester', 'gameEnd',
 function($filter, handTester, gameEnd) {
 
 	/**

@@ -2,7 +2,7 @@
 
 angular.module('tunk')
 .controller('ClientCtrl',
-['$scope', '$filter', 'handTester', 'gamelog', 'playerActions', 'actionValidator'
+['$scope', '$filter', 'handTester', 'gamelog', 'playerActions', 'actionValidator',
 function($scope, $filter, handTester, gamelog, playerActions, actionValidator) {
 	var sortHand = $filter('sortHand');
 	var scoreHand = $filter('handScore');
