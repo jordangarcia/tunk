@@ -9,7 +9,7 @@ module.exports = function(config) {
 			'app/bower_components/angular-mocks/angular-mocks.js',
 			'app/scripts/app.js',
 			'app/scripts/**/*.js',
-			'test/specs/services/gamefactorySpec.js'
+			'test/specs/**/*Spec.js'
 		],
 		reporters: ['progress'],
 		port: 9876,
