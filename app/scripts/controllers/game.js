@@ -102,6 +102,9 @@ function($scope, deckService, discardPileService, gamelog, HAND_SIZE) {
 	$scope.advanceTurn = function() {
 		if (!$scope.turn.hasDrawn || !$scope.turn.hasDiscarded) return;
 
+		// unfreeze the player when their turn starts
+		_.findWhere($scope.players, {id: $scope.turn.playerId}).isFrozen = false;
+
 		var nextPlayerId = getNextPlayerId($scope.players, $scope.turn.playerId);
 		$scope.turn.hasDrawn     = false;
 		$scope.turn.hasDiscarded = false;

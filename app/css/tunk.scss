@@ -20,7 +20,13 @@
 	}
 
 	&.can-draw {
-		.draw-button,
+		.draw-button
+		{
+			display: inline-block;
+		}
+	}
+
+	&.can-go-down {
 		.go-down-button
 		{
 			display: inline-block;

@@ -21,6 +21,15 @@ $active-player-bg: #E1EEF7;
 	}
 }
 
+@mixin blur($radius, $opacity: .4) {
+	-webkit-filter: blur($radius);
+	-moz-filter: blur($radius);
+	-o-filter: blur($radius);
+	-ms-filter: blur($radius);
+	filter: blur($radius);
+	opacity: $opacity;
+}
+
 @mixin card {
 	&.diamonds {
 		color: $diamonds-color;
@@ -128,14 +137,37 @@ $active-player-bg: #E1EEF7;
 	}
 }
 
+@mixin opponent-freeze-button($btn-w, $btn-h) {
+	@include border-box;
+	position: absolute;
+	height: $btn-h;
+	width: $btn-w;
+	text-align: center;
+	margin-top: -($btn-h / 2);
+	margin-left: -($btn-w / 2);
+	top: 50%;
+	left: 50%;
+}
+
 @mixin opponent {
 	padding: 10px 7px 5px;
 	background: $player-bg;
 	margin-bottom: 5px;
 	min-height: 50px;
+	position: relative;
+
+	&.can-freeze {
+		.header, .details {
+			@include blur(1px, .95);
+		}
+	}
 
 	&.has-turn {
 		background: $active-player-bg;
+	}
+
+	.freeze-button {
+		@include opponent-freeze-button(80px, 36px);
 	}
 
 	.header {
@@ -150,6 +182,11 @@ $active-player-bg: #E1EEF7;
 
 		.game-score {
 			float: right;
+		}
+
+		.status {
+			float: left;
+			margin-left: 5px;
 		}
 	}
 

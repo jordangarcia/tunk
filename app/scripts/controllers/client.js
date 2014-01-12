@@ -15,6 +15,14 @@ function($scope, $filter, handTester, gamelog) {
 		return (isPlayersTurn() && $scope.turn.hasDrawn && !$scope.turn.hasDiscarded);
 	}
 
+	$scope.opponents         = _.without($scope.players, $scope.player);
+	$scope.selectedCards     = [];
+
+	$scope.$watchCollection('player.hand', function(hand) {
+		$scope.player.hand          = sortHand($scope.player.hand);
+		$scope.player.handScore     = scoreHand(hand);
+	});
+
 	/**
 	 * Exposed function to use in attribute
 	 *
@@ -23,15 +31,54 @@ function($scope, $filter, handTester, gamelog) {
 	 */
 	$scope.isSet = function(cards) {
 		return handTester.isSet(cards);
-	}
+	};
 
-	$scope.opponents         = _.without($scope.players, $scope.player);
-	$scope.selectedCards     = [];
+	/**
+	 * Check if the current user can freeze an opponent based on their
+	 * selectedCards
+	 *
+	 * @param {Object} opponent
+	 * @return {Boolean}
+	 */
+	$scope.canFreeze = function(opponent) {
+		if (
+			!isPlayersTurn() ||
+			// must draw before freezing
+			!$scope.turn.hasDrawn ||
+			// dont have a card selected
+			$scope.selectedCards.length !== 1 ||
+			// opponent hasn't played any sets
+			opponent.playedSets.length === 0 ||
+			// cannot freeze if already frozen
+			opponent.isFrozen
+		) {
+			return false;
+		}
 
-	$scope.$watchCollection('player.hand', function(hand) {
-		$scope.player.hand          = sortHand($scope.player.hand);
-		$scope.player.handScore     = scoreHand(hand);
-	});
+		var card = $scope.selectedCards[0];
+		
+		return _.some(opponent.playedSets, function(set) {
+			return handTester.isSet(set.concat(card));
+		});
+	};
+
+	/**
+	 * @param {Object} opponent
+	 */
+	$scope.freeze = function(opponent) {
+		if (!$scope.canFreeze(opponent)) return;
+
+		var card = $scope.selectedCards[0];
+		// reset selected cards
+		$scope.selectedCards = [];
+
+		// freeze opponent and add to their set
+		opponent.isFrozen = true;
+		$scope.player.hand.splice($scope.player.hand.indexOf(card), 1);
+		_.find(opponent.playedSets, function(set) {
+			return handTester.isSet(set.concat(card));
+		}).push(card);
+	};
 
 	/**
 	 * Draws card from deck and puts in hand
@@ -120,6 +167,7 @@ function($scope, $filter, handTester, gamelog) {
 
 	$scope.goDown = function() {
 		if (!isPlayersTurn()) return;
+		if (!player.isFrozen) return;
 		if ($scope.turn.hasDrawn) return;
 
 		// reset selected cards
