@@ -31,7 +31,7 @@ function generateCards(cards, suits) {
 }
 
 angular.module('tunk')
-.factory('deck', function() {
+.factory('deckFactory', function() {
 	var self;
 
 	var Deck = function() {
@@ -64,10 +64,8 @@ angular.module('tunk')
 	};
 
 	/**
-	 * Draws n number of cards from deck
 	 * If deck is out of cards draws remaining
 	 *
-	 * @param {Integer} n
 	 * @return {Array}
 	 */
 	Deck.prototype.draw = function() {

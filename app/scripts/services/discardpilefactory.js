@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tunk')
-.factory('discardPile', ['PICKUP_DISCARD_LIMIT',
+.factory('discardPileFactory', ['PICKUP_DISCARD_LIMIT',
 function(PICKUP_DISCARD_LIMIT){
 	var self;
 

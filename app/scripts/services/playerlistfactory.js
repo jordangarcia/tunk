@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tunk')
-.factory('playerList', function() {
+.factory('playerListFactory', function() {
 	var self;
 	var PlayerList = function() {
 		self = this;

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tunk')
-.factory('game', ['deck', 'discardPile', 'playerList', 'gamelog', 'HAND_SIZE',
+.factory('gameFactory', ['deckFactory', 'discardPileFactory', 'playerListFactory', 'gamelog', 'HAND_SIZE',
 function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE) {
 	var self;
 
