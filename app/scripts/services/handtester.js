@@ -133,13 +133,57 @@ angular.module('tunk')
 	}
 
 	/**
+	 * Explicit check if a set of cards is a book
+	 *
+	 * @param {Array} cards
+	 * @return {Boolean}
+	 */
+	function isBook(cards) {
+		if (cards.length < SET_MINIMUM) {
+			return false;
+		}
+
+		var rank = getValue(cards[0]);
+		return _.every(cards, function(card) {
+			return getValue(card) === rank;
+		});
+	}
+
+	/**
+	 * Explicit check if a set of cards is a run
+	 *
+	 * @param {Array} cards
+	 * @return {Boolean}
+	 */
+	function isRun(cards) {
+		if (cards.length < RUN_MINIMUM) {
+			return false;
+		}
+
+		function matchesSuit(suit) {
+			return function(card) {
+				getSuit(card) === suit;
+			}
+		}
+
+		if (!_.every(cards, matchesSuit(getSuit(cards[0])))) {
+			return false;
+		}
+
+		// for all cards to form a run groupSeqs returns a single sequence
+		// true => [['2h', '3h', '4h']]
+		// false => [['2h', '3h', '4h'], ['6h']
+		return (groupSeqs(cards).length === 1);
+	}
+
+	/**
 	 * Checks whether a group of cards is a set
 	 *
 	 * @param {Array} cards
 	 * @return {Boolean}
 	 */
 	function isSet(cards) {
-		return getSets(cards).length > 0;
+		return isBook(cards) || isRun(cards);
 	}
 
 	return {
