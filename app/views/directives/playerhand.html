@@ -1,9 +1,12 @@
 <div class="player-hand">
 	<t-card
-		ng-repeat="card in hand"
+		ng-repeat="card in player.hand"
 		card="{{card}}"
 		ng-click="toggleSelected(card)"
 		ng-class="{ selected: (selectedCards.indexOf(card) !== -1) }"
 	></t-card>
+	<span class="hand-score">
+		{{ player.handScore }}
+	</span>
 
 </div>

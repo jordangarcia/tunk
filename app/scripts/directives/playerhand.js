@@ -4,7 +4,7 @@ angular.module('tunk')
 		restrict: 'E',
 		replace: true,
 		scope: {
-			hand: '=',
+			player: '=',
 			selectedCards: '='
 		},
 		templateUrl: '/views/directives/playerhand.html',

@@ -59,10 +59,8 @@
 					</div>
 				</div>
 
-				<div
-					class="player"
-				>
-					<div class="player-front">
+				<div class="player">
+					<div class="player-board">
 						<div class="played-sets">
 							<div class="set" ng-repeat="set in player.playedSets" played-set="set"></div>
 						</div>
@@ -75,31 +73,14 @@
 					</div>
 					<div class="player-area">
 						<div class="player-info">
-							<h4 class="player-name">{{ player.name }}</h4>
-							<table class="player-details">
-								<tr>
-									<td>
-										Game Score
-									</td>
-									<td>
-										<span class="score">{{ player.score }}</span>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										Hand Score
-									</td>
-									<td>
-										<span class="score">{{ player.handScore }}</span>
-									</td>
-								</tr>
-							</table>
+							<span class="player-name">{{ player.name }}</span>
+							<span class="status" ng-show="player.isFrozen">(FROZEN)</span>
+							<span class="game-score">{{ player.score }}</span>
 						</div>
-						<t-player-hand hand="player.hand" selected-cards="selectedCards"></t-player-hand>
+						<t-player-hand player="player" selected-cards="selectedCards"></t-player-hand>
 					</div>
 				</div>
 			</div>
-			<hr />
 		</section>
 	</div>
 

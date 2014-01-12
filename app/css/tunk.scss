@@ -50,16 +50,7 @@
 	@include player;
 
 	.player-info {
-		@include clear;
-		margin-bottom: 10px;
-
-		.player-name {
-			margin-top: 0;
-			float: left;
-		}
-		.player-details {
-			float: right;
-		}
+		@include player-info;
 	}
 
 	.player-hand {
