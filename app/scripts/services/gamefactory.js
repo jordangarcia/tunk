@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('tunk')
-.factory('gameFactory', ['deckFactory', 'discardPileFactory', 'playerListFactory', 'gamelog', 'HAND_SIZE',
-function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE) {
+.factory('gameFactory', ['deckFactory', 'discardPileFactory', 'playerListFactory', 'gamelog', 'HAND_SIZE', 'MATCH_WIN_SCORE',
+function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE, MATCH_WIN_SCORE) {
 	var Game = function() {
+		this.matchWinScore = MATCH_WIN_SCORE;
 		this.playerList  = playerListFactory.create();
 		this.deck        = deckFactory.create();
 		this.discardPile = discardPileFactory.create();

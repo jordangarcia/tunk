@@ -1,11 +1,15 @@
 angular.module('tunk')
 .factory('gameEnd', ['gamelog', function(gamelog) {
-	function checkMatchEnded(game, winner) {
-		if (matchEnded(game)) {
+	function checkMatchEnded(game, playerToGo) {
+		//var matchEnded = false;
+		//var winner;
 
-		} else {
-			game.newGame(winner);
-		}
+		//if (matchEnded) {
+			//game.endMatch(winner)
+
+		//} else {
+			//game.newGame(playerToGo);
+		//}
 	}
 
 	function tunkOut(game, winner) {
@@ -63,6 +67,7 @@ angular.module('tunk')
 	}
 
 	return {
+		checkMatchEnded: checkMatchEnded,
 		goDown: goDown,
 		tunkOut: tunkOut,
 		outOfCards: outOfCards,
