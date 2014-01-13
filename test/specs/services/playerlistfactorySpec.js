@@ -1,10 +1,13 @@
 describe("services/playerListFactory", function() {
-	var gameFactory;
+	var playerListFactory;
+	var playerFactory;
+
 
 	beforeEach(function() {
 		module('tunk');
 		inject(function($injector) {
 			playerListFactory = $injector.get('playerListFactory');
+			playerFactory = $injector.get('playerFactory');
 		});
 	});
 
@@ -39,6 +42,26 @@ describe("services/playerListFactory", function() {
 				expect(playerList.players.length).toEqual(2);
 			});
 		});
+
+		describe("#getLowestScorers", function() {
+			describe("when one player has the lowest score", function() {
+				it("should return an array containing only that player", function() {
+					var playerList = playerListFactory.create();
+					var players = [];
+					players[0] = playerFactory.create('Jeff');
+					players[1] = playerFactory.create('Jordan');
+					players[2] = playerFactory.create('Parsha');
+
+					players[0].hand = ['2h', 'Ac'];
+					players[1].hand = ['Kh', 'Kd'];
+					players[2].hand = ['8h', '3d'];
+
+					players.forEach(playerList.addPlayer, playerList);
+
+					var results = playerList.getLowestScorers();
+					expect(results).toEqual([players[0]]);
+				});
+			});
+		});
 	});
 });
-

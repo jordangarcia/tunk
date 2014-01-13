@@ -97,18 +97,7 @@ function($filter, gameEnd) {
 	 * @param {Object} player
 	 */
 	function goDown(game, player) {
-		gamelog.write(player.name + ' went down with ' + player.handScore);
-
-		var sorted = _.sortBy(game.playerList.players, function(player) {
-			return player.handScore;
-		});
-		var lowest = sorted[0].handScore;
-
-		var winners = game.playerList.players..filter('')
-
-		var lowestScorers = game.playerList.getLowestScorers();
-
-
+		gameEnd.goDown(game, player);
 	}
 
 	return {

@@ -1,17 +1,21 @@
 angular.module('tunk')
-.factory('playerFactory', ['$watch', function($watch) {
+.factory('playerFactory', ['$filter', function($filter) {
 	var pid = 0;
-	var self;
 
 	var Player = function(name) {
-		self = this;
 		this.id        = pid++;
 		this.name      = name;
 		this.hand      = [];
 		this.score     = 0;
-		this.handScore = 0;
 		this.isFrozen  = false;
 	};
+
+	/**
+	 * @return {Integer}
+	 */
+	Player.prototype.handScore = function() {
+		return $filter('handScore')(this.hand);
+	}
 
 	return {
 		create: function(name) {

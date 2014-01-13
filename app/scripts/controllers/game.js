@@ -39,12 +39,6 @@ angular.module('tunk')
 	}
 
 	$scope.goDown = function(player) {
-		var sorted = _.sortBy($scope.players, function(player) {
-			return player.handScore;
-		});
-
-		gamelog.write(player.name + ' went down with ' + player.handScore);
-
 		if (sorted[0].id === player.id) {
 			// current player won
 			gamelog.write(player.name + ' wins');
