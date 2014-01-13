@@ -1,6 +1,6 @@
 angular.module('tunk')
-.factory('playerActions', ['$filter', 'handTester', 'gameEnd',
-function($filter, handTester, gameEnd) {
+.factory('playerActions', ['$filter', 'gameEnd',
+function($filter, gameEnd) {
 
 	/**
 	 * Draws a card from the game deck and gives to player
@@ -10,6 +10,7 @@ function($filter, handTester, gameEnd) {
 	 * @param {Object} player
 	 */
 	function drawCard(game, player) {
+		player.hand.push(game.deck.draw());
 	}
 
 	/**
@@ -21,6 +22,7 @@ function($filter, handTester, gameEnd) {
 	 * @param {String} card
 	 */
 	function drawDiscard(game, player, card) {
+		player.hand.push(game.discardPile.pickup(card));
 	}
 
 	/**
@@ -90,7 +92,23 @@ function($filter, handTester, gameEnd) {
 		playOnSet(game, player, set, card);
 	}
 
-	function goDown() {
+	/**
+	 * @param {Object} game
+	 * @param {Object} player
+	 */
+	function goDown(game, player) {
+		gamelog.write(player.name + ' went down with ' + player.handScore);
+
+		var sorted = _.sortBy(game.playerList.players, function(player) {
+			return player.handScore;
+		});
+		var lowest = sorted[0].handScore;
+
+		var winners = game.playerList.players..filter('')
+
+		var lowestScorers = game.playerList.getLowestScorers();
+
+
 	}
 
 	return {

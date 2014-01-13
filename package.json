@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "karma-jasmine": "~0.1.5",
-    "karma": "~0.10.9"
+    "karma": "~0.10.9",
+    "phantomjs": "~1.9.2-6"
   }
 }

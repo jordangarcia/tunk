@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tunk')
-.factory('discardPileFactory', ['PICKUP_DISCARD_LIMIT',
+.factory('discardPileFactory', [
 function(PICKUP_DISCARD_LIMIT){
 	var self;
 
@@ -11,31 +11,19 @@ function(PICKUP_DISCARD_LIMIT){
 	};
 
 	/**
-	 * Check if the card can be picked up by the configured
-	 * PICKUP_DISCARD_LIMIT
-	 *
-	 * @param {String} card
-	 * @return {Boolean}
-	 */
-	DiscardPile.prototype.canPickup = function(card) {
-		var ind = self.cards.indexOf(card);
-		var len = self.cards.length;
-		
-		// if PICKUP_DISCARD_LIMIT is 2 then only pickup the last two cards in discardPile
-		return (ind !== -1 && (len - 1 - ind < PICKUP_DISCARD_LIMIT));
-	};
-
-	/**
 	 * Checks that a card can be picked up and removes/returns
 	 *
 	 * @param {String} card
-	 * @return {String|undefined} the card or undefined if cant pick up
+	 * @return {String} the card or undefined if cant pick up
+	 *
+	 * @throws {Error}
 	 */
 	DiscardPile.prototype.pickup = function(card) {
-		if (!self.canPickup(card)) {
-			return;
+		var ind = self.cards.indexOf(card);
+		if (ind === -1) {
+			throw new Error("card %s is not in discardPile", card);
 		}
-		return self.cards.splice(self.cards.indexOf(card), 1)[0];
+		return self.cards.splice(ind, 1)[0];
 	};
 
 	/**
