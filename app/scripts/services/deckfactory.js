@@ -32,10 +32,7 @@ function generateCards(cards, suits) {
 
 angular.module('tunk')
 .factory('deckFactory', function() {
-	var self;
-
 	var Deck = function() {
-		self = this;
 		this.cards = generateCards(CARDS, SUITS);
 	}
 
@@ -43,14 +40,14 @@ angular.module('tunk')
 	 * @return {Integer}
 	 */
 	Deck.prototype.cardsLeft = function() {
-		return self.cards.length;
+		return this.cards.length;
 	};
 
 	/**
 	 * Shuffles deck by reference
 	 */
 	Deck.prototype.shuffle = function() {
-		self.cards = _.shuffle(self.cards);
+		this.cards = _.shuffle(self.cards);
 	};
 
 	/**
@@ -59,7 +56,7 @@ angular.module('tunk')
 	 * @return {Array}
 	 */
 	Deck.prototype.draw = function() {
-		return self.cards.shift();
+		return this.cards.shift();
 	};
 
 	return {

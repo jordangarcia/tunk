@@ -3,11 +3,7 @@
 angular.module('tunk')
 .factory('gameFactory', ['deckFactory', 'discardPileFactory', 'playerListFactory', 'gamelog', 'HAND_SIZE',
 function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE) {
-	var self;
-
 	var Game = function() {
-		self = this;
-
 		this.playerList  = playerListFactory.create();
 		this.deck        = deckFactory.create();
 		this.discardPile = discardPileFactory.create();
@@ -19,18 +15,18 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	 * @param {Integer} playerToGo
 	 */
 	Game.prototype.newGame = function(playerToGo) {
-		self.log.write('Starting a new game');
+		this.log.write('Starting a new game');
 
-		self.turn = {
+		this.turn = {
 			playerId: playerToGo,
 			hasDrawn: false,
 			hasDiscarded: false,
 		};
 
-		self.playerList.resetPlayers();
-		self.discardPile.reset();
-		self.deck.shuffle();
-		self.deal(HAND_SIZE);
+		this.playerList.resetPlayers();
+		this.discardPile.reset();
+		this.deck.shuffle();
+		this.deal(HAND_SIZE);
 	};
 
 	/**
@@ -38,9 +34,9 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	 */
 	Game.prototype.advanceTurn = function() {
 		// unfreeze player who just finished turn
-		self.playerList.find(self.turn.playerId).frozen = false;
-		self.turn = {
-			playerId: self.playerList.getNextPlayer(self.turn.playerId),
+		this.playerList.find(self.turn.playerId).frozen = false;
+		this.turn = {
+			playerId: this.playerList.getNextPlayer(self.turn.playerId),
 			hasDrawn: false,
 			hasDiscarded: false,
 		};
@@ -51,10 +47,10 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	 */
 	Game.prototype.deal = function(numCards) {
 		_.times(HAND_SIZE, function() {
-			self.playerList.players.forEach(function(player) {
-				player.hand.push(self.deck.draw());
-			});
-		});
+			this.playerList.players.forEach(function(player) {
+				player.hand.push(this.deck.draw());
+			}, this);
+		}, this);
 	};
 
 	return {

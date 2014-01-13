@@ -3,10 +3,7 @@
 angular.module('tunk')
 .factory('discardPileFactory', [
 function(PICKUP_DISCARD_LIMIT){
-	var self;
-
 	var DiscardPile = function() {
-		self = this;
 		this.cards = [];
 	};
 
@@ -19,11 +16,11 @@ function(PICKUP_DISCARD_LIMIT){
 	 * @throws {Error}
 	 */
 	DiscardPile.prototype.pickup = function(card) {
-		var ind = self.cards.indexOf(card);
+		var ind = this.cards.indexOf(card);
 		if (ind === -1) {
 			throw new Error("card %s is not in discardPile", card);
 		}
-		return self.cards.splice(ind, 1)[0];
+		return this.cards.splice(ind, 1)[0];
 	};
 
 	/**
@@ -32,14 +29,14 @@ function(PICKUP_DISCARD_LIMIT){
 	 * @param {String} card
 	 */
 	DiscardPile.prototype.push = function(card) {
-		self.cards.push(card);
+		this.cards.push(card);
 	};
 
 	/**
 	 * Resets cards in pile
 	 */
 	DiscardPile.prototype.reset = function() {
-		self.cards = [];
+		this.cards = [];
 	};
 
 	return {
