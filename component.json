@@ -7,7 +7,7 @@
     "underscore": "~1.5.2"
   },
   "devDependencies": {
-    "angular-mocks": "~1.2.9-build.2122"
+    "angular-mocks": "~1.2.7"
   },
   "main": "app/index.html",
   "ignore": [
