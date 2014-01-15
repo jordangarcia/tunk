@@ -1,35 +1,19 @@
 angular.module('tunk')
-.factory('gameEnd', ['gamelog', function(gamelog) {
-	function checkMatchEnded(game, playerToGo) {
-		//var matchEnded = false;
-		//var winner;
-
-		//if (matchEnded) {
-			//game.endMatch(winner)
-
-		//} else {
-			//game.newGame(playerToGo);
-		//}
-	}
-
+.factory('gameEnd', [function() {
 	function tunkOut(game, winner) {
 		game.log.write(winner.name + ' TUNKED OUT!');
 		game.log.write(winner.name + ' wins 2 points');
 		winner.score += 2;
-
-		checkMatchEnded(game, winner);
 	}
 
 	function outOfCards(game, winner) {
 		game.log.write(winner.name + ' has no cards remaining');
 		game.log.write(winner.name + ' wins 1 point');
 		winner.score += 1;
-
-		checkMatchEnded(game, winner);
 	}
 
 	function goDown(game, player) {
-		gamelog.write(player.name + ' went down with ' + player.handScore);
+		game.log.write(player.name + ' went down with ' + player.handScore());
 
 		var lowestScorers = game.playerList.getLowestScorers();
 		var winner;
@@ -62,12 +46,9 @@ angular.module('tunk')
 			// choose a winner randomly to go first next game
 			winner = _.shuffle(lowestScorers)[0];
 		}
-
-		checkMatchEnded(game, winner);
 	}
 
 	return {
-		checkMatchEnded: checkMatchEnded,
 		goDown: goDown,
 		tunkOut: tunkOut,
 		outOfCards: outOfCards,
