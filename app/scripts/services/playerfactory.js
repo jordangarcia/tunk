@@ -3,11 +3,12 @@ angular.module('tunk')
 	var pid = 0;
 
 	var Player = function(name) {
-		this.id        = pid++;
-		this.name      = name;
-		this.hand      = [];
-		this.score     = 0;
-		this.isFrozen  = false;
+		this.id         = pid++;
+		this.name       = name;
+		this.hand       = [];
+		this.playedSets = [];
+		this.score      = 0;
+		this.isFrozen   = false;
 	};
 
 	/**
