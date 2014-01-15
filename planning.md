@@ -1,22 +1,7 @@
-tunk
-====
+==================================
+==========   Entities   ==========
+==================================
 
-TUNK!
-
-Build and watch for development
-```js
-npm run build-dev
-```
-
-Start development server
-```js
-npm start
-// or 
-npm run start-dev
-```
-
-** Entities **
-```javascript
 Client {
 	id:
 	name:
@@ -55,4 +40,3 @@ Player {
 	score: 0 // for tournament player
 	isFrozen: (bool)
 }
-```
