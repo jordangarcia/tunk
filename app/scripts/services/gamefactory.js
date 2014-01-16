@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('tunk')
-.factory('gameFactory', ['deckFactory', 'discardPileFactory', 'playerListFactory', 'gamelog', 'HAND_SIZE',
-function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE) {
+.factory('gameFactory', ['deckFactory', 'discardPileFactory', 'playerListFactory', 'gamelog',
+function(deckFactory, discardPileFactory, playerListFactory, gamelog) {
 	var Game = function() {
-		this.playerList  = playerListFactory.create();
+		this.players     = playerListFactory.create();
 		this.deck        = deckFactory.create();
 		this.discardPile = discardPileFactory.create();
 		this.log         = gamelog;
@@ -12,45 +12,26 @@ function(deckFactory, discardPileFactory, playerListFactory, gamelog, HAND_SIZE)
 	};
 
 	/**
-	 * @param {Integer} playerToGo
+	 * @param {Player} player to go first
 	 */
-	Game.prototype.newGame = function(playerToGo) {
-		this.log.write('Starting a new game');
-
-		this.turn = {
-			playerId: playerToGo,
-			hasDrawn: false,
-			hasDiscarded: false,
-		};
-
-		this.playerList.resetPlayers();
+	Game.prototype.reset = function(player) {
+		this.players.forEach(function(player) {
+			player.resetGameState();
+		});
+		this.advanceTurn(player);
 		this.discardPile.reset();
 		this.deck.shuffle();
-		this.deal(HAND_SIZE);
 	};
 
 	/**
 	 * Advances the state of the game to the next player
 	 */
-	Game.prototype.advanceTurn = function() {
-		// unfreeze player who just finished turn
-		this.playerList.find(self.turn.playerId).frozen = false;
+	Game.prototype.advanceTurn = function(nextPlayer) {
 		this.turn = {
-			playerId: this.playerList.getNextPlayer(self.turn.playerId),
+			currentPlayer: nextPlayer,
 			hasDrawn: false,
-			hasDiscarded: false,
+			hasDiscarded: false
 		};
-	};
-
-	/**
-	 * Gives each player some number of cards
-	 */
-	Game.prototype.deal = function(numCards) {
-		_.times(HAND_SIZE, function() {
-			this.playerList.players.forEach(function(player) {
-				player.hand.push(this.deck.draw());
-			}, this);
-		}, this);
 	};
 
 	return {

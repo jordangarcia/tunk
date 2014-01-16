@@ -15,6 +15,15 @@ angular.module('tunk')
 		return $filter('handScore')(this.hand);
 	}
 
+	/**
+	 * Resets all game state related properties
+	 */
+	Player.prototype.resetGameState = function() {
+		this.hand = [];
+		this.playedSets = [];
+		this.isFrozen = false;
+	}
+
 	return {
 		create: function(name) {
 			return new Player(name);

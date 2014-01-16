@@ -13,41 +13,46 @@ describe("service/playerActions", function() {
 		});
 	});
 
-	afterEach(function() {
-		this.gameMock = {};
+	beforeEach(function() {
+		this.gameMock = {
+			turn: {
+				hasDrawn: false,
+				hasDiscarded: true,
+			},
+			deck: jasmine.createSpyObj('deck', ['draw']),
+			discardPile: jasmine.createSpyObj('discardPile', ['pickup', 'push']),
+		};
 	});
 
 	describe("#drawCard", function() {
-		beforeEach(function () {
-			this.gameMock = {
-				deck: {
-					draw: jasmine.createSpy('draw')
-				}
-			};
-		});
-
 		it("should draw a card from the deck and add to player hand", function() {
 			var player = {
 				hand: ['2h', '4c', '6h']
 			};
 			var card = 'Ac';
-
+			console.log(this.gameMock)
 			this.gameMock.deck.draw.andReturn(card);
+
 			playerActions.drawCard(this.gameMock, player);
 
 			expect(this.gameMock.deck.draw).toHaveBeenCalled();
 			expect(player.hand).toEqual(['2h', '4c', '6h', card]);
 		});
+
+		it("should mark game.turn.hasDrawn = true", function() {
+			var player = {
+				hand: ['2h', '4c', '6h']
+			};
+			var card = 'Ac';
+			this.gameMock.deck.draw.andReturn(card);
+
+			playerActions.drawCard(this.gameMock, player);
+
+			expect(this.gameMock.turn.hasDrawn).toBe(true);
+		});
 	});
 
 	describe("#drawDiscard", function() {
-		beforeEach(function () {
-			this.gameMock = {
-				discardPile: {
-					pickup: jasmine.createSpy('pickup')
-				}
-			};
-		});
 		it("take a card from the discardPile and add it to players hand", function() {
 			var player = {
 				hand: ['2h', '4c', '6h']
@@ -60,12 +65,20 @@ describe("service/playerActions", function() {
 			expect(this.gameMock.discardPile.pickup).toHaveBeenCalled();
 			expect(player.hand).toEqual(['2h', '4c', '6h', card]);
 		});
+		it("should mark game.turn.hasDrawn = true", function() {
+			var player = {
+				hand: ['2h', '4c', '6h']
+			};
+			var card = 'Ac';
+
+			this.gameMock.discardPile.pickup.andReturn(card);
+			playerActions.drawDiscard(this.gameMock, player);
+
+			expect(this.gameMock.turn.hasDrawn).toBe(true);
+		});
 	});
 
 	describe("#playSet", function() {
-		beforeEach(function() {
-			this.gameMock = {};
-		});
 		describe("when the player still has cards after playing a set", function() {
 			it("should remove the set from the hand and add to played sets", function() {
 				var set = ['2c', '2h', '2d'];
@@ -136,13 +149,6 @@ describe("service/playerActions", function() {
 	});
 
 	describe("#discard", function() {
-		beforeEach(function () {
-			this.gameMock = {
-				discardPile: {
-					push: jasmine.createSpy('discardPilePush')
-				}
-			};
-		});
 		it("should remove the card from the players hand and push to discardPile", function() {
 			var card = '2c';
 			var player = {
@@ -153,6 +159,17 @@ describe("service/playerActions", function() {
 
 			expect(player.hand).toEqual(['3c']);
 			expect(this.gameMock.discardPile.push).toHaveBeenCalledWith(card);
+		});
+
+		it("should set game.turn.hasDiscarded = true", function() {
+			var card = '2c';
+			var player = {
+				hand: [card, '3c']
+			};
+
+			playerActions.discard(this.gameMock, player, card);
+
+			expect(this.gameMock.turn.hasDiscarded).toBe(true);
 		});
 
 		describe("when the player has no cards remaining", function() {

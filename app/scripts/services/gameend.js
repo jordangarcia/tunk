@@ -15,7 +15,7 @@ angular.module('tunk')
 	function goDown(game, player) {
 		game.log.write(player.user.name + ' went down with ' + player.handScore());
 
-		var lowestScorers = game.playerList.getLowestScorers();
+		var lowestScorers = game.players.getLowestScorers();
 		var winner;
 
 		if (!_.contains(lowestScorers, player)) {

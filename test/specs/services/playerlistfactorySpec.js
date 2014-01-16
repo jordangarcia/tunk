@@ -26,19 +26,13 @@ describe("services/playerListFactory", function() {
 				playerList.addPlayer(parsha);
 				expect(playerList.players.length).toEqual(3);
 
-				// Find
-				expect(playerList.find(jeff.id)).toEqual(jeff);
-
 				// Cycle through player order
-				expect(playerList.getNextPlayer(jeff.id)).toBe(jordan.id);
-				expect(playerList.getNextPlayer(jordan.id)).toBe(parsha.id);
-				expect(playerList.getNextPlayer(parsha.id)).toBe(jeff.id);
+				expect(playerList.getNextPlayer(jeff)).toBe(jordan);
+				expect(playerList.getNextPlayer(jordan)).toBe(parsha);
+				expect(playerList.getNextPlayer(parsha)).toBe(jeff);
 
 				// Remove players
 				playerList.removePlayer(jordan);
-				expect(playerList.players.length).toEqual(2);
-
-				playerList.removePlayer({id: 3, name: "bob"});
 				expect(playerList.players.length).toEqual(2);
 			});
 		});

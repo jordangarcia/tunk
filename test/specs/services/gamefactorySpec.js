@@ -9,13 +9,17 @@ describe("services/gameFactory", function() {
 	});
 
 
-	describe("#newGame", function() {
+	describe("#reset", function() {
+		beforeEach(function() {
+			this.player = {
+				foo: 'bar'
+			};
+			this.game = gameFactory.create();
+			this.game.reset(this.player);
+		});
 		it("should properly initialize the turn state", function() {
-			var game = gameFactory.create();
-			game.newGame(1);
-
-			expect(game.turn).toEqual({
-				playerId: 1,
+			expect(this.game.turn).toEqual({
+				currentPlayer: this.player,
 				hasDrawn: false,
 				hasDiscarded: false,
 			});

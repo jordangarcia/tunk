@@ -19,47 +19,37 @@ angular.module('tunk')
 	 * @param {Object} player
 	 */
 	PlayerList.prototype.removePlayer = function(player) {
-		var playerIndex = this.players.indexOf(player);
-		if (playerIndex !== -1) this.players.splice(playerIndex, 1);
-	};
-
-	/**
-	 * Resets every players state
-	 */
-	PlayerList.prototype.resetPlayers = function() {
-		this.players.forEach(function(player) {
-			player.playedSets = [];
-			player.hand       = [];
-			player.isFrozen   = false;
-		});
-	};
-
-	/**
-	 * Finds a player by id
-	 * @param {Integer} id
-	 */
-	PlayerList.prototype.find = function(id) {
-		var playerIndex = this.players.indexOf(_.findWhere(this.players, { id: id }));
-
-		if (playerIndex === -1) {
-			throw new Error("Player not found.");
+		var ind = this.players.indexOf(player);
+		if (ind === -1) {
+			throw new Error("Could not remove player: player not found");
 		}
 
-		return this.players[playerIndex];
+		this.players.splice(ind, 1);
+	};
+
+	/**
+	 * Shortcut method to this.players.forEach
+	 *
+	 * @param {Function} fn
+	 * @param {Object} context
+	 */
+	PlayerList.prototype.forEach = function(fn, context) {
+		this.players.forEach(fn, context);
 	};
 
 	/**
 	 * Finds the next player id in turn order
-	 * @param {Integer} id
+	 *
+	 * @param {Player} player
+	 * @return {Player}
 	 */
-	PlayerList.prototype.getNextPlayer = function(id) {
-		var playerIndex = this.players.indexOf(_.findWhere(this.players, { id: id }));
-
-		if (playerIndex === -1) {
+	PlayerList.prototype.getNextPlayer = function(player) {
+		var ind = this.players.indexOf(player);
+		if (ind === -1) {
 			throw new Error("Player not found.");
 		}
 
-		return this.players[(playerIndex + 1) % this.players.length].id;
+		return this.players[(ind + 1) % this.players.length];
 	};
 
 	/**

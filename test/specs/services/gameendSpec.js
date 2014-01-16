@@ -46,7 +46,7 @@ describe("service/gameEnd", function() {
 	describe("#goDown", function() {
 		beforeEach(function() {
 			this.getLowestScorersSpy = jasmine.createSpy('getLowestScorers');
-			this.gameMock.playerList = {
+			this.gameMock.players = {
 				getLowestScorers: this.getLowestScorersSpy
 			};
 		});

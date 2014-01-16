@@ -11,6 +11,8 @@ function($filter, gameEnd) {
 	 */
 	function drawCard(game, player) {
 		player.hand.push(game.deck.draw());
+		game.turn.hasDrawn = true;
+		// todo broadcast event
 	}
 
 	/**
@@ -23,6 +25,8 @@ function($filter, gameEnd) {
 	 */
 	function drawDiscard(game, player, card) {
 		player.hand.push(game.discardPile.pickup(card));
+		game.turn.hasDrawn = true;
+		// todo broadcast event
 	}
 
 	/**
@@ -42,6 +46,7 @@ function($filter, gameEnd) {
 		if (player.hand.length === 0) {
 			gameEnd.tunkOut(game, player);
 		}
+		// todo broadcast event
 	}
 
 	/**
@@ -59,6 +64,7 @@ function($filter, gameEnd) {
 		if (player.hand.length === 0) {
 			gameEnd.outOfCards(game, player);
 		}
+		// todo broadcast event
 	}
 
 	/**
@@ -73,9 +79,12 @@ function($filter, gameEnd) {
 		player.hand.splice(player.hand.indexOf(card), 1);
 		game.discardPile.push(card);
 
+		game.turn.hasDiscarded = true;
+
 		if (player.hand.length === 0) {
 			gameEnd.outOfCards(game, player);
 		}
+		// todo broadcard event
 	}
 
 	/**
@@ -98,6 +107,7 @@ function($filter, gameEnd) {
 	 */
 	function goDown(game, player) {
 		gameEnd.goDown(game, player);
+		// todo broadcast event
 	}
 
 	return {
