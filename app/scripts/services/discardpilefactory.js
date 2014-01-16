@@ -39,6 +39,23 @@ function(PICKUP_DISCARD_LIMIT){
 		this.cards = [];
 	};
 
+	/**
+	 * Gets the offset of a card from end of pile
+	 *
+	 * @param {String} card
+	 *
+	 * @return {Boolean}
+	 */
+	DiscardPile.getOffsetFromEnd = function(card) {
+		var ind = this.pile.indexOf(card);
+		var len = game.discardPile.length;
+		if (ind === -1) {
+			throw new Error("Card %s is not in discardPile", card);
+		}
+
+		return len - (ind + 1);
+	};
+
 	return {
 		create: function() {
 			return new DiscardPile();

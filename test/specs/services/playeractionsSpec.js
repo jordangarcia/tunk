@@ -30,7 +30,6 @@ describe("service/playerActions", function() {
 				hand: ['2h', '4c', '6h']
 			};
 			var card = 'Ac';
-			console.log(this.gameMock)
 			this.gameMock.deck.draw.andReturn(card);
 
 			playerActions.drawCard(this.gameMock, player);
