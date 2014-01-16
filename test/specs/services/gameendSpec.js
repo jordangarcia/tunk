@@ -15,7 +15,9 @@ describe("service/gameEnd", function() {
 
 	function createPlayer(name, score, handScore) {
 		return {
-			name: name,
+			user: {
+				name: name
+			},
 			score: score,
 			handScore: jasmine.createSpy('handScore').andReturn(handScore)
 		};

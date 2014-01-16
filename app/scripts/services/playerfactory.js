@@ -1,10 +1,7 @@
 angular.module('tunk')
 .factory('playerFactory', ['$filter', function($filter) {
-	var pid = 0;
-
-	var Player = function(name) {
-		this.id         = pid++;
-		this.name       = name;
+	var Player = function(user) {
+		this.user       = user;
 		this.hand       = [];
 		this.playedSets = [];
 		this.score      = 0;

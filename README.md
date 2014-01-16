@@ -17,7 +17,7 @@ npm run start-dev
 
 ** Entities **
 ```javascript
-Client {
+User {
 	id:
 	name:
 	chips:
@@ -29,7 +29,8 @@ Client {
 }
 
 Room {
-	clients:
+	id:
+	clients: []
 	game: Game
 	status: (started|running|completed)
 	type: (stake|tournament)
