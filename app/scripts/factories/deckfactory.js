@@ -47,7 +47,7 @@ angular.module('tunk')
 	 * Shuffles deck by reference
 	 */
 	Deck.prototype.shuffle = function() {
-		this.cards = _.shuffle(self.cards);
+		this.cards = _.shuffle(this.cards);
 	};
 
 	/**

@@ -34,9 +34,9 @@ describe("#service/actionValidator", function() {
 		});
 	});
 
-	describe("#canPickupDiscard", function() {
+	describe("#canDrawDiscard", function() {
 		it("should return false when its not the players turn", function() {
-			var result = actionValidator.canPickupDiscard(gameMock, playerMock)
+			var result = actionValidator.canDrawDiscard(gameMock, playerMock)
 			expect(result).toBe(false);
 		});
 
@@ -44,7 +44,7 @@ describe("#service/actionValidator", function() {
 			gameMock.turn.currentPlayer = playerMock;
 			gameMock.discardPile.getOffsetFromEnd.andReturn(PICKUP_DISCARD_LIMIT);
 
-			var result = actionValidator.canPickupDiscard(gameMock, playerMock);
+			var result = actionValidator.canDrawDiscard(gameMock, playerMock);
 
 			expect(result).toBe(false);
 		});
@@ -53,7 +53,7 @@ describe("#service/actionValidator", function() {
 			gameMock.turn.currentPlayer = playerMock;
 			gameMock.discardPile.getOffsetFromEnd.andReturn(PICKUP_DISCARD_LIMIT-1);
 
-			var result = actionValidator.canPickupDiscard(gameMock, playerMock);
+			var result = actionValidator.canDrawDiscard(gameMock, playerMock);
 
 			expect(result).toBe(true);
 		});

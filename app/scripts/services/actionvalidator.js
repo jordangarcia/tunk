@@ -18,7 +18,7 @@ function(PICKUP_DISCARD_LIMIT, handTester) {
 	 * @param {String} card
 	 * @return {Boolean}
 	 */
-	function canPickupDiscard(game, player, card) {
+	function canDrawDiscard(game, player, card) {
 		var offset = game.discardPile.getOffsetFromEnd(card);
 
 		return (
@@ -83,7 +83,7 @@ function(PICKUP_DISCARD_LIMIT, handTester) {
 	}
 
 	return {
-		canPickupDiscard: canPickupDiscard,
+		canDrawDiscard: canDrawDiscard,
 		canDrawCard: canDrawCard,
 		canGoDown: canGoDown,
 		canPlaySet: canPlaySet,
