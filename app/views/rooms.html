@@ -6,6 +6,6 @@
 </form>
 <ul>
 	<li ng-repeat="room in rooms">
-		{{ room.id }} - {{ room.name }}
+		<a href="javascript:void(0)" ng-click="joinRoom(room.id)"> {{ room.name }} </a>
 	</li>
 </ul>

@@ -12,15 +12,19 @@ angular.module('tunk', ['ngRoute'])
 		})
 		.when('/rooms', {
 			templateUrl: 'views/rooms.html',
-			controller: 'RoomsCtrl'
+			controller: 'RoomListCtrl'
 		})
-		.when('/game/:slug', {
+		.when('/game/:roomId', {
 			templateUrl: 'views/game.html',
-			controller: 'GameCtrl'
+			controller: 'RoomCtrl'
 		})
 		.otherwise({
 			redirectTo: '/login'
 		})
 		;
 }])
+
+.run([function() {
+
+}]);
 ;

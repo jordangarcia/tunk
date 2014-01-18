@@ -1,23 +1,22 @@
 'use strict';
 
 /**
- * lists all rooms
- * players can join rooms
- * players can change their name
+ * controller for a single room
  */
 angular.module('tunk')
-.controller('RoomsCtrl',
-['$scope', 'hostService', 'userService', 'roomService', '$location',
-function($scope, hostService, userService, roomService, $location) {
-	if (!userService.isUserLoggedIn()) {
-		$location.url('/login');
-	}
+.controller('RoomCtrl',
+['$scope', '$routeParams', 'hostService', 'roomService', 'playerFactory',
+function($scope, $routeParams, hostService, roomService, playerFactory) {
+	// Bootstrap for dev
+	roomService.createRoom('test');
+	$scope.players = [
+		playerFactory.create('jordan'),
+		playerFactory.create('logan'),
+		playerFactory.create('scott'),
+	];
 
-	$scope.rooms = hostService.rooms;
-	$scope.userService = userService;
+	$scope.room = hostService.getRoom($routeParams.roomId);
 
-	$scope.createRoom = function(name) {
-		roomService.createRoom(name);
-		$scope.name = '';
-	};
+	//more bootstrap
+	roomService.startGame($scope.room, $scope.players);
 }]);

@@ -26,5 +26,15 @@ angular.module('tunk')
 		return _.findWhere(exports.users, {name: name});
 	};
 
+	/**
+	 * Gets room by id
+	 *
+	 * @param {Integer} id
+	 * @return {Room|undefined}
+	 */
+	exports.getRoom = function(id) {
+		return _.findWhere(exports.rooms, {id: parseInt(id, 10) });
+	}
+
 	return exports;
 }]);

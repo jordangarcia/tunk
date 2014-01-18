@@ -5,7 +5,7 @@ angular.module('tunk')
 	var DEFAULT_STAKE = 1;
 
 	var Room = function() {
-		this.id = rid++;
+		this.id = ++rid;
 
 		this.name;
 		/**

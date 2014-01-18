@@ -7,7 +7,7 @@ var BOOKS_ALLOWED = true;
 var RUNS_ALLOWED = true;
 
 angular.module('tunk')
-.factory('handTester', ['$filter', 'deck', function($filter, deck) {
+.factory('handTester', ['$filter', function($filter) {
 	var sortHand = $filter('sortHand');
 	var getValue = $filter('cardValue');
 	var getSuit = $filter('suit');

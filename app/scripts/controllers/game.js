@@ -2,7 +2,6 @@
 
 angular.module('tunk')
 .controller('GameCtrl',
-['$scope', 'actionValidator', 'playerActions',
-function($scope, gameFactory) {
-
+['$scope', '$routeParams', 'actionValidator', 'playerActions',
+function($scope, $routeParams, actionValidator, gameFactory) {
 }]);
