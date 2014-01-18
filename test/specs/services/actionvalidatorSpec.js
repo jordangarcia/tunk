@@ -34,6 +34,32 @@ describe("#service/actionValidator", function() {
 		});
 	});
 
+	describe("#canDiscard", function() {
+		it("should return false when its not the players turn", function() {
+			var result = actionValidator.canDiscard(gameMock, playerMock)
+			gameMock.turn.hasDrawn = true;
+			gameMock.turn.hasDiscarded = false;
+
+			expect(result).toBe(false);
+		});
+		it("should return false when the player has not drawn", function() {
+			gameMock.turn.currentPlayer = playerMock;
+			gameMock.turn.hasDrawn = false;
+			gameMock.turn.hasDiscarded = false;
+
+			var result = actionValidator.canDiscard(gameMock, playerMock)
+			expect(result).toBe(false);
+		});
+		it("should return true when its the players turn and theyve drawn", function() {
+			gameMock.turn.currentPlayer = playerMock;
+			gameMock.turn.hasDrawn = true;
+			gameMock.turn.hasDiscarded = false;
+
+			var result = actionValidator.canDiscard(gameMock, playerMock)
+			expect(result).toBe(true);
+		});
+	});
+
 	describe("#canDrawDiscard", function() {
 		it("should return false when its not the players turn", function() {
 			var result = actionValidator.canDrawDiscard(gameMock, playerMock)
