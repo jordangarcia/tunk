@@ -15,9 +15,9 @@ function($scope, actionValidator, playerActions) {
 	/**
 	 * @param {String} card
 	 */
-	$scope.drawDiscard = function(game, player, card) {
-		if (actionValidator.canDrawDiscard(game, player, card)) {
-			playerActions.drawDiscard(game, player, card);
+	$scope.drawDiscard = function(card) {
+		if (actionValidator.canDrawDiscard($scope.game, $scope.player, card)) {
+			playerActions.drawDiscard($scope.game, $scope.player, card);
 		}
 	};
 

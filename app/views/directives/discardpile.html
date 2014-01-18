@@ -2,7 +2,7 @@
 	ng-repeat="card in discardPile.cards"
 	ng-click="onCardClick(card)"
 	ng-class="{
-		tucked: !discardPile.canPickup(card)
+		tucked: discardPile.getOffsetFromEnd(card) >= pickupOffset
 	}"
 >
 	{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>

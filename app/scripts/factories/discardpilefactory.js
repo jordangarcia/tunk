@@ -46,9 +46,9 @@ function(PICKUP_DISCARD_LIMIT){
 	 *
 	 * @return {Boolean}
 	 */
-	DiscardPile.getOffsetFromEnd = function(card) {
-		var ind = this.pile.indexOf(card);
-		var len = game.discardPile.length;
+	DiscardPile.prototype.getOffsetFromEnd = function(card) {
+		var ind = this.cards.indexOf(card);
+		var len = this.cards.length;
 		if (ind === -1) {
 			throw new Error("Card %s is not in discardPile", card);
 		}

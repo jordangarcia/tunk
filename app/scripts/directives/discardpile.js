@@ -7,5 +7,8 @@ angular.module('tunk')
 			onCardClick: '=',
 		},
 		templateUrl: '/views/directives/discardPile.html',
+		link: function($scope) {
+			$scope.pickupOffset = limit;
+		}
 	};
 }]);
