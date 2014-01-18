@@ -14,102 +14,45 @@
 	<link rel="stylesheet" type="text/sass" href="/css/tunk.scss"></link>
 </head>
 <body ng-app="tunk" ng-controller="MainCtrl">
-	<div class="container">
-		<section ng-controller="GameCtrl">
-			<div gamelog="gamelog.log" style="float: left;"></div>
-
-			<div
-				class="game"
-				ng-repeat="player in players"
-				ng-controller="ClientCtrl"
-				ng-class="{
-					'has-turn':     (player.id === turn.playerId),
-					'can-draw':     (player.id === turn.playerId && !turn.hasDrawn),
-					'can-go-down':  (player.id === turn.playerId && !turn.hasDrawn && !player.isFrozen),
-					'can-discard':  (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded && selectedCards.length === 1),
-					'can-play-set': (player.id === turn.playerId && turn.hasDrawn && !turn.hasDiscarded && selectedCards.length >=3 && isSet(selectedCards)),
-					'is-frozen':    (player.isFrozen)
-				}"
-			>
-
-				<div
-					class="discard-pile cards"
-					discard-pile="discardPile"
-					on-card-click="drawDiscard"
-				>
-				</div>
-
-				<div class="opponents">
-					<div
-						ng-repeat="opponent in opponents"
-						opponent="opponent"
-						class="opponent"
-						ng-class="{
-							'has-turn': (opponent.id === turn.playerId),
-							'can-freeze': canFreeze(opponent)
-						}"
-					>
-						<div class="freeze-overlay">
-							<button
-								class="freeze-button btn btn-primary"
-								ng-click="freeze(opponent)"
-								ng-show="canFreeze(opponent)"
-							>Freeze</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="player">
-					<div class="player-board">
-						<div class="played-sets">
-							<div class="set" ng-repeat="set in player.playedSets" played-set="set"></div>
-						</div>
-						<div class="player-actions">
-							<button type="button" class="go-down-button btn btn-primary" ng-click="goDown()">Go Down</button>
-							<button type="button" class="draw-button btn btn-primary" ng-click="drawCard()">Draw</button>
-							<button type="button" class="discard-button btn btn-primary" ng-click="discard(selectedCards[0])">Discard</button>
-							<button type="button" class="play-set-button btn btn-primary" ng-click="playSet(selectedCards)" >Play Set</button>
-						</div>
-					</div>
-					<div class="player-area">
-						<div class="player-info">
-							<span class="player-name">{{ player.name }}</span>
-							<span class="status" ng-show="player.isFrozen">(FROZEN)</span>
-							<span class="game-score">{{ player.score }}</span>
-						</div>
-						<t-player-hand player="player" selected-cards="selectedCards"></t-player-hand>
-					</div>
-				</div>
-			</div>
-		</section>
+	<div class="container" ng-view>
 	</div>
 
 	<script type="text/javascript" src="/bower_components/underscore/underscore.js" data-env="dev"></script>
 	<script type="text/javascript" src="/bower_components/angular/angular.js" data-env="dev"></script>
 	<script type="text/javascript" src="/bower_components/angular-sanitize/angular-sanitize.js" data-env="dev"></script>
+	<script type="text/javascript" src="/bower_components/angular-route/angular-route.js" data-env="dev"></script>
 	<script type="text/javascript" src="/scripts/app.js"></script>
-	<script type="text/javascript" src="/scripts/services/events.js"></script>
-	<script type="text/javascript" src="/scripts/services/userfactory.js"></script>
-	<script type="text/javascript" src="/scripts/services/roomfactory.js"></script>
-	<script type="text/javascript" src="/scripts/services/deckfactory.js"></script>
-	<script type="text/javascript" src="/scripts/services/gamefactory.js"></script>
-	<script type="text/javascript" src="/scripts/services/playerfactory.js"></script>
-	<script type="text/javascript" src="/scripts/services/gameend.js"></script>
-	<script type="text/javascript" src="/scripts/services/playeractions.js"></script>
+
 	<script type="text/javascript" src="/scripts/services/actionvalidator.js"></script>
-	<script type="text/javascript" src="/scripts/services/playerlistfactory.js"></script>
+	<script type="text/javascript" src="/scripts/services/deckfactory.js"></script>
 	<script type="text/javascript" src="/scripts/services/discardpilefactory.js"></script>
+	<script type="text/javascript" src="/scripts/services/events.js"></script>
+	<script type="text/javascript" src="/scripts/services/gameactions.js"></script>
+	<script type="text/javascript" src="/scripts/services/gameend.js"></script>
+	<script type="text/javascript" src="/scripts/services/gamefactory.js"></script>
 	<script type="text/javascript" src="/scripts/services/gamelog.js"></script>
 	<script type="text/javascript" src="/scripts/services/handtester.js"></script>
+	<script type="text/javascript" src="/scripts/services/host.js"></script>
+	<script type="text/javascript" src="/scripts/services/playeractions.js"></script>
+	<script type="text/javascript" src="/scripts/services/playerfactory.js"></script>
+	<script type="text/javascript" src="/scripts/services/playerlistfactory.js"></script>
+	<script type="text/javascript" src="/scripts/services/roomfactory.js"></script>
+	<script type="text/javascript" src="/scripts/services/userfactory.js"></script>
+	<script type="text/javascript" src="/scripts/services/user.js"></script>
+
+	<script type="text/javascript" src="/scripts/controllers/login.js"></script>
+	<script type="text/javascript" src="/scripts/controllers/room.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/main.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/game.js"></script>
 	<script type="text/javascript" src="/scripts/controllers/client.js"></script>
+
 	<script type="text/javascript" src="/scripts/filters/cardvalue.js"></script>
 	<script type="text/javascript" src="/scripts/filters/suit.js"></script>
 	<script type="text/javascript" src="/scripts/filters/suitentity.js"></script>
 	<script type="text/javascript" src="/scripts/filters/sorthand.js"></script>
 	<script type="text/javascript" src="/scripts/filters/handscore.js"></script>
 	<script type="text/javascript" src="/scripts/filters/cardorder.js"></script>
+
 	<script type="text/javascript" src="/scripts/directives/gamelog.js"></script>
 	<script type="text/javascript" src="/scripts/directives/playerhand.js"></script>
 	<script type="text/javascript" src="/scripts/directives/card.js"></script>
