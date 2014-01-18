@@ -31,7 +31,6 @@ function(HAND_SIZE) {
 	 */
 	exports.deal = function(game, numCards) {
 		_.times(numCards, function() {
-			debugger;
 			game.players.forEach(function(player) {
 				player.hand.push(game.deck.draw());
 			});

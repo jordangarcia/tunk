@@ -15,34 +15,7 @@
 	}
 
 	.player-actions button {
-		display: none;
 		margin-left: 5px;
-	}
-
-	&.can-draw {
-		.draw-button
-		{
-			display: inline-block;
-		}
-	}
-
-	&.can-go-down {
-		.go-down-button
-		{
-			display: inline-block;
-		}
-	}
-
-	&.can-discard {
-		.discard-button {
-			display: inline-block;
-		}
-	}
-
-	&.can-play-set {
-		.play-set-button {
-			display: inline-block;
-		}
 	}
 }
 

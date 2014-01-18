@@ -5,14 +5,14 @@
  */
 angular.module('tunk')
 .controller('RoomCtrl',
-['$scope', '$routeParams', 'hostService', 'roomService', 'playerFactory',
-function($scope, $routeParams, hostService, roomService, playerFactory) {
+['$scope', '$routeParams', 'hostService', 'roomService', 'playerFactory', 'userFactory',
+function($scope, $routeParams, hostService, roomService, playerFactory, userFactory) {
 	// Bootstrap for dev
 	roomService.createRoom('test');
 	$scope.players = [
-		playerFactory.create('jordan'),
-		playerFactory.create('logan'),
-		playerFactory.create('scott'),
+		playerFactory.create(userFactory.create('jordan')),
+		playerFactory.create(userFactory.create('logan')),
+		playerFactory.create(userFactory.create('scott')),
 	];
 
 	$scope.room = hostService.getRoom($routeParams.roomId);
