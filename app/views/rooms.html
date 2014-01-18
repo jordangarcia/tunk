@@ -1,4 +1,11 @@
 <h3>{{ userService.user.name }}</h3>
+<form class="room-create" ng-submit="createRoom(name)">
+	<label for="name">Room Name</label>
+	<input id="name" type="text" name="name" ng-model="name" autocomplete="off" />
+	<input type="submit" value="Create Room" />
+</form>
 <ul>
-	<li ng-repeat="room in rooms"></li>
+	<li ng-repeat="room in rooms">
+		{{ room.id }} - {{ room.name }}
+	</li>
 </ul>

@@ -1,12 +1,13 @@
 angular.module('tunk')
-.factory('roomFactory', ['DEFAULT_WIN_AMOUNT', function() {
+.factory('roomFactory', [function() {
+	var rid = 0;
 	// TODO inject this
 	var DEFAULT_STAKE = 1;
 
 	var Room = function() {
-		this.id;
+		this.id = rid++;
 
-		this.name = '';
+		this.name;
 		/**
 		 * Array of Clients
 		 */
@@ -26,7 +27,7 @@ angular.module('tunk')
 		/**
 		 * Amount of games needed to win in a tournament game
 		 */
-		this.winAmount = DEFAULT_WIN_AMOUNT;
+		this.winAmount;
 	};
 
 	return {
