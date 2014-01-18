@@ -6,12 +6,12 @@ function(HAND_SIZE) {
 	/**
 	 * @param {Game} game
 	 */
-	exports.newGame = function(game, handSize) {
+	exports.newGame = function(game, playerToGo, handSize) {
 		game.log.write('Starting a new game');
 
-		game.reset();
+		game.reset(playerToGo);
 
-		exports.deal(HAND_SIZE);
+		exports.deal(game, HAND_SIZE);
 	};
 
 	/**
@@ -23,14 +23,15 @@ function(HAND_SIZE) {
 		// unfreeze player who just finished turn
 		game.turn.currentPlayer.isFrozen = false;
 		// advance turn to next player
-		game.advanceTurn(game.players.getNextPlayer(game.turn.currentPlayer));
+		game.advanceTurn(game.getNextPlayer());
 	};
 
 	/**
 	 * Gives each player some number of cards
 	 */
-	exports.deal = function(numCards) {
+	exports.deal = function(game, numCards) {
 		_.times(numCards, function() {
+			debugger;
 			game.players.forEach(function(player) {
 				player.hand.push(game.deck.draw());
 			});
