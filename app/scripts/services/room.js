@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tunk')
-.factory('roomService', ['hostService', 'roomFactory', 'gameFactory', 'DEFAULT_WIN_AMOUNT', 'HAND_SIZE', 'events', 'gameHandler',
-function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, events, gameHandler) {
+.factory('roomService', ['hostService', 'roomFactory', 'gameFactory', 'DEFAULT_WIN_AMOUNT', 'HAND_SIZE', 'events', 'gameHandlers',
+function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, events, gameHandlers) {
 	/**
 	 * Creates a room, initializes a game, persists to host
 	 *
@@ -23,6 +23,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, e
 	 * @param {Array} players
 	 */
 	function startGame(room, players) {
+		// TODO clean this up
 		room.game = gameFactory.create();
 		room.game.players = players;
 		// the first player in the array goes first
@@ -48,7 +49,10 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, e
 	 * Binds the game logic event handlers for tournament games
 	 */
 	function bindTournamentGameEvents() {
-		gameHandler.bindDefaultGameEvents();
+		events.on('discard', gameHandlers.discard);
+		events.on('playSet', gameHandlers.playSet);
+		events.on('playOnSet', gameHandlers.playOnSet);
+		events.on('goDown', gameHandlers.goDown);
 
 		events.on('gameEnd', function(data) {
 			var game = data.game;

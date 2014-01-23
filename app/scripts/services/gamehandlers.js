@@ -1,22 +1,10 @@
 'use strict';
 
+/**
+ * library of game handler that happen for every game type of tunk
+ */
 angular.module('tunk')
-.factory('gameHandler', ['events', function(events) {
-
-	function bindDefaultGameEvents() {
-		events.on('discard', handleDiscard);
-		events.on('playSet', handlePlaySet);
-		events.on('playOnSet', handlePlayOnSet);
-		events.on('goDown', handleGoDown);
-	}
-
-	function unbindDefaultGameEvents() {
-		events.off('discard');
-		events.off('playSet');
-		events.off('playOnSet');
-		events.off('goDown');
-	}
-
+.factory('gameHandlers', ['events', function(events) {
 	/**
 	 * Handles the discard event
 	 *
@@ -120,7 +108,9 @@ angular.module('tunk')
 	}
 
 	return {
-		bindDefaultGameEvents: bindDefaultGameEvents,
-		unbind: unbindDefaultGameEvents
+		discard: handleDiscard,
+		playSet: handlePlaySet,
+		playOnSet: handlePlayOnSet,
+		goDown: handleGoDown
 	};
 }]);
