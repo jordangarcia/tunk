@@ -12,6 +12,7 @@ angular.module('tunk')
 
 	function write(msg, level) {
 		level = level || 1;
+		console.log('GAME LOG: %s', msg);
 		log.push({
 			message: msg,
 			level: level
