@@ -21,18 +21,6 @@
 
 .player {
 	@include player;
-
-	.player-info {
-		@include player-info;
-	}
-
-	.player-hand {
-		@include player-hand;
-	}
-
-	.player-board {
-		@include player-board;
-	}
 }
 
 .card {

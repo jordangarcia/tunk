@@ -5,6 +5,9 @@
 		class="game"
 		ng-repeat="player in room.game.players"
 		ng-controller="ClientCtrl"
+		ng-class="{
+			'has-turn': game.turn.currentPlayer === player
+		}"
 	>
 
 		<div
@@ -20,7 +23,7 @@
 				opponent="opponent"
 				class="opponent"
 				ng-class="{
-					'has-turn': (opponent.id === turn.playerId),
+					'has-turn': (game.turn.currentPlayer === opponent),
 					'can-freeze': canFreeze(opponent)
 				}"
 			>

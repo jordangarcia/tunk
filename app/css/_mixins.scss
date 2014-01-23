@@ -79,54 +79,56 @@ $active-player-bg: #E1EEF7;
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-}
 
-@mixin player-info {
-	@include clear;
-	background: $player-bg;
-	padding: 5px 7px 10px;
-	font-weight: 200;
-	font-size: 24px;
-	line-height: 30px;
+	.player-area {
+		background: $player-bg;
 
-	.game-score {
-		float:right;
-	}
-}
+		.player-info {
+			@include clear;
+			padding: 5px 7px 10px;
+			font-weight: 200;
+			font-size: 24px;
+			line-height: 30px;
 
-@mixin player-hand {
-	@include clear;
-	padding: 0 5px;
-	background: $player-bg;
-	position: relative;
+			.game-score {
+				float:right;
+			}
+		}
 
-	.card {
-		@include player-card;
-		border-bottom: none;
+		.player-hand {
+			@include clear;
+			padding: 0 5px;
+			position: relative;
+
+			.card {
+				@include player-card;
+				border-bottom: none;
 
 
-		&.selected {
-			@include selected-card;
+				&.selected {
+					@include selected-card;
+				}
+			}
+
+			.hand-score {
+				position: absolute;
+				bottom: 5px;
+				right: 5px;
+			}
 		}
 	}
 
-	.hand-score {
-		position: absolute;
-		bottom: 5px;
-		right: 5px;
-	}
-}
+	.player-board {
+		@include clear;
+		padding: 5px;
 
-@mixin player-board {
-	@include clear;
-	padding: 5px;
+		.player-actions {
+			float: right;
+		}
 
-	.player-actions {
-		float: right;
-	}
-
-	.played-sets {
-		float: left;
+		.played-sets {
+			float: left;
+		}
 	}
 }
 
