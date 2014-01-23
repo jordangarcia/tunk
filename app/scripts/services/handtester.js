@@ -81,7 +81,10 @@ angular.module('tunk')
 			}
 		}
 
-		return seqs;
+		// filter out the lone ['Ac'] that was added to test high and low
+		return _.filter(seqs, function(seq) {
+			return (seq.length !== 1 || getOrder(seq[0]) !== 1);
+		});
 	}
 
 	/**
@@ -162,18 +165,19 @@ angular.module('tunk')
 
 		function matchesSuit(suit) {
 			return function(card) {
-				getSuit(card) === suit;
+				return getSuit(card) === suit;
 			}
-		}
-
-		if (!_.every(cards, matchesSuit(getSuit(cards[0])))) {
-			return false;
 		}
 
 		// for all cards to form a run groupSeqs returns a single sequence
 		// true => [['2h', '3h', '4h']]
 		// false => [['2h', '3h', '4h'], ['6h']
-		return (groupSeqs(cards).length === 1);
+		return (
+			// every card must be the same suit
+			_.every(cards, matchesSuit(getSuit(cards[0]))) &&
+			// the cards must form only one sequence
+			groupSeqs(cards).length === 1
+		);
 	}
 
 	/**

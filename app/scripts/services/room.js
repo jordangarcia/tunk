@@ -87,7 +87,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, e
 			});
 		});
 
-		events.on('goDown', function(data) {
+		events.on('goDownResult', function(data) {
 			var result = data.result;
 			var game = data.game;
 			var winners = data.winners;
