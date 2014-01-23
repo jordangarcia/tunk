@@ -26,15 +26,18 @@ angular.module('tunk')
 		var game = data.game;
 		var player = data.player;
 
-		debugger;
-
 		if (player.hand.length === 0) {
 			events.trigger('outOfCards', {
 				game: game,
 				player: player
 			});
 		} else {
-			game.advanceTurn(game.getNextPlayer());
+			// unfreeze player who just finished turn
+			game.turn.currentPlayer.isFrozen = false;
+			// advance turn to next player
+			game.advanceTurn();
+
+			events.trigger('turnAdvanced');
 		}
 	}
 

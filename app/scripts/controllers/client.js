@@ -2,8 +2,8 @@
 
 angular.module('tunk')
 .controller('ClientCtrl',
-['$scope', 'actionValidator', 'playerActions',
-function($scope, actionValidator, playerActions) {
+['$scope', 'actionValidator', 'playerActions', 'events',
+function($scope, actionValidator, playerActions, events) {
 	// get easier access to the game
 	$scope.game = $scope.room.game;
 	$scope.opponents = _.without($scope.game.players, $scope.player);
@@ -11,6 +11,22 @@ function($scope, actionValidator, playerActions) {
 	$scope.actionValidator = actionValidator;
 
 	$scope.selectedCards = [];
+
+	$scope.resetSelectedCards = function() {
+		$scope.selectedCards = [];
+	};
+
+	events.on('turnAdvanced', $scope.resetSelectedCards);
+	events.on('playSet', $scope.resetSelectedCards);
+	events.on('playOnSet', $scope.resetSelectedCards);
+
+	// unbind resetSelected cards when controller $scope is destroyed
+	$scope.$on('$destroy', function onScopeDestroy() {
+		events.off('turnAdvanced', $scope.resetSelectedCards);
+		events.off('playSet', $scope.resetSelectedCards);
+		events.off('playOnSet', $scope.resetSelectedCards);
+	});
+
 
 	/**
 	 * @param {String} card
@@ -59,15 +75,22 @@ function($scope, actionValidator, playerActions) {
 		);
 	};
 
-	$scope.canGoDown = actionValidator.canGoDown;
-	$scope.canDrawCard = actionValidator.canDrawCard;
-	$scope.canPlaySet = actionValidator.canPlaySet;
+	/**
+	 * Logical check to see if a player can discard his selected card
+	 *
+	 * @param {Game} game
+	 * @param {Player} player
+	 */
 	$scope.canDiscard = function(game, player) {
 		return (
 			$scope.selectedCards.length === 1 &&
 			actionValidator.canDiscard(game, player)
 		)
 	};
+
+	$scope.canGoDown = actionValidator.canGoDown;
+	$scope.canDrawCard = actionValidator.canDrawCard;
+	$scope.canPlaySet = actionValidator.canPlaySet;
 
 	$scope.drawCard = function(game, player) {
 		if (actionValidator.canDrawCard(game, player)) {

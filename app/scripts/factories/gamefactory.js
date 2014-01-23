@@ -18,29 +18,22 @@ function(deckFactory, discardPileFactory, playerFactory, gamelog) {
 		this.players.forEach(function(player) {
 			player.resetGameState();
 		});
-		this.advanceTurn(player);
+		this.turn = {
+			currentPlayer: player,
+			hasDrawn: false,
+			hasDiscarded: false
+		};
 		this.discardPile.reset();
 		this.deck.shuffle();
 	};
 
 	/**
-	 * Gets the next player in the turn order
-	 *
-	 * @return {Player}
-	 */
-	Game.prototype.getNextPlayer = function() {
-		var ind = this.players.indexOf(this.turn.currentPlayer);
-		if (ind === -1) {
-			throw new Error("Player not found.");
-		}
-
-		return this.players[(ind + 1) % this.players.length];
-	};
-
-	/**
 	 * Advances the state of the game to the next player
 	 */
-	Game.prototype.advanceTurn = function(nextPlayer) {
+	Game.prototype.advanceTurn = function() {
+		var ind = this.players.indexOf(this.turn.currentPlayer);
+		var nextPlayer = this.players[(ind + 1) % this.players.length];
+
 		this.turn = {
 			currentPlayer: nextPlayer,
 			hasDrawn: false,
@@ -62,6 +55,19 @@ function(deckFactory, discardPileFactory, playerFactory, gamelog) {
 		return sorted.filter(function(player) {
 			return player.handScore() === lowest;
 		});
+	};
+
+	/**
+	 * Deals cards to players in game
+	 *
+	 * @param {Integer} numCards
+	 */
+	Game.prototype.deal = function(numCards) {
+		_.times(numCards, function() {
+			this.players.forEach(function(player) {
+				player.hand.push(this.deck.draw());
+			}, this);
+		}, this);
 	};
 
 	return {
