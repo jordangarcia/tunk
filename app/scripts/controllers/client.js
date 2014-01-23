@@ -27,7 +27,6 @@ function($scope, actionValidator, playerActions, events) {
 		events.off('playOnSet', $scope.resetSelectedCards);
 	});
 
-
 	/**
 	 * @param {String} card
 	 */

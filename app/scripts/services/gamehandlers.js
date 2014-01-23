@@ -100,9 +100,9 @@ angular.module('tunk')
 			// player went down and tied with other players
 			events.trigger('goDownResult', {
 				game: game,
-				plyaer: player,
+				player: player,
 				result: 'tie',
-				winners: lowestScorers
+				winners: lowestScorers // TODO should return _.without player?
 			});
 		}
 	}
