@@ -60,9 +60,14 @@ function($scope, actionValidator, playerActions) {
 	};
 
 	$scope.canGoDown = actionValidator.canGoDown;
-	$scope.canDiscard = actionValidator.canDiscard;
 	$scope.canDrawCard = actionValidator.canDrawCard;
 	$scope.canPlaySet = actionValidator.canPlaySet;
+	$scope.canDiscard = function(game, player) {
+		return (
+			$scope.selectedCards.length === 1 &&
+			actionValidator.canDiscard(game, player)
+		)
+	};
 
 	$scope.drawCard = function(game, player) {
 		if (actionValidator.canDrawCard(game, player)) {

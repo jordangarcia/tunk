@@ -1,6 +1,6 @@
 angular.module('tunk')
-.factory('playerActions', ['$filter', 'gameEnd',
-function($filter, gameEnd) {
+.factory('playerActions', ['$filter', 'events',
+function($filter, events) {
 
 	/**
 	 * Draws a card from the game deck and gives to player
@@ -12,7 +12,6 @@ function($filter, gameEnd) {
 	function drawCard(game, player) {
 		player.hand.push(game.deck.draw());
 		game.turn.hasDrawn = true;
-		// todo broadcast event
 	}
 
 	/**
@@ -26,7 +25,6 @@ function($filter, gameEnd) {
 	function drawDiscard(game, player, card) {
 		player.hand.push(game.discardPile.pickup(card));
 		game.turn.hasDrawn = true;
-		// todo broadcast event
 	}
 
 	/**
@@ -43,10 +41,11 @@ function($filter, gameEnd) {
 		// add set to playedSets
 		player.playedSets.push(set);
 		// check win
-		if (player.hand.length === 0) {
-			gameEnd.tunkOut(game, player);
-		}
-		// todo broadcast event
+		events.trigger('playSet', {
+			game: game,
+			player: player,
+			set: set
+		});
 	}
 
 	/**
@@ -60,11 +59,12 @@ function($filter, gameEnd) {
 	function playOnSet(game, player, set, card) {
 		player.hand.splice(player.hand.indexOf(card), 1);
 		set.push(card);
-		// check win
-		if (player.hand.length === 0) {
-			gameEnd.outOfCards(game, player);
-		}
-		// todo broadcast event
+		events.trigger('playOnSet', {
+			game: game,
+			player: player,
+			set: set,
+			card: card
+		});
 	}
 
 	/**
@@ -78,13 +78,13 @@ function($filter, gameEnd) {
 	function discard(game, player, card) {
 		player.hand.splice(player.hand.indexOf(card), 1);
 		game.discardPile.push(card);
-
 		game.turn.hasDiscarded = true;
 
-		if (player.hand.length === 0) {
-			gameEnd.outOfCards(game, player);
-		}
-		// todo broadcard event
+		events.trigger('discard', {
+			game: game,
+			player: player,
+			card: card
+		});
 	}
 
 	/**
@@ -106,8 +106,10 @@ function($filter, gameEnd) {
 	 * @param {Object} player
 	 */
 	function goDown(game, player) {
-		gameEnd.goDown(game, player);
-		// todo broadcast event
+		events.trigger('goDown', {
+			game: game,
+			player: player
+		});
 	}
 
 	return {
@@ -117,6 +119,6 @@ function($filter, gameEnd) {
 		playSet: playSet,
 		freeze: freeze,
 		playOnSet: playOnSet,
-		goDown: goDown,
+		goDown: goDown
 	};
 }]);

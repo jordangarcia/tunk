@@ -6,7 +6,7 @@ function(HAND_SIZE) {
 	/**
 	 * @param {Game} game
 	 */
-	exports.newGame = function(game, playerToGo, handSize) {
+	exports.newGame = function(game, playerToGo) {
 		game.log.write('Starting a new game');
 
 		game.reset(playerToGo);
