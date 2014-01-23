@@ -5,25 +5,29 @@ angular.module('tunk')
 	exports = {};
 
 	exports.on = function(name, fn) {
-		if (!events.name) {
-			events.name = [];
+		if (!events[name]) {
+			events[name] = [];
 		}
-		events.name.push(fn);
+		events[name].push(fn);
 	};
 
 	exports.off = function(name, fn) {
 		var ind;
-		if (events.name) {
-			ind = events.name.indexOf(fn);
-			while (ind !== -1) {
-				events.name.splice(ind, 1);
+		if (events[name]) {
+			if (fn) {
+				ind = events[name].indexOf(fn);
+				while (ind !== -1) {
+					events[name].splice(ind, 1);
+				}
+			} else {
+				events[name] = [];
 			}
 		}
 	}
 
 	exports.trigger = function(name, data) {
-		if (events.name) {
-			events.name.forEach(function(fn) {
+		if (events[name]) {
+			events[name].forEach(function(fn) {
 				fn.call(null, data);
 			});
 		}
