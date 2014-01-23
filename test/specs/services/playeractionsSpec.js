@@ -1,11 +1,11 @@
 describe("service/playerActions", function() {
 	var playerActions;
-	var gameEndMock = jasmine.createSpyObj('gameEnd', ['tunkOut', 'outOfCards']);
+	var eventsMock = jasmine.createSpyObj('events', ['on', 'off', 'trigger']);
 
 	beforeEach(function() {
 		module('tunk');
 		module(function($provide) {
-			$provide.value('gameEnd', gameEndMock);
+			$provide.value('events', eventsMock);
 		});
 
 		inject(function($injector) {
@@ -78,71 +78,66 @@ describe("service/playerActions", function() {
 	});
 
 	describe("#playSet", function() {
-		describe("when the player still has cards after playing a set", function() {
-			it("should remove the set from the hand and add to played sets", function() {
-				var set = ['2c', '2h', '2d'];
-				var player = {
-					hand: ['2c', '2h', '2d', '5h', '6h'],
-					playedSets: [['3h', '3d', '3c']],
-				};
+		it("should remove the set from the hand and add to played sets", function() {
+			var set = ['2c', '2h', '2d'];
+			var player = {
+				hand: ['2c', '2h', '2d', '5h', '6h'],
+				playedSets: [['3h', '3d', '3c']],
+			};
 
-				playerActions.playSet(this.gameMock, player, set);
+			playerActions.playSet(this.gameMock, player, set);
 
-				expect(player.hand).toEqual(['5h', '6h']);
-				expect(player.playedSets).toEqual([['3h', '3d', '3c'], ['2c', '2h', '2d']]);
-			});
+			expect(player.hand).toEqual(['5h', '6h']);
+			expect(player.playedSets).toEqual([['3h', '3d', '3c'], ['2c', '2h', '2d']]);
 		});
 
-		describe("when the player has no cards remaining", function() {
-			it("should try to tunkOut", function() {
-				var set = ['2c', '2h', '2d'];
-				var player = {
-					hand: ['2c', '2h', '2d'],
-					playedSets: [],
-				};
+		it("should trigger a `playSet` event", function() {
+			var set = ['2c', '2h', '2d'];
+			var player = {
+				hand: ['2c', '2h', '2d', '5h', '6h'],
+				playedSets: [['3h', '3d', '3c']],
+			};
 
-				playerActions.playSet(this.gameMock, player, set);
+			playerActions.playSet(this.gameMock, player, set);
 
-				expect(player.hand).toEqual([]);
-				expect(player.playedSets).toEqual([['2c', '2h', '2d']]);
-				expect(gameEndMock.tunkOut).toHaveBeenCalled();
+			expect(eventsMock.trigger).toHaveBeenCalledWith('playSet', {
+				game: this.gameMock,
+				player: player,
+				set: set
 			});
 		});
 	});
 
 	describe("#playOnSet", function() {
-		describe("when the player has cards remaining", function() {
-			it("should remove the card from hand and add to set", function() {
-				var player = {
-					hand: ['2c', '3c'],
-					playedSets: [['2d', '2s', '2h']]
-				};
+		it("should remove the card from hand and add to set", function() {
+			var player = {
+				hand: ['2c', '3c'],
+				playedSets: [['2d', '2s', '2h']]
+			};
 
-				var card = '2c';
+			var card = '2c';
 
-				playerActions.playOnSet(this.gameMock, player, player.playedSets[0], card)
+			playerActions.playOnSet(this.gameMock, player, player.playedSets[0], card)
 
-				expect(player.hand).toEqual(['3c']);
-				expect(player.playedSets).toEqual([['2d', '2s', '2h', '2c']]);
-
-				expect(gameEndMock.outOfCards).not.toHaveBeenCalled();
-			});
+			expect(player.hand).toEqual(['3c']);
+			expect(player.playedSets).toEqual([['2d', '2s', '2h', '2c']]);
 		});
-		describe("when the player has no cards remaining", function() {
-			it("should call gameEnd.outOfCards", function() {
-				var player = {
-					hand: ['2c'],
-					playedSets: [['2d', '2s', '2h']]
-				};
 
-				var card = '2c';
+		it("should trigger a `playOnSet` event", function() {
+			var player = {
+				hand: ['2c', '3c'],
+				playedSets: [['2d', '2s', '2h']]
+			};
 
-				playerActions.playOnSet(this.gameMock, player, player.playedSets[0], card)
+			var card = '2c';
 
-				expect(player.hand).toEqual([]);
-				expect(player.playedSets).toEqual([['2d', '2s', '2h', '2c']]);
+			playerActions.playOnSet(this.gameMock, player, player.playedSets[0], card)
 
-				expect(gameEndMock.outOfCards).toHaveBeenCalled();
+			expect(eventsMock.trigger).toHaveBeenCalledWith('playOnSet', {
+				game: this.gameMock,
+				player: player,
+				set: player.playedSets[0],
+				card: card
 			});
 		});
 	});
@@ -171,16 +166,18 @@ describe("service/playerActions", function() {
 			expect(this.gameMock.turn.hasDiscarded).toBe(true);
 		});
 
-		describe("when the player has no cards remaining", function() {
-			it("should call gameEnd.outOfCards", function() {
-				var card = '2c';
-				var player = {
-					hand: [card]
-				};
+		it("should trigger a `discard` event", function() {
+			var card = '2c';
+			var player = {
+				hand: [card, '3c']
+			};
 
-				playerActions.discard(this.gameMock, player, card);
+			playerActions.discard(this.gameMock, player, card);
 
-				expect(gameEndMock.outOfCards).toHaveBeenCalledWith(this.gameMock, player);
+			expect(eventsMock.trigger).toHaveBeenCalledWith('discard', {
+				game: this.gameMock,
+				player: player,
+				card: card
 			});
 		});
 	});
@@ -203,20 +200,38 @@ describe("service/playerActions", function() {
 			expect(player.hand).toEqual(['3d']);
 		});
 
-		describe("when the player has no cards remaining", function() {
-			it("should call gameEnd.outOfCards", function() {
-				var card = '2c';
-				var player = {
-					hand: [card]
-				};
-				var opponent = {
-					isFrozen: false,
-					playedSets: [['2d', '2h', '2s']]
-				};
+		it("should trigger a `playOnSet` event", function() {
+			var card = '2c';
+			var player = {
+				hand: [card, '3d']
+			};
+			var opponent = {
+				isFrozen: false,
+				playedSets: [['2d', '2h', '2s']]
+			};
 
-				playerActions.freeze(this.gameMock, player, opponent, opponent.playedSets[0], card);
+			playerActions.freeze(this.gameMock, player, opponent, opponent.playedSets[0], card);
 
-				expect(gameEndMock.outOfCards).toHaveBeenCalledWith(this.gameMock, player);
+			expect(eventsMock.trigger).toHaveBeenCalledWith('playOnSet', {
+				game: this.gameMock,
+				player: player,
+				set: opponent.playedSets[0],
+				card: card
+			});
+		});
+	});
+
+	describe("#goDown", function() {
+		it("should trigger a `goDown` event", function() {
+			var player = {
+				hand: ['Ac']
+			};
+
+			playerActions.goDown(this.gameMock, player);
+
+			expect(eventsMock.trigger).toHaveBeenCalledWith('goDown', {
+				game: this.gameMock,
+				player: player
 			});
 		});
 	});
