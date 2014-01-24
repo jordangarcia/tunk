@@ -9,7 +9,9 @@ describe("#service/actionValidator", function() {
 		handTesterMock = jasmine.createSpyObj('handTester', ['isSet']);
 		gameMock = {
 			turn: {
-				currentPlayer: null,
+				currentPlayer: {
+					id: 2
+				},
 				hasDrawn: false,
 				hasDiscarded: false,
 			},
@@ -19,6 +21,7 @@ describe("#service/actionValidator", function() {
 		};
 
 		playerMock = {
+			id: 1,
 			isFrozen: false,
 			hand: [],
 			playedSets: [],

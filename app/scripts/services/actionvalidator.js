@@ -7,7 +7,7 @@ function(PICKUP_DISCARD_LIMIT, handTester) {
 	 * @return {Boolean}
 	 */
 	function isPlayersTurn(game, player) {
-		return (game.turn.currentPlayer.user.id === player.user.id);
+		return (game.turn.currentPlayer.id === player.id);
 	}
 
 	/**

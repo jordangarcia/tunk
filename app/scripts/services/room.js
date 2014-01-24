@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tunk')
-.factory('roomService', ['hostService', 'roomFactory', 'gameFactory', 'DEFAULT_WIN_AMOUNT', 'HAND_SIZE', 'events', 'gameHandlers',
-function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, events, gameHandlers) {
+.factory('roomService', ['hostService', 'roomFactory', 'gameFactory', 'DEFAULT_WIN_AMOUNT', 'events', 'gameHandlers', 'gameService',
+function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, gameHandlers, gameService) {
 	/**
 	 * Creates a room, initializes a game, persists to host
 	 *
@@ -27,22 +27,12 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, e
 		room.game = gameFactory.create();
 		room.game.players = players;
 		// the first player in the array goes first
-		newGame(room.game, players[0]);
+		gameService.newGame(room.game, players[0]);
 
 		// bind events for tournament games
 		bindTournamentGameEvents();
 		// mark the game as running
 		room.status = 'running';
-	}
-
-	/**
-	 * @param {Game} game
-	 * @param {Player} playerToGo
-	 */
-	function newGame(game, playerToGo) {
-		game.log.write('Starting a new game');
-		game.reset(playerToGo);
-		game.deal(HAND_SIZE);
 	}
 
 	/**
@@ -59,8 +49,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, e
 			var playerToGo = data.playerToGo;
 
 			// todo check if the match ended
-			game.reset(playerToGo);
-			game.deal(HAND_SIZE);
+			gameService.newGame(game, playerToGo);
 		});
 
 		events.on('outOfCards', function(data) {

@@ -1,5 +1,6 @@
 describe("service/gameHandlers", function() {
 	var gameHandlers;
+	var gameServiceMock;
 	var eventsMock;
 
 	function createPlayer(name, score, handScore) {
@@ -14,10 +15,12 @@ describe("service/gameHandlers", function() {
 
 	beforeEach(function() {
 		eventsMock = jasmine.createSpyObj('events', ['on', 'off', 'trigger']);
+		gameServiceMock = jasmine.createSpyObj('gameService', ['advanceTurn', 'newGame', 'getLowestScorers'])
 
 		module('tunk');
 		module(function($provide) {
 			$provide.value('events', eventsMock);
+			$provide.value('gameService', gameServiceMock);
 		});
 		inject(function($injector) {
 			gameHandlers = $injector.get('gameHandlers');
@@ -59,7 +62,7 @@ describe("service/gameHandlers", function() {
 					player: this.playerMock,
 				});
 
-				expect(this.gameMock.advanceTurn).not.toHaveBeenCalled();
+				expect(gameServiceMock.advanceTurn).not.toHaveBeenCalled();
 				expect(eventsMock.trigger).not.toHaveBeenCalledWith('turnAdvanced');
 			});
 		});
@@ -83,8 +86,7 @@ describe("service/gameHandlers", function() {
 					player: this.playerMock,
 				});
 
-				expect(this.currentPlayer.isFrozen).toBe(false);
-				expect(this.gameMock.advanceTurn).toHaveBeenCalled();
+				expect(gameServiceMock.advanceTurn).toHaveBeenCalled();
 				expect(eventsMock.trigger).toHaveBeenCalledWith('turnAdvanced');
 			});
 		});
@@ -135,7 +137,7 @@ describe("service/gameHandlers", function() {
 				var winner = createPlayer('winner', 2, 3);
 				var player = createPlayer('player', 0, 10);
 
-				this.gameMock.getLowestScorers.andReturn([winner]);
+				gameServiceMock.getLowestScorers.andReturn([winner]);
 
 				gameHandlers.goDown({
 					game: this.gameMock,
@@ -157,7 +159,7 @@ describe("service/gameHandlers", function() {
 				var winner2 = createPlayer('winner2', 1, 3);
 				var player = createPlayer('player', 0, 10);
 
-				this.gameMock.getLowestScorers.andReturn([winner1, winner2]);
+				gameServiceMock.getLowestScorers.andReturn([winner1, winner2]);
 
 				gameHandlers.goDown({
 					game: this.gameMock,
@@ -177,7 +179,7 @@ describe("service/gameHandlers", function() {
 			it("should give the player 1 point", function() {
 				var player = createPlayer('player', 0, 3);
 
-				this.gameMock.getLowestScorers.andReturn([player]);
+				gameServiceMock.getLowestScorers.andReturn([player]);
 
 				gameHandlers.goDown({
 					game: this.gameMock,
@@ -197,7 +199,8 @@ describe("service/gameHandlers", function() {
 			it("should trigger `goDownResult` with the result as tie", function() {
 				var player = createPlayer('player1', 0, 3);
 				var otherPlayer = createPlayer('player2', 0, 2);
-				this.gameMock.getLowestScorers.andReturn([player, otherPlayer]);
+
+				gameServiceMock.getLowestScorers.andReturn([player, otherPlayer]);
 
 				gameHandlers.goDown({
 					game: this.gameMock,

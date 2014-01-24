@@ -4,7 +4,7 @@
  * library of game handler that happen for every game type of tunk
  */
 angular.module('tunk')
-.factory('gameHandlers', ['events', function(events) {
+.factory('gameHandlers', ['gameService', 'events', function(gameService, events) {
 	/**
 	 * Handles the discard event
 	 *
@@ -20,10 +20,7 @@ angular.module('tunk')
 				player: player
 			});
 		} else {
-			// unfreeze player who just finished turn
-			game.turn.currentPlayer.isFrozen = false;
-			// advance turn to next player
-			game.advanceTurn();
+			gameService.advanceTurn(game);
 
 			events.trigger('turnAdvanced');
 		}
@@ -78,7 +75,7 @@ angular.module('tunk')
 
 		game.log.write(player.user.name + ' went down with ' + player.handScore());
 
-		var lowestScorers = game.getLowestScorers();
+		var lowestScorers = gameService.getLowestScorers(game);
 
 		if (!_.contains(lowestScorers, player)) {
 			// one or more people had a lower hand score than the player 'going down'

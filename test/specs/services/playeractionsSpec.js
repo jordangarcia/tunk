@@ -19,8 +19,8 @@ describe("service/playerActions", function() {
 				hasDrawn: false,
 				hasDiscarded: true,
 			},
-			deck: jasmine.createSpyObj('deck', ['draw']),
-			discardPile: jasmine.createSpyObj('discardPile', ['pickup', 'push']),
+			deck: ['Ac', 'Kc'],
+			discardPile: ['9c', '8c'],
 		};
 	});
 
@@ -29,21 +29,16 @@ describe("service/playerActions", function() {
 			var player = {
 				hand: ['2h', '4c', '6h']
 			};
-			var card = 'Ac';
-			this.gameMock.deck.draw.andReturn(card);
 
 			playerActions.drawCard(this.gameMock, player);
 
-			expect(this.gameMock.deck.draw).toHaveBeenCalled();
-			expect(player.hand).toEqual(['2h', '4c', '6h', card]);
+			expect(player.hand).toEqual(['2h', '4c', '6h', 'Ac']);
 		});
 
 		it("should mark game.turn.hasDrawn = true", function() {
 			var player = {
 				hand: ['2h', '4c', '6h']
 			};
-			var card = 'Ac';
-			this.gameMock.deck.draw.andReturn(card);
 
 			playerActions.drawCard(this.gameMock, player);
 
@@ -56,22 +51,19 @@ describe("service/playerActions", function() {
 			var player = {
 				hand: ['2h', '4c', '6h']
 			};
-			var card = 'Ac';
+			var card = '9c';
 
-			this.gameMock.discardPile.pickup.andReturn(card);
-			playerActions.drawDiscard(this.gameMock, player);
+			playerActions.drawDiscard(this.gameMock, player, card);
 
-			expect(this.gameMock.discardPile.pickup).toHaveBeenCalled();
 			expect(player.hand).toEqual(['2h', '4c', '6h', card]);
 		});
 		it("should mark game.turn.hasDrawn = true", function() {
 			var player = {
 				hand: ['2h', '4c', '6h']
 			};
-			var card = 'Ac';
+			var card = '9c';
 
-			this.gameMock.discardPile.pickup.andReturn(card);
-			playerActions.drawDiscard(this.gameMock, player);
+			playerActions.drawDiscard(this.gameMock, player, card);
 
 			expect(this.gameMock.turn.hasDrawn).toBe(true);
 		});
@@ -149,10 +141,12 @@ describe("service/playerActions", function() {
 				hand: [card, '3c']
 			};
 
+			var discardPileBefore = _.clone(this.gameMock.discardPile);
+
 			playerActions.discard(this.gameMock, player, card);
 
 			expect(player.hand).toEqual(['3c']);
-			expect(this.gameMock.discardPile.push).toHaveBeenCalledWith(card);
+			expect(this.gameMock.discardPile).toEqual(discardPileBefore.concat(card));
 		});
 
 		it("should set game.turn.hasDiscarded = true", function() {

@@ -10,7 +10,8 @@ function($filter, events) {
 	 * @param {Object} player
 	 */
 	function drawCard(game, player) {
-		player.hand.push(game.deck.draw());
+		// shift off the top card of the deck and put into players hand
+		player.hand.push(game.deck.shift());
 		game.turn.hasDrawn = true;
 	}
 
@@ -23,7 +24,13 @@ function($filter, events) {
 	 * @param {String} card
 	 */
 	function drawDiscard(game, player, card) {
-		player.hand.push(game.discardPile.pickup(card));
+		var ind = game.discardPile.indexOf(card);
+		if (ind === -1) {
+			throw new Error("Cannot draw discard %s, not in discardPile", card);
+		}
+
+		game.discardPile.splice(ind, 1);
+		player.hand.push(card);
 		game.turn.hasDrawn = true;
 	}
 

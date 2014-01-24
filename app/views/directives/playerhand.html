@@ -6,7 +6,7 @@
 		ng-class="{ selected: (selectedCards.indexOf(card) !== -1) }"
 	></t-card>
 	<span class="hand-score">
-		{{ player.handScore }}
+		{{ player|handScore }}
 	</span>
 
 </div>

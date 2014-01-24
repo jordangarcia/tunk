@@ -32,36 +32,9 @@ function generateCards(cards, suits) {
 
 angular.module('tunk')
 .factory('deckFactory', function() {
-	var Deck = function() {
-		this.cards = generateCards(CARDS, SUITS);
-	}
-
-	/**
-	 * @return {Integer}
-	 */
-	Deck.prototype.cardsLeft = function() {
-		return this.cards.length;
-	};
-
-	/**
-	 * Shuffles deck by reference
-	 */
-	Deck.prototype.shuffle = function() {
-		this.cards = _.shuffle(this.cards);
-	};
-
-	/**
-	 * If deck is out of cards draws remaining
-	 *
-	 * @return {Array}
-	 */
-	Deck.prototype.draw = function() {
-		return this.cards.shift();
-	};
-
 	return {
 		create: function() {
-			return new Deck();
+			return generateCards(CARDS, SUITS);
 		}
 	};
 });
