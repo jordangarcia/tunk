@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('tunk', ['ngRoute'])
+angular.module('tunk', ['ngRoute', 'firebase'])
 .constant('HAND_SIZE', 5)
 .constant('PICKUP_DISCARD_LIMIT', 2)
 .constant('DEFAULT_WIN_AMOUNT', 7)
+.constant('FIREBASE_URL', 'https://tunk.firebaseio.com/')
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/login', {
@@ -14,7 +15,7 @@ angular.module('tunk', ['ngRoute'])
 			templateUrl: 'views/rooms.html',
 			controller: 'RoomListCtrl'
 		})
-		.when('/game/:roomId', {
+		.when('/game/:room/:user', {
 			templateUrl: 'views/game.html',
 			controller: 'RoomCtrl'
 		})

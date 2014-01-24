@@ -13,7 +13,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, HAND_SIZE, e
 		room.name = name;
 		room.winAmount = DEFAULT_WIN_AMOUNT;
 
-		hostService.rooms.push(room);
+		return room;
 	}
 
 	/**

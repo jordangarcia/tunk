@@ -4,115 +4,118 @@ angular.module('tunk')
 .controller('ClientCtrl',
 ['$scope', 'actionValidator', 'playerActions', 'events',
 function($scope, actionValidator, playerActions, events) {
-	// get easier access to the game
-	$scope.game = $scope.room.game;
-	$scope.opponents = _.without($scope.game.players, $scope.player);
+	$scope.loaded.then(init);
 
-	$scope.actionValidator = actionValidator;
+	function init() {
+		// get easier access to the game
+		$scope.game = $scope.room.game;
+		$scope.opponents = _.without($scope.game.players, $scope.player);
 
-	$scope.selectedCards = [];
+		$scope.actionValidator = actionValidator;
 
-	$scope.resetSelectedCards = function() {
 		$scope.selectedCards = [];
-	};
 
-	events.on('turnAdvanced', $scope.resetSelectedCards);
-	events.on('playSet', $scope.resetSelectedCards);
-	events.on('playOnSet', $scope.resetSelectedCards);
+		$scope.resetSelectedCards = function() {
+			$scope.selectedCards = [];
+		};
 
-	// unbind resetSelected cards when controller $scope is destroyed
-	$scope.$on('$destroy', function onScopeDestroy() {
-		events.off('turnAdvanced', $scope.resetSelectedCards);
-		events.off('playSet', $scope.resetSelectedCards);
-		events.off('playOnSet', $scope.resetSelectedCards);
-	});
+		events.on('turnAdvanced', $scope.resetSelectedCards);
+		events.on('playSet', $scope.resetSelectedCards);
+		events.on('playOnSet', $scope.resetSelectedCards);
 
-	/**
-	 * @param {String} card
-	 */
-	$scope.drawDiscard = function(card) {
-		if (actionValidator.canDrawDiscard($scope.game, $scope.player, card)) {
-			playerActions.drawDiscard($scope.game, $scope.player, card);
-		}
-	};
+		// unbind resetSelected cards when controller $scope is destroyed
+		$scope.$on('$destroy', function onScopeDestroy() {
+			events.off('turnAdvanced', $scope.resetSelectedCards);
+			events.off('playSet', $scope.resetSelectedCards);
+			events.off('playOnSet', $scope.resetSelectedCards);
+		});
 
-	/**
-	 * Freeze opponent with selectedCard[0]
-	 *
-	 * @param {Player} opponent
-	 */
-	$scope.freeze = function(opponent) {
-		if (!$scope.canFreeze(opponent)) {
-			return;
-		}
+		/**
+		 * @param {String} card
+		 */
+		$scope.drawDiscard = function(card) {
+			if (actionValidator.canDrawDiscard($scope.game, $scope.player, card)) {
+				playerActions.drawDiscard($scope.game, $scope.player, card);
+			}
+		};
 
-		playerActions.freeze(
-			$scope.game,
-			$scope.player,
-			opponent,
-			opponent.playedSets[0],
-			$scope.selectedCards[0]
-		);
-	}
+		/**
+		 * Freeze opponent with selectedCard[0]
+		 *
+		 * @param {Player} opponent
+		 */
+		$scope.freeze = function(opponent) {
+			if (!$scope.canFreeze(opponent)) {
+				return;
+			}
 
-	/**
-	 * Logical check if players selected card can freeze an opponent
-	 *
-	 * @param {Player} opponent
-	 * @return {Boolaen}
-	 */
-	$scope.canFreeze = function(opponent) {
-		return (
-			$scope.selectedCards.length === 1 &&
-			opponent.playedSets[0] &&
-			actionValidator.canPlayOnSet(
+			playerActions.freeze(
 				$scope.game,
 				$scope.player,
+				opponent,
 				opponent.playedSets[0],
 				$scope.selectedCards[0]
+			);
+		}
+
+		/**
+		 * Logical check if players selected card can freeze an opponent
+		 *
+		 * @param {Player} opponent
+		 * @return {Boolaen}
+		 */
+		$scope.canFreeze = function(opponent) {
+			return (
+				$scope.selectedCards.length === 1 &&
+				opponent.playedSets[0] &&
+				actionValidator.canPlayOnSet(
+					$scope.game,
+					$scope.player,
+					opponent.playedSets[0],
+					$scope.selectedCards[0]
+				)
+			);
+		};
+
+		/**
+		 * Logical check to see if a player can discard his selected card
+		 *
+		 * @param {Game} game
+		 * @param {Player} player
+		 */
+		$scope.canDiscard = function(game, player) {
+			return (
+				$scope.selectedCards.length === 1 &&
+				actionValidator.canDiscard(game, player)
 			)
-		);
-	};
+		};
 
-	/**
-	 * Logical check to see if a player can discard his selected card
-	 *
-	 * @param {Game} game
-	 * @param {Player} player
-	 */
-	$scope.canDiscard = function(game, player) {
-		return (
-			$scope.selectedCards.length === 1 &&
-			actionValidator.canDiscard(game, player)
-		)
-	};
+		$scope.canGoDown = actionValidator.canGoDown;
+		$scope.canDrawCard = actionValidator.canDrawCard;
+		$scope.canPlaySet = actionValidator.canPlaySet;
 
-	$scope.canGoDown = actionValidator.canGoDown;
-	$scope.canDrawCard = actionValidator.canDrawCard;
-	$scope.canPlaySet = actionValidator.canPlaySet;
+		$scope.drawCard = function(game, player) {
+			if (actionValidator.canDrawCard(game, player)) {
+				playerActions.drawCard(game, player);
+			}
+		};
 
-	$scope.drawCard = function(game, player) {
-		if (actionValidator.canDrawCard(game, player)) {
-			playerActions.drawCard(game, player);
-		}
-	};
+		$scope.goDown = function(game, player) {
+			if (actionValidator.canGoDown(game, player)) {
+				playerActions.goDown(game, player);
+			}
+		};
 
-	$scope.goDown = function(game, player) {
-		if (actionValidator.canGoDown(game, player)) {
-			playerActions.goDown(game, player);
-		}
-	};
+		$scope.discard = function(game, player, card) {
+			if (actionValidator.canDiscard(game, player, card)) {
+				playerActions.discard(game, player, card);
+			}
+		};
 
-	$scope.discard = function(game, player, card) {
-		if (actionValidator.canDiscard(game, player, card)) {
-			playerActions.discard(game, player, card);
-		}
-	};
-
-	$scope.playSet = function(game, player, set) {
-		if (actionValidator.canPlaySet(game, player, set)) {
-			playerActions.playSet(game, player, set);
+		$scope.playSet = function(game, player, set) {
+			if (actionValidator.canPlaySet(game, player, set)) {
+				playerActions.playSet(game, player, set);
+			}
 		}
 	}
-
 }]);

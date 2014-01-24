@@ -5,17 +5,18 @@
  * all games
  */
 angular.module('tunk')
-.factory('hostService', [function() {
+.factory('hostService', ['$firebase', 'FIREBASE_URL',
+function($firebase, FIREBASE_URL) {
 	var exports = {};
 
-	exports.users = [];
-	exports.rooms = [];
-
 	exports.addUser = function(user) {
-		exports.users.push(user);
+		users.$add(user);
 	};
 
-	
+	exports.addRoom = function(name) {
+		return $firebase(new Firebase(FIREBASE_URL + 'rooms/' + name));
+	};
+
 	/**
 	 * Gets user by name
 	 *
@@ -25,16 +26,6 @@ angular.module('tunk')
 	exports.getUserByName = function(name) {
 		return _.findWhere(exports.users, {name: name});
 	};
-
-	/**
-	 * Gets room by id
-	 *
-	 * @param {Integer} id
-	 * @return {Room|undefined}
-	 */
-	exports.getRoom = function(id) {
-		return _.findWhere(exports.rooms, {id: parseInt(id, 10) });
-	}
 
 	return exports;
 }]);

@@ -1,9 +1,6 @@
 <section>
-	<div gamelog="gamelog.log" style="float: left;"></div>
-
 	<div
 		class="game"
-		ng-repeat="player in room.game.players"
 		ng-controller="ClientCtrl"
 		ng-class="{
 			'has-turn': game.turn.currentPlayer === player
