@@ -1,5 +1,5 @@
 <div class="card {{card|suit}}"
-	ng-repeat="card in discardPile.cards"
+	ng-repeat="card in discardPile"
 	ng-click="onCardClick(card)"
 	ng-class="{
 		tucked: discardPile.getOffsetFromEnd(card) >= pickupOffset

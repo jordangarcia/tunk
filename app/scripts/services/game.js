@@ -33,7 +33,8 @@ angular.module('tunk')
 		// unfreeze player who just finished turn
 		game.turn.currentPlayer.isFrozen = false;
 
-		var ind = game.players.indexOf(game.turn.currentPlayer);
+		var toFind = _.findWhere(game.players, { id: game.turn.currentPlayer.id });
+		var ind = game.players.indexOf(toFind);
 		var nextPlayer = game.players[(ind + 1) % game.players.length];
 
 		game.turn = {

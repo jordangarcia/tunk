@@ -5,14 +5,16 @@
  */
 angular.module('tunk')
 .controller('RoomCtrl',
-['$scope', '$routeParams', 'hostService', 'roomService', 'playerFactory', 'userFactory', '$q',
-function($scope, $routeParams, hostService, roomService, playerFactory, userFactory, $q) {
+['$scope', '$routeParams', 'hostService', 'roomService', 'playerFactory', 'userFactory', '$q', 'events',
+function($scope, $routeParams, hostService, roomService, playerFactory, userFactory, $q, events) {
 	var deferred = $q.defer();
 	$scope.loaded = deferred.promise;
 
-	$scope.loaded.then(function() {
-		$scope.player = _.find($scope.room.game.players, function(player) {
-			return player.user.name === username;
+	$scope.loaded.then(function(data) {
+		$scope.room.game.players.forEach(function(player, ind) {
+			if (player.user.name === username) {
+				$scope.player = player;
+			}
 		});
 	});
 
@@ -28,17 +30,23 @@ function($scope, $routeParams, hostService, roomService, playerFactory, userFact
 
 	$scope.room = hostService.addRoom(roomName);
 	$scope.room.$on('loaded', function(data) {
+		$scope.room
 		if (!data) {
 			$scope.room.$set(roomService.createRoom(roomName)).then(function() {
-				debugger;
 				roomService.startGame($scope.room, $scope.players);
 
 				$scope.room.$save();
-				deferred.resolve();
+				deferred.resolve(data);
 			});
 		} else {
-			deferred.resolve();
+			roomService.loadGame($scope.room);
+			deferred.resolve(data);
 		}
+	});
+
+	events.on('gameUpdated', function() {
+		debugger;
+		$scope.room.$save();
 	});
 
 }]);

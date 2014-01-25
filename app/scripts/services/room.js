@@ -35,13 +35,21 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 		room.status = 'running';
 	}
 
+	function loadGame(room) {
+		room.game.discardPile = room.game.discardPile || [];
+		bindTournamentGameEvents();
+	}
+
 	/**
 	 * Binds the game logic event handlers for tournament games
 	 */
 	function bindTournamentGameEvents() {
 		events.on('discard', gameHandlers.discard);
+
 		events.on('playSet', gameHandlers.playSet);
+
 		events.on('playOnSet', gameHandlers.playOnSet);
+
 		events.on('goDown', gameHandlers.goDown);
 
 		events.on('gameEnd', function(data) {
@@ -112,6 +120,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 
 	return {
 		createRoom: createRoom,
+		loadGame: loadGame,
 		startGame: startGame
 	};
 }]);

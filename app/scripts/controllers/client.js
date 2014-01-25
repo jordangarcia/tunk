@@ -56,6 +56,7 @@ function($scope, actionValidator, playerActions, events) {
 				opponent.playedSets[0],
 				$scope.selectedCards[0]
 			);
+			events.trigger('gameUpdated');
 		}
 
 		/**
@@ -67,6 +68,7 @@ function($scope, actionValidator, playerActions, events) {
 		$scope.canFreeze = function(opponent) {
 			return (
 				$scope.selectedCards.length === 1 &&
+				opponent.playedSets &&
 				opponent.playedSets[0] &&
 				actionValidator.canPlayOnSet(
 					$scope.game,
@@ -98,24 +100,28 @@ function($scope, actionValidator, playerActions, events) {
 			if (actionValidator.canDrawCard(game, player)) {
 				playerActions.drawCard(game, player);
 			}
+			events.trigger('gameUpdated');
 		};
 
 		$scope.goDown = function(game, player) {
 			if (actionValidator.canGoDown(game, player)) {
 				playerActions.goDown(game, player);
 			}
+			events.trigger('gameUpdated');
 		};
 
 		$scope.discard = function(game, player, card) {
 			if (actionValidator.canDiscard(game, player, card)) {
 				playerActions.discard(game, player, card);
 			}
+			events.trigger('gameUpdated');
 		};
 
 		$scope.playSet = function(game, player, set) {
 			if (actionValidator.canPlaySet(game, player, set)) {
 				playerActions.playSet(game, player, set);
 			}
-		}
+			events.trigger('gameUpdated');
+		};
 	}
 }]);
