@@ -5,18 +5,19 @@ angular.module('tunk', ['ngRoute', 'firebase'])
 .constant('PICKUP_DISCARD_LIMIT', 2)
 .constant('DEFAULT_WIN_AMOUNT', 7)
 .constant('FIREBASE_URL', 'https://tunk.firebaseio.com/')
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider', '$locationProvider',
+function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/login', {
-			templateUrl: 'views/login.html',
+			templateUrl: '/views/login.html',
 			controller: 'LoginCtrl'
 		})
 		.when('/rooms', {
-			templateUrl: 'views/rooms.html',
+			templateUrl: '/views/rooms.html',
 			controller: 'RoomListCtrl'
 		})
 		.when('/game/:room/:user', {
-			templateUrl: 'views/game.html',
+			templateUrl: '/views/game.html',
 			controller: 'RoomCtrl'
 		})
 		.otherwise({
@@ -27,5 +28,5 @@ angular.module('tunk', ['ngRoute', 'firebase'])
 
 .run([function() {
 
-}]);
+}])
 ;

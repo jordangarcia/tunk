@@ -2,25 +2,33 @@ describe("service/gameHandlers", function() {
 	var gameHandlers;
 	var gameServiceMock;
 	var eventsMock;
+	var handScoreMock;
+	var filterMock;
 
-	function createPlayer(name, score, handScore) {
+	function createPlayer(name, score) {
 		return {
 			user: {
 				name: name
 			},
-			score: score,
-			handScore: jasmine.createSpy('handScore').andReturn(handScore)
+			score: score
 		};
 	}
 
 	beforeEach(function() {
 		eventsMock = jasmine.createSpyObj('events', ['on', 'off', 'trigger']);
 		gameServiceMock = jasmine.createSpyObj('gameService', ['advanceTurn', 'newGame', 'getLowestScorers'])
+		handScoreMock = jasmine.createSpy('handScore');
+		filterMock = function(filter) {
+			if (filter === 'handScore') {
+				return handScoreMock;
+			}
+		}
 
 		module('tunk');
 		module(function($provide) {
 			$provide.value('events', eventsMock);
 			$provide.value('gameService', gameServiceMock);
+			$provide.value('$filter', filterMock);
 		});
 		inject(function($injector) {
 			gameHandlers = $injector.get('gameHandlers');

@@ -5,7 +5,7 @@
 	>
 		<div
 			class="discard-pile cards"
-			discard-pile="game.discardPile"
+			discard-pile="room.game.discardPile"
 			on-card-click="drawDiscard"
 		>
 		</div>
@@ -16,7 +16,7 @@
 				opponent="opponent"
 				class="opponent"
 				ng-class="{
-					'has-turn': (game.turn.currentPlayer === opponent),
+					'has-turn': (room.game.turn.currentPlayer === opponent),
 					'can-freeze': canFreeze(opponent)
 				}"
 			>
@@ -35,10 +35,10 @@
 					<div class="set" ng-repeat="set in player.playedSets" played-set="set"></div>
 				</div>
 				<div class="player-actions">
-					<button type="button" class="go-down-button btn btn-primary" ng-click="goDown(game, player)" ng-show="canGoDown(game, player)">Go Down</button>
-					<button type="button" class="draw-button btn btn-primary" ng-click="drawCard(game, player)" ng-show="canDrawCard(game, player)">Draw</button>
-					<button type="button" class="discard-button btn btn-primary" ng-click="discard(game, player, selectedCards[0])" ng-show="canDiscard(game, player)">Discard</button>
-					<button type="button" class="play-set-button btn btn-primary" ng-click="playSet(game, player, selectedCards)" ng-show="canPlaySet(game, player, selectedCards)">Play Set</button>
+					<button type="button" class="go-down-button btn btn-primary" ng-click="goDown(room.game, player)" ng-show="canGoDown(room.game, player)">Go Down</button>
+					<button type="button" class="draw-button btn btn-primary" ng-click="drawCard(room.game, player)" ng-show="canDrawCard(room.game, player)">Draw</button>
+					<button type="button" class="discard-button btn btn-primary" ng-click="discard(room.game, player, selectedCards[0])" ng-show="canDiscard(room.game, player)">Discard</button>
+					<button type="button" class="play-set-button btn btn-primary" ng-click="playSet(room.game, player, selectedCards)" ng-show="canPlaySet(room.game, player, selectedCards)">Play Set</button>
 				</div>
 			</div>
 			<div class="player-area">

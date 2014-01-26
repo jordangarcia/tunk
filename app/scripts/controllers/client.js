@@ -8,8 +8,7 @@ function($scope, actionValidator, playerActions, events) {
 
 	function init() {
 		// get easier access to the game
-		$scope.game = $scope.room.game;
-		$scope.opponents = _.without($scope.game.players, $scope.player);
+		$scope.opponents = _.without($scope.room.game.players, $scope.player);
 
 		$scope.actionValidator = actionValidator;
 
@@ -34,8 +33,8 @@ function($scope, actionValidator, playerActions, events) {
 		 * @param {String} card
 		 */
 		$scope.drawDiscard = function(card) {
-			if (actionValidator.canDrawDiscard($scope.game, $scope.player, card)) {
-				playerActions.drawDiscard($scope.game, $scope.player, card);
+			if (actionValidator.canDrawDiscard($scope.room.game, $scope.player, card)) {
+				playerActions.drawDiscard($scope.room.game, $scope.player, card);
 			}
 		};
 
@@ -50,7 +49,7 @@ function($scope, actionValidator, playerActions, events) {
 			}
 
 			playerActions.freeze(
-				$scope.game,
+				$scope.room.game,
 				$scope.player,
 				opponent,
 				opponent.playedSets[0],
@@ -71,7 +70,7 @@ function($scope, actionValidator, playerActions, events) {
 				opponent.playedSets &&
 				opponent.playedSets[0] &&
 				actionValidator.canPlayOnSet(
-					$scope.game,
+					$scope.room.game,
 					$scope.player,
 					opponent.playedSets[0],
 					$scope.selectedCards[0]

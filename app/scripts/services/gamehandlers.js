@@ -4,7 +4,10 @@
  * library of game handler that happen for every game type of tunk
  */
 angular.module('tunk')
-.factory('gameHandlers', ['gameService', 'events', function(gameService, events) {
+.factory('gameHandlers', ['gameService', 'events', '$filter',
+function(gameService, events, $filter) {
+	var handScore = $filter('handScore');
+
 	/**
 	 * Handles the discard event
 	 *
@@ -73,7 +76,7 @@ angular.module('tunk')
 		var game = data.game;
 		var player = data.player;
 
-		game.log.write(player.user.name + ' went down with ' + player.handScore());
+		game.log.write(player.user.name + ' went down with ' + handScore(player.hand));
 
 		var lowestScorers = gameService.getLowestScorers(game);
 

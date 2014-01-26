@@ -24,8 +24,7 @@ function($scope, $routeParams, hostService, roomService, playerFactory, userFact
 	// Bootstrap for dev
 	$scope.players = [
 		playerFactory.create(userFactory.create('jordan')),
-		playerFactory.create(userFactory.create('logan')),
-		playerFactory.create(userFactory.create('scott')),
+		playerFactory.create(userFactory.create('logan'))
 	];
 
 	$scope.room = hostService.addRoom(roomName);
@@ -45,8 +44,6 @@ function($scope, $routeParams, hostService, roomService, playerFactory, userFact
 	});
 
 	events.on('gameUpdated', function() {
-		debugger;
 		$scope.room.$save();
 	});
-
 }]);
