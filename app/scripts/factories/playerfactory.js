@@ -10,8 +10,8 @@ angular.module('tunk')
 	};
 
 	return {
-		create: function(name) {
-			return new Player(name);
+		create: function(user) {
+			return new Player(user);
 		}
 	}
 }]);

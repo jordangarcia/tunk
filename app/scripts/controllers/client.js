@@ -7,9 +7,6 @@ function($scope, actionValidator, playerActions, events) {
 	$scope.loaded.then(init);
 
 	function init() {
-		// get easier access to the game
-		$scope.opponents = _.without($scope.room.game.players, $scope.player);
-
 		$scope.actionValidator = actionValidator;
 
 		$scope.selectedCards = [];
