@@ -36,6 +36,7 @@ function($scope, actionValidator, playerActions, events) {
 			if (actionValidator.canDrawDiscard($scope.room.game, $scope.player, card)) {
 				playerActions.drawDiscard($scope.room.game, $scope.player, card);
 			}
+			events.trigger('gameUpdated');
 		};
 
 		/**

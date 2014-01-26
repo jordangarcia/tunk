@@ -25,6 +25,18 @@ angular.module('tunk')
 	}
 
 	/**
+	 * Initializes game state from loaded firebase game
+	 *
+	 * @param {Object} game
+	 */
+	function loadGame(game) {
+		game.discardPile = game.discardPile || [];
+		game.players.forEach(function(player) {
+			player.playedSets = player.playedSets || [];
+		});
+	}
+
+	/**
 	 * Updates the game state to represent the turn advanced
 	 *
 	 * @param {Object} game
@@ -91,6 +103,7 @@ angular.module('tunk')
 
 	return {
 		newGame: newGame,
+		loadGame: loadGame,
 		advanceTurn: advanceTurn,
 		getLowestScorers: getLowestScorers
 	};

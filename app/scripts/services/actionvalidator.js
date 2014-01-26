@@ -1,6 +1,8 @@
 angular.module('tunk')
-.factory('actionValidator', ['PICKUP_DISCARD_LIMIT', 'handTester',
-function(PICKUP_DISCARD_LIMIT, handTester) {
+.factory('actionValidator', ['PICKUP_DISCARD_LIMIT', 'handTester', '$filter',
+function(PICKUP_DISCARD_LIMIT, handTester, $filter) {
+	var offsetFromEnd = $filter('offsetFromEnd');
+
 	/**
 	 * @param {Game} game
 	 * @param {Player} game
@@ -31,11 +33,9 @@ function(PICKUP_DISCARD_LIMIT, handTester) {
 	 * @return {Boolean}
 	 */
 	function canDrawDiscard(game, player, card) {
-		var offset = game.discardPile.getOffsetFromEnd(card);
-
 		return (
 			isPlayersTurn(game, player) &&
-			offset < PICKUP_DISCARD_LIMIT
+			offsetFromEnd(game.discardPile, card) < PICKUP_DISCARD_LIMIT
 		);
 	}
 

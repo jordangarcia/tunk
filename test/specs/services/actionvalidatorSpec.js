@@ -7,6 +7,7 @@ describe("#service/actionValidator", function() {
 
 	beforeEach(function() {
 		handTesterMock = jasmine.createSpyObj('handTester', ['isSet']);
+		offsetFromEndMock = jasmine.createSpy('offsetFromEnd');
 		gameMock = {
 			turn: {
 				currentPlayer: {
@@ -31,6 +32,11 @@ describe("#service/actionValidator", function() {
 		module(function($provide) {
 			$provide.value('handTester', handTesterMock);
 			$provide.value('PICKUP_DISCARD_LIMIT', PICKUP_DISCARD_LIMIT);
+			$provide.value('$filter', function(filter) {
+				if (filter === 'offsetFromEnd') {
+					return offsetFromEndMock;
+				}
+			});
 		});
 		inject(function($injector) {
 			actionValidator = $injector.get('actionValidator');
@@ -71,7 +77,7 @@ describe("#service/actionValidator", function() {
 
 		it("should return false when the offset isn't less than the PICKUP_DISCARD_LIMIT", function() {
 			gameMock.turn.currentPlayer = playerMock;
-			gameMock.discardPile.getOffsetFromEnd.andReturn(PICKUP_DISCARD_LIMIT);
+			offsetFromEndMock.andReturn(PICKUP_DISCARD_LIMIT);
 
 			var result = actionValidator.canDrawDiscard(gameMock, playerMock);
 
@@ -80,7 +86,7 @@ describe("#service/actionValidator", function() {
 
 		it("should return true when it's the players turn and the card is withint he offset limit", function() {
 			gameMock.turn.currentPlayer = playerMock;
-			gameMock.discardPile.getOffsetFromEnd.andReturn(PICKUP_DISCARD_LIMIT-1);
+			offsetFromEndMock.andReturn(PICKUP_DISCARD_LIMIT-1);
 
 			var result = actionValidator.canDrawDiscard(gameMock, playerMock);
 

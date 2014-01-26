@@ -36,7 +36,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 	}
 
 	function loadGame(room) {
-		room.game.discardPile = room.game.discardPile || [];
+		gameService.loadGame(room.game);
 		bindTournamentGameEvents();
 	}
 
