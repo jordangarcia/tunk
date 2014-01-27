@@ -18,7 +18,12 @@ function($routeProvider, $locationProvider) {
 		})
 		.when('/game/:room/:user', {
 			templateUrl: '/views/game.html',
-			controller: 'RoomCtrl'
+			controller: 'RoomCtrl',
+			resolve: {
+				room: function($route, roomService) {
+					return roomService.loadRoom($route.current.params['room']);
+				}
+			}
 		})
 		.otherwise({
 			redirectTo: '/login'

@@ -1,8 +1,18 @@
 'use strict';
 
 angular.module('tunk')
-.factory('roomService', ['hostService', 'roomFactory', 'gameFactory', 'DEFAULT_WIN_AMOUNT', 'events', 'gameHandlers', 'gameService',
-function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, gameHandlers, gameService) {
+.factory('roomService', [
+	'hostService',
+	'roomFactory',
+	'gameFactory',
+	'DEFAULT_WIN_AMOUNT',
+	'events',
+	'gameHandlers',
+	'gameService',
+	'$q',
+	'playerFactory',
+	'userFactory',
+function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, gameHandlers, gameService, $q, playerFactory, userFactory) {
 	/**
 	 * Creates a room, initializes a game, persists to host
 	 *
@@ -14,6 +24,39 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 		room.winAmount = DEFAULT_WIN_AMOUNT;
 
 		return room;
+	}
+
+	/**
+	 * Wraps the room loading in a promise
+	 *
+	 * @param {String} roomName
+	 * @return {Promise}
+	 */
+	function loadRoom(roomName) {
+		var deferred = $q.defer();
+		var room = hostService.addRoom(roomName);
+
+		room.$on('loaded', function(data) {
+			if (!data) {
+				console.log('creating room');
+				var newRoom = createRoom(roomName);
+				startGame(newRoom, [
+					playerFactory.create(userFactory.create('jordan')),
+					playerFactory.create(userFactory.create('logan')),
+				]);
+
+				room.$set(newRoom).then(function() {
+					loadGame(room);
+					deferred.resolve(room);
+				});
+			} else {
+				console.log('loading room');
+				loadGame(room);
+				deferred.resolve(room);
+			}
+		});
+
+		return deferred.promise;
 	}
 
 	/**
@@ -35,8 +78,13 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 		room.status = 'running';
 	}
 
+	/**
+	 * Initializes a game in a room
+	 *
+	 * @param {Object} room
+	 */
 	function loadGame(room) {
-		gameService.loadGame(room.game);
+		gameService.restoreArrays(room.game);
 		bindTournamentGameEvents();
 	}
 
@@ -120,6 +168,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 
 	return {
 		createRoom: createRoom,
+		loadRoom: loadRoom,
 		loadGame: loadGame,
 		startGame: startGame
 	};

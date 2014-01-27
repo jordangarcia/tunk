@@ -2,6 +2,9 @@
 	<div
 		class="game"
 		ng-controller="ClientCtrl"
+		ng-class="{
+			'has-turn': room.game.turn.currentPlayer.id === player.id
+		}"
 	>
 		<div
 			class="discard-pile cards"
@@ -16,7 +19,7 @@
 				opponent="opponent"
 				class="opponent"
 				ng-class="{
-					'has-turn': (room.game.turn.currentPlayer === opponent),
+					'has-turn': (room.game.turn.currentPlayer.id === opponent.id),
 					'can-freeze': canFreeze(opponent)
 				}"
 			>

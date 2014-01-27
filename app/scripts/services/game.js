@@ -25,11 +25,11 @@ angular.module('tunk')
 	}
 
 	/**
-	 * Initializes game state from loaded firebase game
+	 * Restore arrays that firebase removes =(
 	 *
 	 * @param {Object} game
 	 */
-	function loadGame(game) {
+	function restoreArrays(game) {
 		game.discardPile = game.discardPile || [];
 		game.players.forEach(function(player) {
 			player.playedSets = player.playedSets || [];
@@ -103,7 +103,7 @@ angular.module('tunk')
 
 	return {
 		newGame: newGame,
-		loadGame: loadGame,
+		restoreArrays: restoreArrays,
 		advanceTurn: advanceTurn,
 		getLowestScorers: getLowestScorers
 	};
