@@ -1,3 +1,10 @@
+'use strict';
+
+/**
+ * service/playerActions
+ *
+ * This module provides functions representing an action a player could take in a game of Tunk
+ */
 angular.module('tunk')
 .factory('playerActions', ['$filter', 'events',
 function($filter, events) {
@@ -120,12 +127,12 @@ function($filter, events) {
 	}
 
 	return {
-		drawCard: drawCard,
-		drawDiscard: drawDiscard,
-		discard: discard,
-		playSet: playSet,
-		freeze: freeze,
-		playOnSet: playOnSet,
-		goDown: goDown
+		drawCard:     drawCard,
+		drawDiscard:  drawDiscard,
+		discard:      discard,
+		playSet:      playSet,
+		freeze:       freeze,
+		playOnSet:    playOnSet,
+		goDown:       goDown
 	};
 }]);

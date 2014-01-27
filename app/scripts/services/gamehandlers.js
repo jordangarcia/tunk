@@ -1,11 +1,13 @@
 'use strict';
 
 /**
+ * service/gameHandlers
+ *
  * library of game handler that happen for every game type of tunk
  */
 angular.module('tunk')
-.factory('gameHandlers', ['gameService', 'events', '$filter',
-function(gameService, events, $filter) {
+.factory('gameHandlers', ['gameService', 'events', '$filter', 'gamelog',
+function(gameService, events, $filter, gamelog) {
 	var handScore = $filter('handScore');
 
 	/**
@@ -39,7 +41,7 @@ function(gameService, events, $filter) {
 		var player = data.player;
 
 		if (player.hand.length === 0) {
-			game.log.write(player.user.name + ' TUNKED OUT!');
+			gamelog.write(player.user.name + ' TUNKED OUT!');
 
 			events.trigger('tunkOut', {
 				game: game,
@@ -58,7 +60,7 @@ function(gameService, events, $filter) {
 		var player = data.player;
 
 		if (player.hand.length === 0) {
-			game.log.write(player.user.name + ' has no cards remaining');
+			gamelog.write(player.user.name + ' has no cards remaining');
 
 			events.trigger('outOfCards', {
 				game: game,
@@ -76,7 +78,7 @@ function(gameService, events, $filter) {
 		var game = data.game;
 		var player = data.player;
 
-		game.log.write(player.user.name + ' went down with ' + handScore(player.hand));
+		gamelog.write(player.user.name + ' went down with ' + handScore(player.hand));
 
 		var lowestScorers = gameService.getLowestScorers(game);
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tunk')
-.factory('gameFactory', ['deckFactory', 'gamelog',
-function(deckFactory, gamelog) {
+.factory('gameFactory', ['deckFactory',
+function(deckFactory) {
 	var Game = function() {
 		this.players     = [];
 		this.deck        = deckFactory.create();

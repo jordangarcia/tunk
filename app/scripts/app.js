@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Main application definition
+ */
 angular.module('tunk', ['ngRoute', 'firebase'])
 .constant('HAND_SIZE', 5)
 .constant('PICKUP_DISCARD_LIMIT', 2)
@@ -21,17 +24,12 @@ function($routeProvider, $locationProvider) {
 			controller: 'RoomCtrl',
 			resolve: {
 				room: function($route, roomService) {
+					// use $route.current instead of $routeParams as it isn't resolved yet
 					return roomService.loadRoom($route.current.params['room']);
 				}
 			}
 		})
 		.otherwise({
 			redirectTo: '/login'
-		})
-		;
-}])
-
-.run([function() {
-
-}])
-;
+		});
+}]);

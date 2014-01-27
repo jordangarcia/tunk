@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Room Service
+ *
+ * Responsible for functions that manage the Room
+ */
 angular.module('tunk')
 .factory('roomService', [
 	'hostService',
