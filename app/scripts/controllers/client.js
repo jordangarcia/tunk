@@ -2,15 +2,24 @@
 
 angular.module('tunk')
 .controller('ClientCtrl',
-['$scope', 'actionValidator', 'playerActions', 'events', '$routeParams',
-function($scope, actionValidator, playerActions, events, $routeParams) {
-	$scope.players = $scope.room.game.players;
-	$scope.room.game.players.forEach(function(player, ind) {
-		if (player.user.name === $routeParams['user']) {
-			$scope.player = player;
-		}
-	});
+['$scope', 'actionValidator', 'playerActions', 'events', '$routeParams', 'gameService',
+function($scope, actionValidator, playerActions, events, $routeParams, gameService) {
+	/**
+	 * Syncs references to $scope.player and $scope.players after firebase loading
+	 */
+	function syncPlayer() {
+		$scope.players = $scope.room.game.players;
+		$scope.room.game.players.forEach(function(player, ind) {
+			if (player.user.name === $routeParams['user']) {
+				$scope.player = player;
+			}
+		});
+	}
 
+	// initial syncing of $scope.player and $scope.players
+	syncPlayer();
+
+	// expose the action validator
 	$scope.actionValidator = actionValidator;
 
 	$scope.selectedCards = [];
@@ -36,8 +45,8 @@ function($scope, actionValidator, playerActions, events, $routeParams) {
 	$scope.drawDiscard = function(card) {
 		if (actionValidator.canDrawDiscard($scope.room.game, $scope.player, card)) {
 			playerActions.drawDiscard($scope.room.game, $scope.player, card);
+			events.trigger('gameUpdated');
 		}
-		events.trigger('gameUpdated');
 	};
 
 	/**
@@ -100,28 +109,42 @@ function($scope, actionValidator, playerActions, events, $routeParams) {
 	$scope.drawCard = function(game, player) {
 		if (actionValidator.canDrawCard(game, player)) {
 			playerActions.drawCard(game, player);
+			events.trigger('gameUpdated');
 		}
-		events.trigger('gameUpdated');
 	};
 
 	$scope.goDown = function(game, player) {
 		if (actionValidator.canGoDown(game, player)) {
 			playerActions.goDown(game, player);
+			events.trigger('gameUpdated');
 		}
-		events.trigger('gameUpdated');
 	};
 
 	$scope.discard = function(game, player, card) {
 		if (actionValidator.canDiscard(game, player, card)) {
 			playerActions.discard(game, player, card);
+			events.trigger('gameUpdated');
 		}
-		events.trigger('gameUpdated');
 	};
 
 	$scope.playSet = function(game, player, set) {
 		if (actionValidator.canPlaySet(game, player, set)) {
 			playerActions.playSet(game, player, set);
+			events.trigger('gameUpdated');
 		}
-		events.trigger('gameUpdated');
 	};
+
+	// Save the entire game state
+	events.on('gameUpdated', function() {
+		$scope.room.$save('game').then(function() {
+			// doing $angularfire.$save will replace the object ref with the parsed
+			// firebase data and turn any empty arrays into undefined
+			gameService.restoreArrays($scope.room.game);
+		});
+	});
+
+	// sync player referenced anytime the firebase data is changed
+	$scope.room.$on('change', function() {
+		syncPlayer();
+	});
 }]);

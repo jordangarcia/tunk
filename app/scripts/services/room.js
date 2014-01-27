@@ -45,8 +45,8 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 					playerFactory.create(userFactory.create('logan')),
 				]);
 
+				newRoom.game.players[0].hand = ['2h', '2c', '2d'];
 				room.$set(newRoom).then(function() {
-					loadGame(room);
 					deferred.resolve(room);
 				});
 			} else {
@@ -74,6 +74,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 
 		// bind events for tournament games
 		bindTournamentGameEvents();
+		gameService.restoreArrays(room.game);
 		// mark the game as running
 		room.status = 'running';
 	}
