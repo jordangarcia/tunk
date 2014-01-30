@@ -32,6 +32,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 	}
 
 	/**
+	 * Loads a game via the hostService
 	 * Wraps the room loading in a promise
 	 *
 	 * @param {String} roomName
@@ -49,6 +50,7 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 					playerFactory.create(userFactory.create('jordan')),
 					playerFactory.create(userFactory.create('logan')),
 				]);
+				gameService.restoreArrays(room.game);
 
 				newRoom.game.players[0].hand = ['2h', '2c', '2d'];
 				room.$set(newRoom).then(function() {
@@ -56,7 +58,8 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 				});
 			} else {
 				console.log('loading room');
-				loadGame(room);
+				gameService.restoreArrays(room.game);
+				bindTournamentGameEvents();
 				deferred.resolve(room);
 			}
 		});
@@ -66,32 +69,24 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 
 	/**
 	 * Creates a game for a room
+	 * Takes a room with and initializes the game and players
 	 *
 	 * @param {Room} room
 	 * @param {Array} players
 	 */
 	function startGame(room, players) {
-		// TODO clean this up
+		// create a game instance on the room
 		room.game = gameFactory.create();
+		// add players
 		room.game.players = players;
+		// initialize the game state
 		// the first player in the array goes first
 		gameService.newGame(room.game, players[0]);
 
-		// bind events for tournament games
+		// bind event handlers for tournament games
 		bindTournamentGameEvents();
-		gameService.restoreArrays(room.game);
 		// mark the game as running
 		room.status = 'running';
-	}
-
-	/**
-	 * Initializes a game in a room
-	 *
-	 * @param {Object} room
-	 */
-	function loadGame(room) {
-		gameService.restoreArrays(room.game);
-		bindTournamentGameEvents();
 	}
 
 	/**
@@ -175,7 +170,6 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, events, game
 	return {
 		createRoom: createRoom,
 		loadRoom: loadRoom,
-		loadGame: loadGame,
 		startGame: startGame
 	};
 }]);
