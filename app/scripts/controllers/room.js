@@ -1,14 +1,43 @@
 'use strict';
 
 /**
- * controller for a single room
+ * controller for a multiplayer room through firebase
  */
 angular.module('tunk').controller('RoomCtrl',
-['$scope', 'room',
+['$scope', 'room', 'gameService', '$routeParams',
 /**
  * @param {$scope} $scope
  * @param {AngularFire} room the AngularFire reference to the room
  */
-function($scope, room) {
+function($scope, room, gameService, routeParams) {
 	$scope.room = room;
+
+	/**
+	 * Syncs references to $scope.player and $scope.players after firebase loading
+	 */
+	function syncPlayer() {
+		$scope.players = $scope.room.game.players;
+		$scope.room.game.players.forEach(function(player, ind) {
+			if (player.user.name === $routeParams['user']) {
+				$scope.player = player;
+			}
+		});
+	}
+
+	// initial syncing of $scope.player and $scope.players
+	syncPlayer();
+
+	// Save the entire game state
+	events.on('gameUpdated', function() {
+		$scope.room.$save('game').then(function() {
+			// doing $angularfire.$save will replace the object ref with the parsed
+			// firebase data and turn any empty arrays into undefined
+			gameService.restoreArrays($scope.room.game);
+		});
+	});
+
+	// sync player referenced anytime the firebase data is changed
+	$scope.room.$on('change', function() {
+		syncPlayer();
+	});
 }]);

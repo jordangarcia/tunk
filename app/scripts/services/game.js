@@ -101,8 +101,20 @@ angular.module('tunk')
 		player.isFrozen = false;
 	}
 
+
+	/**
+	 * Returns object (for reference) of the current player
+	 *
+	 * @param {Object} game
+	 * @return {Object} player
+	 */
+	function getCurrentPlayer(game) {
+		return _.findWhere(game.players, { id: game.turn.currentPlayer.id });
+	}
+
 	return {
 		newGame: newGame,
+		getCurrentPlayer: getCurrentPlayer,
 		restoreArrays: restoreArrays,
 		advanceTurn: advanceTurn,
 		getLowestScorers: getLowestScorers

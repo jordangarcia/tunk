@@ -2,23 +2,8 @@
 
 angular.module('tunk')
 .controller('ClientCtrl',
-['$scope', 'actionValidator', 'playerActions', 'events', '$routeParams', 'gameService',
-function($scope, actionValidator, playerActions, events, $routeParams, gameService) {
-	/**
-	 * Syncs references to $scope.player and $scope.players after firebase loading
-	 */
-	function syncPlayer() {
-		$scope.players = $scope.room.game.players;
-		$scope.room.game.players.forEach(function(player, ind) {
-			if (player.user.name === $routeParams['user']) {
-				$scope.player = player;
-			}
-		});
-	}
-
-	// initial syncing of $scope.player and $scope.players
-	syncPlayer();
-
+['$scope', 'actionValidator', 'playerActions', 'events',
+function($scope, actionValidator, playerActions, events) {
 	// expose the action validator
 	$scope.actionValidator = actionValidator;
 
@@ -133,18 +118,4 @@ function($scope, actionValidator, playerActions, events, $routeParams, gameServi
 			events.trigger('gameUpdated');
 		}
 	};
-
-	// Save the entire game state
-	events.on('gameUpdated', function() {
-		$scope.room.$save('game').then(function() {
-			// doing $angularfire.$save will replace the object ref with the parsed
-			// firebase data and turn any empty arrays into undefined
-			gameService.restoreArrays($scope.room.game);
-		});
-	});
-
-	// sync player referenced anytime the firebase data is changed
-	$scope.room.$on('change', function() {
-		syncPlayer();
-	});
 }]);

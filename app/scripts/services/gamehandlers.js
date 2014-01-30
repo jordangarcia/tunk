@@ -27,7 +27,9 @@ function(gameService, events, $filter, gamelog) {
 		} else {
 			gameService.advanceTurn(game);
 
-			events.trigger('turnAdvanced');
+			events.trigger('turnAdvanced', {
+				game: game
+			});
 		}
 	}
 

@@ -11,6 +11,10 @@ angular.module('tunk', ['ngRoute', 'firebase'])
 .config(['$routeProvider', '$locationProvider',
 function($routeProvider, $locationProvider) {
 	$routeProvider
+		.when('/', {
+			templateUrl: '/views/game.html',
+			controller: 'SinglePlayerCtrl'
+		})
 		.when('/login', {
 			templateUrl: '/views/login.html',
 			controller: 'LoginCtrl'

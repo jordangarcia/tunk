@@ -95,7 +95,9 @@ describe("service/gameHandlers", function() {
 				});
 
 				expect(gameServiceMock.advanceTurn).toHaveBeenCalled();
-				expect(eventsMock.trigger).toHaveBeenCalledWith('turnAdvanced');
+				expect(eventsMock.trigger).toHaveBeenCalledWith('turnAdvanced', {
+					game: this.gameMock
+				});
 			});
 		});
 	});
