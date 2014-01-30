@@ -6,7 +6,7 @@ angular.module('tunk')
 			discardPile: '=',
 			onCardClick: '=',
 		},
-		templateUrl: '/views/directives/discardPile.html',
+		templateUrl: '/views/directives/discardpile.html',
 		link: function($scope) {
 			$scope.pickupOffset = limit;
 		}
