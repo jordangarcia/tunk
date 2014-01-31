@@ -4,12 +4,12 @@
  * controller for a multiplayer room through firebase
  */
 angular.module('tunk').controller('RoomCtrl',
-['$scope', 'room', 'gameService', '$routeParams',
+['$scope', 'room', 'gameService', '$routeParams', 'events',
 /**
  * @param {$scope} $scope
  * @param {AngularFire} room the AngularFire reference to the room
  */
-function($scope, room, gameService, routeParams) {
+function($scope, room, gameService, $routeParams, events) {
 	$scope.room = room;
 
 	/**
