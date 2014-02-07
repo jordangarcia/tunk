@@ -41,6 +41,28 @@ angular.module('tunk')
 	}
 
 	/**
+	 * Checks if two cards are a sequence
+	 *
+	 * @param {String} a
+	 * @param {String} b
+	 */
+	function isSeq(a, b) {
+		var sorted = sortHand([a, b]);
+		var low = sorted[0];
+		var high = sorted[1];
+
+		if (getSuit(low) !== getSuit(high)) {
+			return false;
+		}
+		if (getOrder(low) === 13 && getOrder(high) === 1) {
+			// aces go both ways
+			return true;
+		}
+
+		return (getOrder(low) === getOrder(high) - 1);
+	}
+
+	/**
 	 * ['Ah', '2h', '3h', '5h, '8h', '9h', '10h'] => [['Ah', '2h', '3h'], ['5h'], ['8h', '9h', '10h']]
 	 *
 	 * @param {Array} cards of the same suit
@@ -48,42 +70,49 @@ angular.module('tunk')
 	 */
 	function groupSeqs(cards) {
 		var seqs = [];
+		// number of aces added to check ace high-low
+		var extraAces = 0;
 		cards = sortHand(cards);
 
 		// add ace to end of array
 		if (getOrder(cards[0]) == 1) {
 			cards.push(cards[0]);
+			extraAces++;
 		}
 
-		function isSeq(a, b) {
-			if (getOrder(a) === 13 && getOrder(b) === 1) {
-				// aces go both ways
-				return true;
+
+		cards.forEach(function(card) {
+			if (seqs.length === 0) {
+				// initialize the sequence
+				seqs.push([card])
+				return;
 			}
 
-			return (getOrder(a) === getOrder(b) - 1);
-		}
-
-		for (var i = 0; i < cards.length; i++) {
-			if (!seqs.length) {
-				// initialize the seqs
-				seqs.push([cards[i]])
-				continue;
-			}
-
+			// last card in last seq
 			var lastCard = _.last(_.last(seqs));
 			// if the last element in the last group is card[i] - 1
-			if (isSeq(lastCard, cards[i])) {
-				seqs[seqs.length - 1].push(cards[i]);
+			if (isSeq(lastCard, card)) {
+				_.last(seqs).push(card);
 			} else {
 				// isn't in the current sequence add a new group
-				seqs.push([cards[i]]);
+				seqs.push([card]);
 			}
-		}
+		});
 
 		// filter out the lone ['Ac'] that was added to test high and low
 		return _.filter(seqs, function(seq) {
-			return (seq.length !== 1 || getOrder(seq[0]) !== 1);
+			// no need to filter out seq if there were no aces added
+			if (extraAces === 0) {
+				return true;
+			}
+			// if there were aces added and the seq is a lone ace remove until extraAces are 0
+			if (extraAces > 0 && (seq.length === 1 && getOrder(seq[0]) === 1)) {
+				extraAces--;
+				return false;
+			}
+
+			// otherwise its fine
+			return true;
 		});
 	}
 
@@ -94,28 +123,10 @@ angular.module('tunk')
 	 * @return {Array}
 	 */
 	function getRuns(cards) {
-		// generates an array map function to add suit to card value
-		function addSuit(suit) {
-			return function(val) {
-				return val + suit;
-			}
-		}
-
-		var runs = []
-
-		_.each(_.groupBy(cards, getSuit), function(cards, suit) {
-			groupSeqs(cards)
-			// [[Ah,2h,3h], [5h,6h,7h], [9h]]
-				.filter(function(seq) {
-					return seq.length >= RUN_MINIMUM;
-				})
-				// [[Ah,2h,3h], [5h,6h,7h]]
-				.map(function(seq) {
-					runs.push(seq);
-				});
+		return groupSeqs(cards)
+		.filter(function(seq) {
+			return seq.length >= RUN_MINIMUM;
 		});
-
-		return runs;
 	}
 
 	/**
@@ -191,6 +202,7 @@ angular.module('tunk')
 	}
 
 	return {
+		groupSeqs: groupSeqs,
 		getSets: getSets,
 		isSet: isSet
 	};

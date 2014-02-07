@@ -36,4 +36,24 @@ describe("service/handTester", function() {
 			});
 		});
 	});
+
+	describe("#groupSeqs", function() {
+		function test(input, expected) {
+			var result = handTester.groupSeqs(input);
+			expect(expected).toEqual(result);
+		}
+
+		it("should group sequences", function() {
+			var input = ['2h', '3h', '4c', '5c', 'Kd'];
+
+			var expected = [
+				['2h', '3h'],
+				['4c', '5c'],
+				['Kd'],
+			];
+
+			test(input, expected);
+		});
+
+	});
 });
