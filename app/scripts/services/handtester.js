@@ -28,19 +28,6 @@ angular.module('tunk')
 	}
 
 	/**
-	 * @param {Array} cards
-	 * @return {Boolean}
-	 */
-	function isSameSuit(cards) {
-		if (!cards.length) return false;
-
-		var suit = getSuit(cards.shift());
-		return _.every(cards, function(card) {
-			return getSuit(card) === suit;
-		});
-	}
-
-	/**
 	 * Checks if two cards are a sequence
 	 *
 	 * @param {String} a
@@ -54,7 +41,7 @@ angular.module('tunk')
 		if (getSuit(low) !== getSuit(high)) {
 			return false;
 		}
-		if (getOrder(low) === 13 && getOrder(high) === 1) {
+		if (getOrder(low) === 1 && getOrder(high) === 13) {
 			// aces go both ways
 			return true;
 		}
@@ -79,7 +66,6 @@ angular.module('tunk')
 			cards.push(cards[0]);
 			extraAces++;
 		}
-
 
 		cards.forEach(function(card) {
 			if (seqs.length === 0) {
