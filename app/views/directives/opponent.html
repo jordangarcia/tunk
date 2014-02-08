@@ -9,6 +9,12 @@
 	<span class="cards-left">
 		{{ player.hand.length }} <span class="cards-left-icon"></span>
 	</span>
+	<t-card
+		ng-repeat="card in player.hand"
+		card="{{card}}"
+		ng-click="toggleSelected(card)"
+		ng-class="{ selected: (selectedCards.indexOf(card) !== -1) }"
+	></t-card>
 	<div class="played-sets">
 		<div class="set" played-set="set" ng-repeat="set in player.playedSets"></div>
 	</div>

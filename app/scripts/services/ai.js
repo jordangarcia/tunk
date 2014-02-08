@@ -7,7 +7,26 @@ angular.module('tunk')
 .factory('ai', ['$filter', 'playerActions', 'gameService', '$q', 'PICKUP_DISCARD_LIMIT', 'deckFactory', 'handEV',
 function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFactory, handEV) {
 	var handScore = $filter('handScore');
-	var deck = deckFactory.create();
+	var WHOLE_DECK = deckFactory.create();
+
+	/**
+	 * decision is an object returned from a AI decision it has an action and args property
+	 *
+	 * @param {Object} game
+	 * @param {Object} player
+	 * @param {Object} decision
+	 */
+	function playAction(game, player, decision) {
+		console.log("%s: %s %o", player.user.name, decision.action, decision.args);
+		playerActions[decision.action].apply(null, [game, player].concat(decision.args));
+	}
+
+	/**
+	 * @param {Array} withoutCards
+	 */
+	function deckWithout(withoutCards) {
+		return _.without.apply(null, [WHOLE_DECK].concat(withoutCards));
+	}
 
 	/**
 	 * @param {Array} discardPile
@@ -18,6 +37,19 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 			cards.push(discardPile[i]);
 		}
 		return cards;
+	}
+
+	/**
+	 * Sorts objects asc based on their .ev property
+	 *
+	 * @param {Array} options
+	 * @return {Object}
+	 */
+	function sortByEV(options) {
+		// sort the options ASC and make the best decision
+		return _.sortBy(options, function(a) {
+			return a.ev;
+		});
 	}
 
 	function think(time) {
@@ -34,43 +66,77 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	 * Weighs the options of drawing a random card vs drawing an eligible
 	 * card in the discard pile and takes the most +EV action
 	 *
-	 * @param {Object} game
-	 * @param {Object} player
+	 * @param {Array} hand
+	 * @param {Array} discardPile
+	 *
+	 * @return {Object}
 	 */
-	function makeDrawDecision(game, player) {
+	function getDrawDecision(hand, discardPile) {
 		var options = [];
-		var eligibleDiscards = getElibleDiscards(game.discardPile);
-		// all hand combinations if the player picked up a discard option
-		getElibleDiscards(game.discardPile).forEach(function(card) {
+		var eligibleDiscards = getElibleDiscards(discardPile);
+		// Calculate the handEV after drawing a discard card
+		getElibleDiscards(discardPile).forEach(function(card) {
 			options.push({
 				action: 'drawDiscard',
-				args: [game, player, card],
-				ev: handEV(player.hand.concat(card))
+				args: [card],
+				ev: handEV(hand.concat(card))
 			});
 		});
 
 		// a whole deck without the discard pile and cards in players hand
-		var deck = _.without.apply(null, [deck].concat(hand).concat(game.discardPile));
-		var deckLen = deck.length;
+		// get all cards in deck without the players hand and discard pile
+		var deck = deckWithout(hand.concat(discardPile));
 		// calculates the average ev of drawing a random card
-		var drawRandomEV = deck.reduce(function(prev, card) {
-			// add prev + handScore
-			return prev + ((handEV(player.hand.concat(card))) / deckLen);
+		var totalDrawRandomEV = deck.reduce(function(prev, card) {
+			return prev + handEV(hand.concat(card));
 		}, 0);
+
+		// TODO add calculating the EV of using card in hand to `playOnSet`
 
 		// add the draw random card option
 		options.push({
 			action: 'drawCard',
-			args: [game, player],
-			ev: drawRandomEV
+			args: [],
+			ev: totalDrawRandomEV / deck.length
 		});
 
-		// sort the options and make the best decision
-		var bestOption = _.sortBy(options, function(a, b) {
-			return a.ev - b.ev;
-		})[0];
+		return sortByEV(options)[0];
+	}
 
-		playerActions[bestOption.action].apply(null, bestOption.args);
+	/**
+	 * Weighs the options of drawing a random card vs drawing an eligible
+	 * card in the discard pile and takes the most +EV action
+	 *
+	 * @param {Object} game
+	 * @param {Object} player
+	 * @param {Object} config
+	 */
+	function makeDrawDecision(game, player, config) {
+		var decision = getDrawDecision(player.hand, game.discardPile);
+		playAction(game, player, decision);
+	}
+
+	/**
+	 * Weighs the options of discarding a card from the players hand
+	 *
+	 * @param {Object} game
+	 * @param {Object} player
+	 */
+	function makeDiscardDecision(game, player, config) {
+		var options = [];
+		player.hand.forEach(function(card, ind, hand) {
+			// get the draw card EV based with the current hand without card
+			var ev = getDrawDecision(_.without(hand, card), game.discardPile).ev;
+
+			options.push({
+				action: 'discard',
+				args: [card],
+				ev: ev
+			});
+		});
+
+		var decision = sortByEV(options)[0];
+		playAction(game, player, decision);
 	}
 
 	/**
@@ -82,7 +148,7 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 		var currentPlayer = gameService.getCurrentPlayer(game);
 
 		var drawCard = makeDrawDecision.bind(null, game, currentPlayer);
-		var discard = playerActions.discard.bind(null, game, currentPlayer, currentPlayer.hand[0]);
+		var discard = makeDiscardDecision.bind(null, game, currentPlayer);
 		think(1000).then(drawCard)
 			.then(function() {
 				think(1000).then(discard);

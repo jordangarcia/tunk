@@ -44,7 +44,7 @@ function($filter, handTester) {
 	 * @returns {Number} Expected value of hand
 	 */
 	function handEV(hand, config) {
-		return handWithoutSets(hand);
+		return handScore(handWithoutSets(hand));
 	};
 
 	handEV.handWithoutSets = handWithoutSets;
