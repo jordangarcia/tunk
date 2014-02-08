@@ -17,7 +17,6 @@ function($filter, handTester) {
 	 * @param {Array} toRemove of array of cards
 	 */
 	function withoutCards(cards, toRemove) {
-		console.log(cards, toRemove);
 		return toRemove.reduce(function(prev, curr) {
 			return _.without.apply(null, [prev].concat(curr));
 		}, cards);
@@ -32,8 +31,6 @@ function($filter, handTester) {
 
 		var withoutRuns = withoutCards(cards, runs);
 		var withoutBooks = withoutCards(cards, books);
-		console.log('withoutRuns ', withoutRuns);
-		console.log('withoutBooks ', withoutBooks);
 
 		// in the case of a tie return the runs because they can be played on more
 		return (handScore(withoutRuns) > handScore(withoutBooks))
