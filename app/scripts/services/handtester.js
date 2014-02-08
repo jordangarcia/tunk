@@ -14,20 +14,6 @@ angular.module('tunk')
 	var getOrder = $filter('cardOrder')
 
 	/**
-	 * Returns an array of sets (cards)
-	 *
-	 * @param {Array} cards
-	 * @return {Array}
-	 */
-	function getBooks(hand) {
-		return _.values(_.groupBy(hand, function(card) {
-			return getValue(card);
-		})).filter(function(group) {
-			return group.length >= SET_MINIMUM;
-		});
-	}
-
-	/**
 	 * Checks if two cards are a sequence
 	 *
 	 * @param {String} a
@@ -67,6 +53,24 @@ angular.module('tunk')
 	 * @return {Array} of array of cards
 	 */
 	function groupSeqs(cards) {
+		var bySuit = _.groupBy(cards, getSuit);
+		var seqs = [];
+
+		_.each(bySuit, function(seq) {
+			seqs = seqs.concat(groupSeqsSameSuit(seq));
+		});
+
+		return seqs;
+	}
+
+	/**
+	 * ['Ah', '2h', '3h', '5h, '8h', '9h', '10h'] => [['Ah', '2h', '3h'], ['5h'], ['8h', '9h', '10h']]
+	 *
+	 * @param {Array} cards of the same suit
+	 * @return {Array} of array of cards
+	 */
+	function groupSeqsSameSuit(cards) {
+
 		var seqs = [];
 		// number of aces added to check ace high-low
 		var extraAces = 0;
@@ -113,6 +117,19 @@ angular.module('tunk')
 		});
 	}
 
+
+	/**
+	 * Returns an array of sets (cards)
+	 *
+	 * @param {Array} cards
+	 * @return {Array}
+	 */
+	function getBooks(hand) {
+		return groupBooks(hand).filter(function(group) {
+			return group.length >= SET_MINIMUM;
+		});
+	}
+
 	/**
 	 * Returns an array of runs (cards)
 	 *
@@ -120,8 +137,7 @@ angular.module('tunk')
 	 * @return {Array}
 	 */
 	function getRuns(cards) {
-		return groupSeqs(cards)
-		.filter(function(seq) {
+		return groupSeqs(cards).filter(function(seq) {
 			return seq.length >= RUN_MINIMUM;
 		});
 	}
@@ -199,6 +215,8 @@ angular.module('tunk')
 	}
 
 	return {
+		getBooks: getBooks,
+		getRuns: getRuns,
 		groupBooks: groupBooks,
 		groupSeqs: groupSeqs,
 		getSets: getSets,

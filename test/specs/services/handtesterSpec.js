@@ -16,6 +16,7 @@ describe("service/handTester", function() {
 		['2c', '2h', '2d'],
 		['3c', '3h', '3d', '3s']
 	];
+
 	var validRuns = [
 		['2c', '3c', '4c'],
 		['Ac', '2c', '3c'],
@@ -23,6 +24,12 @@ describe("service/handTester", function() {
 		['2c', '3c', '4c', '5c'],
 		['4d', '2d', '3d']
 	];
+	function test(method, input, expected) {
+		it(input + " -> " + expected, function() {
+			var result = handTester[method](input);
+			expect(expected).toEqual(result);
+		});
+	}
 
 	describe("#isSet", function() {
 		validBooks.forEach(function(set) {
@@ -75,13 +82,6 @@ describe("service/handTester", function() {
 	});
 
 	describe("#groupSeqs", function() {
-		function test(input, expected) {
-			it(input + " -> " + expected, function() {
-				var result = handTester.groupSeqs(input);
-				expect(expected).toEqual(result);
-			});
-		}
-
 		var tests = [
 			{
 				input: ['2h', '3h', '4c', '5c', 'Kd'],
@@ -107,18 +107,11 @@ describe("service/handTester", function() {
 		];
 		
 		tests.forEach(function(testCase) {
-			test(testCase.input, testCase.expected);
+			test('groupSeqs', testCase.input, testCase.expected);
 		});
 	});
 
 	describe("#groupBooks", function() {
-		function test(input, expected) {
-			it(input + " -> " + expected, function() {
-				var result = handTester.groupBooks(input);
-				expect(expected).toEqual(result);
-			});
-		}
-
 		var tests = [
 			{
 				input: ['2h', '2h', '4c', '5c', 'Kd'],
@@ -146,7 +139,42 @@ describe("service/handTester", function() {
 		];
 		
 		tests.forEach(function(testCase) {
-			test(testCase.input, testCase.expected);
+			test('groupBooks', testCase.input, testCase.expected);
+		});
+	});
+
+	describe("#getRuns", function() {
+		var tests = [
+			{
+				input: ['2h', '3h', '4h', '5c', 'Kd'],
+				expected: [
+					['2h', '3h', '4h']
+				]
+			},
+			{
+				input: ['3c', '4c', '4d', '4s', '5c', '5d', '5s'],
+				expected: [
+					['3c', '4c', '5c']
+				]
+			},
+			{
+				input: ['Qh', 'Kh', '6h', '5c', 'Ah'],
+				expected: [
+					['Qh', 'Kh', 'Ah']
+				]
+			},
+			{
+				input: ['5c', '6h', '7c', '8c'],
+				expected: []
+			},
+			{
+				input: ['5c', '6c', '7c', '8c', 'Tc', 'Jc', 'Qc'],
+				expected: [['5c', '6c', '7c', '8c'], ['Tc', 'Jc', 'Qc']]
+			},
+		];
+		
+		tests.forEach(function(testCase) {
+			test('getRuns', testCase.input, testCase.expected);
 		});
 	});
 });
