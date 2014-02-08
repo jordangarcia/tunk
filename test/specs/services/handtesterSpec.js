@@ -74,7 +74,7 @@ describe("service/handTester", function() {
 		});
 	});
 
-	describe("#groupBooks", function() {
+	describe("#groupSeqs", function() {
 		function test(input, expected) {
 			it(input + " -> " + expected, function() {
 				var result = handTester.groupSeqs(input);
@@ -102,6 +102,45 @@ describe("service/handTester", function() {
 				expected: [
 					['Ah', '2h'],
 					['Qh', 'Kh', 'Ah']
+				]
+			}
+		];
+		
+		tests.forEach(function(testCase) {
+			test(testCase.input, testCase.expected);
+		});
+	});
+
+	describe("#groupBooks", function() {
+		function test(input, expected) {
+			it(input + " -> " + expected, function() {
+				var result = handTester.groupBooks(input);
+				expect(expected).toEqual(result);
+			});
+		}
+
+		var tests = [
+			{
+				input: ['2h', '2h', '4c', '5c', 'Kd'],
+				expected: [
+					['2h', '2h'],
+					['4c'],
+					['5c'],
+					['Kd'],
+				]
+			},
+			{
+				input: ['2h', '2d', '2c'],
+				expected: [
+					['2h', '2d', '2c']
+				]
+			},
+			{
+				input: ['2h', '2d', '5c', 'Kd', 'Kc', 'Ks'],
+				expected: [
+					['2h', '2d'],
+					['5c'],
+					['Kd', 'Kc', 'Ks']
 				]
 			}
 		];

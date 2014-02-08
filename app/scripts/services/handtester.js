@@ -49,10 +49,21 @@ angular.module('tunk')
 		return (getOrder(low) === getOrder(high) - 1);
 	}
 
+
+	/**
+	 * ['2h', '2c', '4d', '5c', '6c', '6d', '6h']  => [['2h', '2c'], ['4d'], ['5c'], ['6c', '6d', '6h']]
+	 *
+	 * @param {Array} cards
+	 * @return {Array} of array of cards grouped in books
+	 */
+	function groupBooks(cards) {
+		return _.values(_.groupBy(cards, getValue));
+	}
+
 	/**
 	 * ['Ah', '2h', '3h', '5h, '8h', '9h', '10h'] => [['Ah', '2h', '3h'], ['5h'], ['8h', '9h', '10h']]
 	 *
-	 * @param {Array} cards of the same suit
+	 * @param {Array} cards
 	 * @return {Array} of array of cards
 	 */
 	function groupSeqs(cards) {
@@ -188,6 +199,7 @@ angular.module('tunk')
 	}
 
 	return {
+		groupBooks: groupBooks,
 		groupSeqs: groupSeqs,
 		getSets: getSets,
 		isSet: isSet
