@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Controller that initializes a single player room and game
+ */
 angular.module('tunk')
 .controller('SinglePlayerCtrl', ['$scope', 'singlePlayerService', 'roomService',
 function($scope, singlePlayerService, roomService) {

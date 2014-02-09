@@ -1,7 +1,14 @@
 'use strict';
 
+/**
+ * Methods dealing with modifying the game state.  Such as creating a new game
+ * advancing the turn or other misc methods *could* go on some Game object
+ *
+ * Note: none of these methods should be called directly by a player or controller
+ */
 angular.module('tunk')
-.factory('gameService', ['$filter', 'HAND_SIZE', function($filter, HAND_SIZE) {
+.factory('gameService', ['$filter', 'HAND_SIZE', 'events',
+function($filter, HAND_SIZE, events) {
 	var handScore = $filter('handScore');
 
 	/**
@@ -22,6 +29,10 @@ angular.module('tunk')
 		game.discardPile = [];
 		game.deck = _.shuffle(game.deck);
 		deal(game, HAND_SIZE);
+
+		events.trigger('newGame', {
+			game: game
+		});
 	}
 
 	/**

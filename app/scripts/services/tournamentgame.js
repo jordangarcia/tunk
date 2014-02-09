@@ -2,8 +2,10 @@
 
 /**
  * holds specific logic dealing with tournament games
+ *
+ * This is split into its own module so that different types of games
+ * with different payouts can be bound without changing core game logic
  */
-
 angular.module('tunk')
 .factory('tournamentGame', ['gameHandlers', 'gameService', 'events',
 function(gameHandlers, gameService, events){

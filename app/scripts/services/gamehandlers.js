@@ -3,7 +3,7 @@
 /**
  * service/gameHandlers
  *
- * library of game handler that happen for every game type of tunk
+ * library of game handlers to handle reactive events in any game of tunk
  */
 angular.module('tunk')
 .factory('gameHandlers', ['gameService', 'events', '$filter', 'gamelog',

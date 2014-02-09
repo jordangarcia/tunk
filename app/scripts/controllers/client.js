@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Controller responsible for binding player actions and the game state
+ * to the UI
+ */
 angular.module('tunk')
 .controller('ClientCtrl',
 ['$scope', 'actionValidator', 'playerActions', 'events',

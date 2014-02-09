@@ -50,6 +50,13 @@ function(playerFactory, userFactory, ai, events) {
 	 * Bind to events for AI to take actions
 	 */
 	function bindAiHooks() {
+		// if a new game starts check AI plays if its their turn
+		events.on('newGame', function(data) {
+			if (!isPlayersTurn(data.game)) {
+				ai.playTurn(data.game);
+			}
+		});
+
 		// when the turn advnace
 		events.on('turnAdvanced', function(data) {
 			if (!isPlayersTurn(data.game)) {
