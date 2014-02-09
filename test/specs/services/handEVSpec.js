@@ -11,12 +11,12 @@ describe('service/handEV', function() {
 		});
 	});
 
-	describe("#handWithoutSets", function() {
+	describe("#findOptimalSets", function() {
 		it("should return the hand with the lowest value after playing any possible sets", function() {
 			var input =  ['3c', '4c', '4d', '4s', '5c', '5d', '5s'];
 			var expected = ['3c'];
-			var result = handEV.handWithoutSets(input);
-			expect(expected).toEqual(result);
+			var result = handEV.findOptimalSets(input);
+			expect(expected).toEqual(result.hand);
 		});
 	});
 });

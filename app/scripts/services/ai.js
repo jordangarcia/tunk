@@ -71,7 +71,7 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	 *
 	 * @return {Object}
 	 */
-	function getDrawDecision(hand, discardPile) {
+	function getDrawDecision(hand, discardPile, playerSets, opponentSets, config) {
 		var options = [];
 		var eligibleDiscards = getElibleDiscards(discardPile);
 		// Calculate the handEV after drawing a discard card
@@ -121,6 +121,7 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	 *
 	 * @param {Object} game
 	 * @param {Object} player
+	 * @param {Object} config
 	 */
 	function makeDiscardDecision(game, player, config) {
 		var options = [];
@@ -140,6 +141,28 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	}
 
 	/**
+	 * Plays the best set available
+	 *
+	 * @param {Object} game
+	 * @param {Object} player
+	 * @param {Object} config
+	 */
+	function makePlaySetDecision(game, player, config) {
+		// analyze hand and find the most optimal way to play the sets in the hand
+		var info = handEV.findOptimalSets(player.hand);
+
+		// there is a set that can be played
+		if (info.playedSets.length > 0) {
+			info.playedSets.forEach(function(set) {
+				playAction(game, player, {
+					action: 'playSet',
+					args: [set]
+				});
+			});
+		}
+	}
+
+	/**
 	 * Plays a turn for an AI player
 	 *
 	 * @param {Object} game
@@ -149,10 +172,14 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 
 		var drawCard = makeDrawDecision.bind(null, game, currentPlayer);
 		var discard = makeDiscardDecision.bind(null, game, currentPlayer);
-		think(1000).then(drawCard)
+		var playSet = makePlaySetDecision.bind(null, game, currentPlayer);
+		think(500).then(drawCard)
+		.then(function() {
+			think(500).then(playSet)
 			.then(function() {
-				think(1000).then(discard);
+				think(500).then(discard);
 			});
+		});
 	}
 
 	return {

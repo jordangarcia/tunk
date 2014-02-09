@@ -23,17 +23,37 @@ function($filter, handTester) {
 	}
 
 	/**
-	 * Calculates the handEV if the sets in the hand were played
+	 * Determines the best way to play the sets in a hand
+	 *
+	 * return data structure:
+	 *	hand - without the played sets
+	 *	score - score of the hand without sets
+	 *	playedSets - the sets that were played to get the optimal hand
+	 *
+	 * @param {Array} cards
+	 * @return {Object}
 	 */
-	function handWithoutSets(cards) {
+	function findOptimalSets(cards) {
 		var runs = handTester.getRuns(cards);
 		var books = handTester.getBooks(cards);
 
-		var withoutRuns = withoutCards(cards, runs);
-		var withoutBooks = withoutCards(cards, books);
+		var handWithoutRuns = withoutCards(cards, runs);
+		var handWithoutBooks = withoutCards(cards, books);
+
+		var withoutRuns = {
+			hand: handWithoutRuns,
+			score: handScore(handWithoutRuns),
+			playedSets: runs
+		};
+
+		var withoutBooks = {
+			hand: handWithoutBooks,
+			score: handScore(handWithoutBooks),
+			playedSets: books
+		};
 
 		// in the case of a tie return the runs because they can be played on more
-		return (handScore(withoutRuns) > handScore(withoutBooks))
+		return (withoutRuns.score > withoutBooks.score)
 			? withoutBooks
 			: withoutRuns;
 	}
@@ -44,10 +64,10 @@ function($filter, handTester) {
 	 * @returns {Number} Expected value of hand
 	 */
 	function handEV(hand, config) {
-		return handScore(handWithoutSets(hand));
+		return findOptimalSets(hand).score;
 	};
 
-	handEV.handWithoutSets = handWithoutSets;
+	handEV.findOptimalSets = findOptimalSets;
 
 	return handEV;
 }]);
