@@ -4,10 +4,17 @@
  * Server for setting up the SinglePlayer game mode
  */
 angular.module('tunk')
-.factory('ai', ['$filter', 'playerActions', 'gameService', '$q', 'PICKUP_DISCARD_LIMIT', 'deckFactory', 'handEV',
-function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFactory, handEV) {
+.factory('ai', ['$filter', 'playerActions', 'gameService', '$q', 'PICKUP_DISCARD_LIMIT', 'deckFactory', 'handEV', 'HAND_SIZE', 'actionValidator',
+function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFactory, handEV, HAND_SIZE, actionValidator) {
 	var handScore = $filter('handScore');
 	var WHOLE_DECK = deckFactory.create();
+
+	/**
+	 * Gets the corresponding validation method given a player action name
+	 */
+	function getValidationMethod(actionMethod) {
+		return 'can' + actionMethod.charAt(0).toUpperCase() + actionMethod.slice(1);
+	}
 
 	/**
 	 * decision is an object returned from a AI decision it has an action and args property
@@ -18,7 +25,13 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	 */
 	function playAction(game, player, decision) {
 		console.log("%s: %s %o", player.user.name, decision.action, decision.args);
-		playerActions[decision.action].apply(null, [game, player].concat(decision.args));
+
+		var args = [game, player].concat(decision.args || []);
+		if (actionValidator[getValidationMethod(decision.action)].apply(null, args)) {
+			playerActions[decision.action].apply(null, args);
+		} else {
+			console.log("AI: tried to %s but failed", decision.action);
+		}
 	}
 
 	/**
@@ -163,6 +176,54 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	}
 
 	/**
+	 * Plays the best set available
+	 *
+	 * @param {Object} game
+	 * @param {Object} player
+	 * @param {Object} config
+	 */
+	function makeGoDownDecision(game, player, config) {
+		config = config || {};
+		// the average value per card that an AI will go down with given all other players have more
+		// or equal number of cards
+		var GO_DOWN_AVG = 3;
+
+		var decision;
+
+		var opponents = gameService.getOpponents(game, player);
+		// get the lowest number of cards any opponent has in their hand
+		var minHandSize = opponents.reduce(function(prev, player) {
+			var len = player.hand.length;
+			if (prev === -1) {
+				return len;
+			}
+			if (len < prev) {
+				return len;
+			}
+		}, -1); // -1 initial value
+
+		// if the current player has 40% less cards than the closest opponent go down
+		if (player.hand.length <= (minHandSize * .6)) {
+			decision = {
+				action: 'goDown'
+			};
+		} else if (
+			// if the player has less or equal to opponent min hand size
+			(player.hand.length <= minHandSize) &&
+			// and the average card value is less than the GO_DOWN_AVG
+			(handScore(player.hand) / player.hand.length) <= GO_DOWN_AVG
+		) {
+			decision = {
+				action: 'goDown'
+			}
+		}
+
+		if (decision) {
+			playAction(game, player, decision);
+		}
+	}
+
+	/**
 	 * Plays a turn for an AI player
 	 *
 	 * @param {Object} game
@@ -170,14 +231,18 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	function playTurn(game) {
 		var currentPlayer = gameService.getCurrentPlayer(game);
 
+		var goDown = makeGoDownDecision.bind(null, game, currentPlayer);
 		var drawCard = makeDrawDecision.bind(null, game, currentPlayer);
 		var discard = makeDiscardDecision.bind(null, game, currentPlayer);
 		var playSet = makePlaySetDecision.bind(null, game, currentPlayer);
-		think(500).then(drawCard)
+		think(500).then(goDown)
 		.then(function() {
-			think(500).then(playSet)
+			think(500).then(drawCard)
 			.then(function() {
-				think(500).then(discard);
+				think(500).then(playSet)
+				.then(function() {
+					think(500).then(discard);
+				});
 			});
 		});
 	}
@@ -185,4 +250,5 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	return {
 		playTurn: playTurn
 	};
+
 }]);

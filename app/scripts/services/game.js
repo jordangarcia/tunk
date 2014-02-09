@@ -36,6 +36,19 @@ function($filter, HAND_SIZE, events) {
 	}
 
 	/**
+	 * Gets all other players in game besides current player
+	 *
+	 * @param {Object} game
+	 * @param {Object} player
+	 * @return {Array}
+	 */
+	function getOpponents(game, player) {
+		return game.players.filter(function(p) {
+			return p.id !== player.id;
+		});
+	}
+
+	/**
 	 * Restore arrays that firebase removes =(
 	 *
 	 * @param {Object} game
@@ -125,6 +138,7 @@ function($filter, HAND_SIZE, events) {
 
 	return {
 		newGame: newGame,
+		getOpponents: getOpponents,
 		getCurrentPlayer: getCurrentPlayer,
 		restoreArrays: restoreArrays,
 		advanceTurn: advanceTurn,
