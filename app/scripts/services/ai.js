@@ -45,11 +45,7 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	 * @param {Array} discardPile
 	 */
 	function getElibleDiscards(discardPile) {
-		var cards = [];
-		for (var i = discardPile.length - 1; i >= 0; i--) {
-			cards.push(discardPile[i]);
-		}
-		return cards;
+		return discardPile.slice(- PICKUP_DISCARD_LIMIT);
 	}
 
 	/**
@@ -197,10 +193,9 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 			if (prev === -1) {
 				return len;
 			}
-			if (len < prev) {
-				return len;
-			}
-		}, -1); // -1 initial value
+
+			return (len < prev) ? len : prev;
+		}, -1);
 
 		// if the current player has 40% less cards than the closest opponent go down
 		if (player.hand.length <= (minHandSize * .6)) {
