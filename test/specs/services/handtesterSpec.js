@@ -24,6 +24,11 @@ describe("service/handTester", function() {
 		['2c', '3c', '4c', '5c'],
 		['4d', '2d', '3d']
 	];
+
+	var invalidRuns = [
+		['Ah', '2h']
+	];
+
 	function test(method, input, expected) {
 		it(input + " -> " + expected, function() {
 			var result = handTester[method](input);
@@ -40,6 +45,11 @@ describe("service/handTester", function() {
 		validRuns.forEach(function(set) {
 			it(set + " should return true", function() {
 				expect(handTester.isSet(set)).toBe(true);
+			});
+		});
+		invalidRuns.forEach(function(set) {
+			it(set + " should return false", function() {
+				expect(handTester.isSet(set)).toBe(false);
 			});
 		});
 	});
@@ -167,6 +177,11 @@ describe("service/handTester", function() {
 				input: ['5c', '6h', '7c', '8c'],
 				expected: []
 			},
+			{
+				input: ['Ah', '2h'],
+				expected: []
+			},
+			,
 			{
 				input: ['5c', '6c', '7c', '8c', 'Tc', 'Jc', 'Qc'],
 				expected: [['5c', '6c', '7c', '8c'], ['Tc', 'Jc', 'Qc']]

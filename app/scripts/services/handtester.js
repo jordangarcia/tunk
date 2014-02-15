@@ -70,14 +70,15 @@ angular.module('tunk')
 	 * @return {Array} of array of cards
 	 */
 	function groupSeqsSameSuit(cards) {
+		cards = sortHand(cards);
 
 		var seqs = [];
 		// number of aces added to check ace high-low
 		var extraAces = 0;
-		cards = sortHand(cards);
 
 		// add ace to end of array
-		if (getOrder(cards[0]) == 1) {
+		var containsKing = _.contains(_.map(cards, getOrder), 13);
+		if (containsKing && getOrder(cards[0]) == 1) {
 			cards.push(cards[0]);
 			extraAces++;
 		}
