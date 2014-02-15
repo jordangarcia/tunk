@@ -35,6 +35,7 @@ function(PICKUP_DISCARD_LIMIT, handTester, $filter) {
 	function canDrawDiscard(game, player, card) {
 		return (
 			isPlayersTurn(game, player) &&
+			!game.turn.hasDrawn &&
 			offsetFromEnd(game.discardPile, card) < PICKUP_DISCARD_LIMIT
 		);
 	}

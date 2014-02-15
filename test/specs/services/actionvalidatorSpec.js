@@ -71,13 +71,26 @@ describe("#service/actionValidator", function() {
 
 	describe("#canDrawDiscard", function() {
 		it("should return false when its not the players turn", function() {
-			var result = actionValidator.canDrawDiscard(gameMock, playerMock)
+			var card = '2h';
+			gameMock.discardPile.getOffsetFromEnd.andReturn(0);
+			var result = actionValidator.canDrawDiscard(gameMock, playerMock, card);
 			expect(result).toBe(false);
 		});
 
 		it("should return false when the offset isn't less than the PICKUP_DISCARD_LIMIT", function() {
+			var card = '2h';
 			gameMock.turn.currentPlayer = playerMock;
 			offsetFromEndMock.andReturn(PICKUP_DISCARD_LIMIT);
+
+			var result = actionValidator.canDrawDiscard(gameMock, playerMock, card);
+
+			expect(result).toBe(false);
+		});
+
+		it("should return false when the player has already drawn", function() {
+			gameMock.turn.currentPlayer = playerMock;
+			gameMock.turn.hasDrawn = true;
+			offsetFromEndMock.andReturn(0);
 
 			var result = actionValidator.canDrawDiscard(gameMock, playerMock);
 
