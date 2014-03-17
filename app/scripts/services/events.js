@@ -18,12 +18,20 @@ angular.module('tunk')
 				ind = events[name].indexOf(fn);
 				while (ind !== -1) {
 					events[name].splice(ind, 1);
+					ind = events[name].indexOf(fn);
 				}
 			} else {
 				events[name] = [];
 			}
 		}
-	}
+	};
+
+	exports.once = function(name, fn) {
+		exports.on(name, function() {
+			fn();
+			exports.off(name, fn);
+		});
+	};
 
 	exports.trigger = function(name, data) {
 		if (events[name]) {

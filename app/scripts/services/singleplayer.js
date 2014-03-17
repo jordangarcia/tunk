@@ -52,6 +52,7 @@ function(playerFactory, userFactory, ai, events) {
 	function bindAiHooks() {
 		// if a new game starts check AI plays if its their turn
 		events.on('newGame', function(data) {
+			console.log('new game AI HOOK');
 			if (!isPlayersTurn(data.game)) {
 				ai.playTurn(data.game);
 			}
@@ -62,6 +63,12 @@ function(playerFactory, userFactory, ai, events) {
 			if (!isPlayersTurn(data.game)) {
 				ai.playTurn(data.game);
 			}
+		});
+
+		// Retrigger a hookable gameEnd event for AIs
+		// this allows easier `events.off('gameEndAI')`
+		events.on('gameEnd', function(data) {
+			events.trigger('gameEndAI', data);
 		});
 	}
 

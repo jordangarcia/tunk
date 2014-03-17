@@ -3,9 +3,19 @@
 /**
  * Server for setting up the SinglePlayer game mode
  */
-angular.module('tunk')
-.factory('ai', ['$filter', 'playerActions', 'gameService', '$q', 'PICKUP_DISCARD_LIMIT', 'deckFactory', 'handEV', 'HAND_SIZE', 'actionValidator',
-function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFactory, handEV, HAND_SIZE, actionValidator) {
+angular.module('tunk').factory('ai', [
+	'$filter',
+	'$interval',
+	'playerActions',
+	'gameService',
+	'$q',
+	'PICKUP_DISCARD_LIMIT',
+	'deckFactory',
+	'handEV',
+	'HAND_SIZE',
+	'actionValidator',
+	'events',
+function($filter, $interval, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFactory, handEV, HAND_SIZE, actionValidator, events) {
 	var handScore = $filter('handScore');
 	var WHOLE_DECK = deckFactory.create();
 
@@ -59,16 +69,6 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 		return _.sortBy(options, function(a) {
 			return a.ev;
 		});
-	}
-
-	function think(time) {
-		var deferred = $q.defer();
-
-		setTimeout(function() {
-			deferred.resolve();
-		}, time);
-
-		return deferred.promise;
 	}
 
 	/**
@@ -226,24 +226,28 @@ function($filter, playerActions, gameService, $q, PICKUP_DISCARD_LIMIT, deckFact
 	function playTurn(game) {
 		var currentPlayer = gameService.getCurrentPlayer(game);
 
-		var goDown = makeGoDownDecision.bind(null, game, currentPlayer);
-		var drawCard = makeDrawDecision.bind(null, game, currentPlayer);
-		var discard = makeDiscardDecision.bind(null, game, currentPlayer);
-		var playSet = makePlaySetDecision.bind(null, game, currentPlayer);
-		think(500).then(goDown)
-		.then(function() {
-			think(500).then(drawCard)
-			.then(function() {
-				think(500).then(playSet)
-				.then(function() {
-					think(500).then(discard);
-				});
-			});
+		var actions = [
+			makeGoDownDecision,
+			makeDrawDecision,
+			makePlaySetDecision,
+			makeDiscardDecision
+		];
+
+		var stop = $interval(function() {
+			if (actions.length === 0) {
+				$interval.cancel(stop);
+				events.off('gameEndAI');
+			} else {
+				actions.shift()(game, currentPlayer);
+			}
+		}, 500);
+
+		events.once('gameEndAI', function() {
+			$interval.cancel(stop);
 		});
 	}
 
 	return {
 		playTurn: playTurn
 	};
-
 }]);
