@@ -6,9 +6,12 @@
  *
  * Note: none of these methods should be called directly by a player or controller
  */
-angular.module('tunk')
-.factory('gameService', ['$filter', 'HAND_SIZE', 'events',
-function($filter, HAND_SIZE, events) {
+angular.module('tunk').factory('gameService', [
+	'$filter',
+	'HAND_SIZE',
+	'events',
+	'deckFactory',
+function($filter, HAND_SIZE, events, deckFactory) {
 	var handScore = $filter('handScore');
 
 	/**
@@ -27,7 +30,8 @@ function($filter, HAND_SIZE, events) {
 			hasDiscarded: false
 		};
 		game.discardPile = [];
-		game.deck = _.shuffle(game.deck);
+		// shuffle a new deck
+		game.deck = _.shuffle(deckFactory.create());
 		deal(game, HAND_SIZE);
 
 		events.trigger('newGame', {
@@ -124,7 +128,6 @@ function($filter, HAND_SIZE, events) {
 		player.playedSets = [];
 		player.isFrozen = false;
 	}
-
 
 	/**
 	 * Returns object (for reference) of the current player
