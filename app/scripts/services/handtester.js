@@ -93,7 +93,12 @@ angular.module('tunk')
 			// last card in last seq
 			var lastCard = _.last(_.last(seqs));
 			// if the last element in the last group is card[i] - 1
+
 			if (isSeq(lastCard, card)) {
+				if (getOrder(card) === 1 && _.contains(_.last(seqs), card)) {
+					// if the extra ace gets added twice to sequence return and skip
+					return;
+				}
 				_.last(seqs).push(card);
 			} else {
 				// isn't in the current sequence add a new group

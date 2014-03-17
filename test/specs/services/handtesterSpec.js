@@ -26,7 +26,8 @@ describe("service/handTester", function() {
 	];
 
 	var invalidRuns = [
-		['Ah', '2h']
+		['Ah', '2h'],
+		['Ah', 'Kh']
 	];
 
 	function test(method, input, expected) {
@@ -178,10 +179,13 @@ describe("service/handTester", function() {
 				expected: []
 			},
 			{
+				input: ['Ah', 'Kh'],
+				expected: []
+			},
+			{
 				input: ['Ah', '2h'],
 				expected: []
 			},
-			,
 			{
 				input: ['5c', '6c', '7c', '8c', 'Tc', 'Jc', 'Qc'],
 				expected: [['5c', '6c', '7c', '8c'], ['Tc', 'Jc', 'Qc']]
