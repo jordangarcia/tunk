@@ -4,13 +4,15 @@
  * Controller responsible for binding player actions and the game state
  * to the UI
  */
-angular.module('tunk')
-.controller('ClientCtrl',
-['$scope', 'actionValidator', 'playerActions', 'events',
-function($scope, actionValidator, playerActions, events) {
-	// expose the action validator
-	$scope.actionValidator = actionValidator;
-
+angular.module('tunk').controller('ClientCtrl', [
+	'$scope',
+	'actionValidator',
+	'playerActions',
+	'events',
+	'gameService',
+	'gameResultModal',
+	'bodyOverlay',
+function($scope, actionValidator, playerActions, events, gameService, gameResultModal, bodyOverlay) {
 	$scope.selectedCards = [];
 
 	$scope.resetSelectedCards = function() {
@@ -28,14 +30,18 @@ function($scope, actionValidator, playerActions, events) {
 		events.off('playOnSet', $scope.resetSelectedCards);
 	});
 
-	/**
-	 * @param {String} card
-	 */
-	$scope.drawDiscard = function(card) {
-		if (actionValidator.canDrawDiscard($scope.room.game, $scope.player, card)) {
-			playerActions.drawDiscard($scope.room.game, $scope.player, card);
-			events.trigger('gameUpdated');
-		}
+	events.on('gameEnd', function(data) {
+		bodyOverlay.activate();
+		gameResultModal.activate({
+			game: data.game,
+			winner: data.playerToGo
+		});
+	});
+
+	$scope.newGame = function(game, playerToGo) {
+		gameService.newGame(game, playerToGo);
+		bodyOverlay.deactivate();
+		gameResultModal.deactivate();
 	};
 
 	/**
@@ -94,6 +100,16 @@ function($scope, actionValidator, playerActions, events) {
 	$scope.canGoDown = actionValidator.canGoDown;
 	$scope.canDrawCard = actionValidator.canDrawCard;
 	$scope.canPlaySet = actionValidator.canPlaySet;
+
+	/**
+	 * @param {String} card
+	 */
+	$scope.drawDiscard = function(game, player, card) {
+		if (actionValidator.canDrawDiscard(game, player, card)) {
+			playerActions.drawDiscard(game, player, card);
+			events.trigger('gameUpdated');
+		}
+	};
 
 	$scope.drawCard = function(game, player) {
 		if (actionValidator.canDrawCard(game, player)) {

@@ -49,3 +49,20 @@ $navbar-height: 60px;
 		@include opponent;
 	}
 }
+
+.btf-modal {
+	@include modal-positioning;
+	width: 280px;
+	padding: 15px 20px;
+	background: white;
+	border: 1px solid #ccc;
+
+	// semantic title
+	h3 {
+		margin-top: 0;
+	}
+}
+
+.page-overlay {
+	@include overlay;
+}

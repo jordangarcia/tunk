@@ -1,55 +1,57 @@
+<div
+	class="game"
+	ng-controller="ClientCtrl"
+	ng-class="{
+		'has-turn': room.game.turn.currentPlayer.id === player.id
+	}"
+>
 	<div
-		class="game"
-		ng-controller="ClientCtrl"
-		ng-class="{
-			'has-turn': room.game.turn.currentPlayer.id === player.id
-		}"
+		class="discard-pile cards"
+		discard-pile="room.game.discardPile"
+		game="room.game"
+		player="player"
+		on-card-click="drawDiscard"
 	>
+	</div>
+
+	<div class="opponents">
 		<div
-			class="discard-pile cards"
-			discard-pile="room.game.discardPile"
-			on-card-click="drawDiscard"
+			ng-repeat="opponent in players|withoutEntity:player"
+			opponent="opponent"
+			class="opponent"
+			ng-class="{
+				'has-turn': (room.game.turn.currentPlayer.id === opponent.id),
+				'can-freeze': canFreeze(opponent)
+			}"
 		>
-		</div>
-
-		<div class="opponents">
-			<div
-				ng-repeat="opponent in players|withoutEntity:player"
-				opponent="opponent"
-				class="opponent"
-				ng-class="{
-					'has-turn': (room.game.turn.currentPlayer.id === opponent.id),
-					'can-freeze': canFreeze(opponent)
-				}"
-			>
-				<div class="freeze-overlay" ng-show="canFreeze(opponent)">
-					<button
-						class="freeze-button btn btn-primary"
-						ng-click="freeze(opponent)"
-					>Freeze</button>
-				</div>
-			</div>
-		</div>
-
-		<div class="player">
-			<div class="player-board">
-				<div class="played-sets">
-					<div class="set" ng-repeat="set in player.playedSets" played-set="set"></div>
-				</div>
-				<div class="player-actions">
-					<button type="button" class="go-down-button btn btn-primary" ng-click="goDown(room.game, player)" ng-show="canGoDown(room.game, player)">Go Down</button>
-					<button type="button" class="draw-button btn btn-primary" ng-click="drawCard(room.game, player)" ng-show="canDrawCard(room.game, player)">Draw</button>
-					<button type="button" class="discard-button btn btn-primary" ng-click="discard(room.game, player, selectedCards[0])" ng-show="canDiscard(room.game, player)">Discard</button>
-					<button type="button" class="play-set-button btn btn-primary" ng-click="playSet(room.game, player, selectedCards)" ng-show="canPlaySet(room.game, player, selectedCards)">Play Set</button>
-				</div>
-			</div>
-			<div class="player-area">
-				<div class="player-info">
-					<span class="player-name">{{ player.user.name }}</span>
-					<span class="status" ng-show="player.isFrozen">(FROZEN)</span>
-					<span class="game-score">{{ player.score }}</span>
-				</div>
-				<t-player-hand player="player" selected-cards="selectedCards"></t-player-hand>
+			<div class="freeze-overlay" ng-show="canFreeze(opponent)">
+				<button
+					class="freeze-button btn btn-primary"
+					ng-click="freeze(opponent)"
+				>Freeze</button>
 			</div>
 		</div>
 	</div>
+
+	<div class="player">
+		<div class="player-board">
+			<div class="played-sets">
+				<div class="set" ng-repeat="set in player.playedSets" played-set="set"></div>
+			</div>
+			<div class="player-actions">
+				<button type="button" class="go-down-button btn btn-primary" ng-click="goDown(room.game, player)" ng-show="canGoDown(room.game, player)">Go Down</button>
+				<button type="button" class="draw-button btn btn-primary" ng-click="drawCard(room.game, player)" ng-show="canDrawCard(room.game, player)">Draw</button>
+				<button type="button" class="discard-button btn btn-primary" ng-click="discard(room.game, player, selectedCards[0])" ng-show="canDiscard(room.game, player)">Discard</button>
+				<button type="button" class="play-set-button btn btn-primary" ng-click="playSet(room.game, player, selectedCards)" ng-show="canPlaySet(room.game, player, selectedCards)">Play Set</button>
+			</div>
+		</div>
+		<div class="player-area">
+			<div class="player-info">
+				<span class="player-name">{{ player.user.name }}</span>
+				<span class="status" ng-show="player.isFrozen">(FROZEN)</span>
+				<span class="game-score">{{ player.score }}</span>
+			</div>
+			<t-player-hand player="player" selected-cards="selectedCards"></t-player-hand>
+		</div>
+	</div>
+</div>

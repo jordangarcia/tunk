@@ -21,14 +21,6 @@ function(gameHandlers, gameService, events){
 
 		events.on('goDown', gameHandlers.goDown);
 
-		events.on('gameEnd', function(data) {
-			var game = data.game;
-			var playerToGo = data.playerToGo;
-
-			// todo check if the match ended
-			gameService.newGame(game, playerToGo);
-		});
-
 		events.on('outOfCards', function(data) {
 			var game = data.game;
 			var player = data.player;

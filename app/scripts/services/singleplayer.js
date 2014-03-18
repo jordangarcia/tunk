@@ -54,6 +54,7 @@ function(playerFactory, userFactory, ai, events) {
 		events.on('newGame', function(data) {
 			console.log('new game AI HOOK');
 			if (!isPlayersTurn(data.game)) {
+				console.log('not players turn');
 				ai.playTurn(data.game);
 			}
 		});

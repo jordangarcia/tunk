@@ -20,13 +20,6 @@ function($filter, $interval, playerActions, gameService, $q, PICKUP_DISCARD_LIMI
 	var WHOLE_DECK = deckFactory.create();
 
 	/**
-	 * Gets the corresponding validation method given a player action name
-	 */
-	function getValidationMethod(actionMethod) {
-		return 'can' + actionMethod.charAt(0).toUpperCase() + actionMethod.slice(1);
-	}
-
-	/**
 	 * decision is an object returned from a AI decision it has an action and args property
 	 *
 	 * @param {Object} game
@@ -35,6 +28,7 @@ function($filter, $interval, playerActions, gameService, $q, PICKUP_DISCARD_LIMI
 	 */
 	function playAction(game, player, decision) {
 		console.log("%s: %s %o", player.user.name, decision.action, decision.args);
+		var getValidationMethod = $filter('actionValidateMethod');
 
 		var args = [game, player].concat(decision.args || []);
 		if (actionValidator[getValidationMethod(decision.action)].apply(null, args)) {
@@ -243,6 +237,7 @@ function($filter, $interval, playerActions, gameService, $q, PICKUP_DISCARD_LIMI
 		}, 500);
 
 		events.once('gameEndAI', function() {
+			console.log('cancelling $interval, ', stop);
 			$interval.cancel(stop);
 		});
 	}

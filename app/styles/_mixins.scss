@@ -238,3 +238,26 @@ $active-player-bg: #E1EEF7;
 		}
 	}
 }
+
+@mixin modal-positioning {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 50%;
+	height: auto;
+	z-index: 2000;
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-ms-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+
+@mixin overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: rgba(0,0,0,.5);
+	z-index: 1000;
+}

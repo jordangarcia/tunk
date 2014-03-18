@@ -1,8 +1,8 @@
 <div class="card {{card|suit}}"
 	ng-repeat="card in discardPile"
-	ng-click="onCardClick(card)"
+	ng-click="onCardClick(game, player, card)"
 	ng-class="{
-	tucked: (discardPile|offsetFromEnd:card) >= pickupOffset
+		tucked: (discardPile|offsetFromEnd:card) >= pickupOffset
 	}"
 >
 	{{ card|cardValue }} <span ng-bind-html="card|suit|suitEntity"></span>

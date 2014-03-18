@@ -3,7 +3,7 @@
 /**
  * Main application definition
  */
-angular.module('tunk', ['ngRoute', 'firebase'])
+angular.module('tunk', ['ngRoute', 'firebase', 'btford.modal'])
 .constant('HAND_SIZE', 5)
 .constant('PICKUP_DISCARD_LIMIT', 2)
 .constant('DEFAULT_WIN_AMOUNT', 7)
