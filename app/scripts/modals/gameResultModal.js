@@ -2,7 +2,7 @@
 angular.module('tunk')
 .factory('gameResultModal', ['btfModal', function(btfModal) {
 	return btfModal({
-		controller: 'ClientCtrl',
+		controller: 'GameResultModalCtrl',
 		templateUrl: '/views/gameResultModal.html'
 	});
 }]);

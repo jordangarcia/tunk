@@ -9,10 +9,8 @@ angular.module('tunk').controller('ClientCtrl', [
 	'actionValidator',
 	'playerActions',
 	'events',
-	'gameService',
 	'gameResultModal',
-	'bodyOverlay',
-function($scope, actionValidator, playerActions, events, gameService, gameResultModal, bodyOverlay) {
+function($scope, actionValidator, playerActions, events, gameResultModal) {
 	$scope.selectedCards = [];
 
 	$scope.resetSelectedCards = function() {
@@ -31,18 +29,12 @@ function($scope, actionValidator, playerActions, events, gameService, gameResult
 	});
 
 	events.on('gameEnd', function(data) {
-		bodyOverlay.activate();
 		gameResultModal.activate({
+			gameIsOver: false,
 			game: data.game,
 			winner: data.playerToGo
 		});
 	});
-
-	$scope.newGame = function(game, playerToGo) {
-		gameService.newGame(game, playerToGo);
-		bodyOverlay.deactivate();
-		gameResultModal.deactivate();
-	};
 
 	/**
 	 * Freeze opponent with selectedCard[0]
