@@ -12,6 +12,9 @@ angular.module('tunk', ['ngRoute', 'firebase'])
 function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {
+			templateUrl: '/views/menu.html'
+		})
+		.when('/singleplayer', {
 			templateUrl: '/views/game.html',
 			controller: 'SinglePlayerCtrl'
 		})
@@ -34,6 +37,6 @@ function($routeProvider, $locationProvider) {
 			}
 		})
 		.otherwise({
-			redirectTo: '/login'
+			redirectTo: '/'
 		});
 }]);
