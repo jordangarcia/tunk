@@ -16,7 +16,7 @@
 
 	<div class="opponents">
 		<div
-			ng-repeat="opponent in players|withoutEntity:player"
+			ng-repeat="opponent in room.game.players|withoutEntity:player"
 			opponent="opponent"
 			class="opponent"
 			ng-class="{

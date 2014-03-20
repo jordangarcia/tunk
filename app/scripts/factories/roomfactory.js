@@ -8,6 +8,11 @@ angular.module('tunk')
 		this.id = ++rid;
 
 		this.name;
+
+		/**
+		 * @var {String}
+		 */
+		this.gameType;
 		/**
 		 * Array of Clients
 		 */

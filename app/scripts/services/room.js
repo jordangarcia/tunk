@@ -11,22 +11,22 @@ angular.module('tunk')
 	'roomFactory',
 	'gameFactory',
 	'DEFAULT_WIN_AMOUNT',
+	'GAME_TYPE_TOURNAMENT',
+	'GAME_TYPE_CASH',
 	'gameService',
 	'$q',
 	'playerFactory',
 	'userFactory',
 	'tournamentGame',
-function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, gameService, $q, playerFactory, userFactory, tournamentGame) {
+function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameService, $q, playerFactory, userFactory, tournamentGame) {
 	/**
 	 * Creates a room, initializes a game, persists to host
 	 *
 	 * @param {String} name
 	 */
-	function createRoom(name) {
-		var room = roomFactory.create(name);
-		room.name = name;
-		room.winAmount = DEFAULT_WIN_AMOUNT;
-
+	function createRoom(opts) {
+		var room = roomFactory.create();
+		_.extend(room, opts);
 		return room;
 	}
 
@@ -82,10 +82,25 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, gameService,
 		// the first player in the array goes first
 		gameService.newGame(room.game, players[0]);
 
-		// bind event handlers for tournament games
-		tournamentGame.bindEvents();
+		if (room.gameType === GAME_TYPE_TOURNAMENT) {
+			// bind event handlers for tournament games
+			tournamentGame.bindEvents();
+		} else if (room.gameType === GAME_TYPE_CASH){
+			throw "GAME_TYPE_CASH not implemented";
+		} else {
+			throw "Invalid gameType";
+		}
 		// mark the game as running
 		room.status = 'running';
+	}
+
+	/**
+	 * Destroys a game and unbinds the events
+	 *
+	 * @param {Object} room
+	 */
+	function destroyGame(room) {
+		throw "Not implemented";
 	}
 
 	return {

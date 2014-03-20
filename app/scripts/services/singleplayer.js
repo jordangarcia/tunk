@@ -3,9 +3,14 @@
 /**
  * Server for setting up the SinglePlayer game mode
  */
-angular.module('tunk')
-.factory('singlePlayerService', ['playerFactory', 'userFactory', 'ai', 'events',
-function(playerFactory, userFactory, ai, events) {
+angular.module('tunk').factory('singlePlayerService', [
+	'playerFactory',
+	'userFactory',
+	'ai',
+	'events',
+	'roomService',
+	'singlePlayerConfig',
+function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig) {
 	/**
 	 * Creates a playerlist
 	 *
@@ -47,35 +52,68 @@ function(playerFactory, userFactory, ai, events) {
 	}
 
 	/**
+	 * If AI turn play game
+	 *
+	 * @param {Object} data
+	 */
+	function playTurn(data) {
+		if (!isPlayersTurn(data.game)) {
+			ai.playTurn(data.game);
+		}
+	}
+
+	/**
 	 * Bind to events for AI to take actions
 	 */
 	function bindAiHooks() {
 		// if a new game starts check AI plays if its their turn
-		events.on('newGame', function(data) {
-			console.log('new game AI HOOK');
-			if (!isPlayersTurn(data.game)) {
-				console.log('not players turn');
-				ai.playTurn(data.game);
-			}
+		events.on('newGame', playTurn);
+		events.on('turnAdvanced', playTurn);
+	}
+
+	/**
+	 * Unbind events
+	 */
+	function unbindAiHooks() {
+		events.off('newGame', playTurn);
+		events.off('turnAdvanced', playTurn);
+	}
+
+	/**
+	 * Start a single player room and game
+	 *
+	 * @param {Object} player
+	 */
+	function startGame(player) {
+		var aiPlayers = createAiPlayers(singlePlayerConfig.aiPlayers);
+		var players = [player].concat(aiPlayers);
+
+		// create the room
+		var room = roomService.createRoom({
+			name: 'room',
+			gameType: singlePlayerConfig.gameType,
+			winAmount: singlePlayerConfig.winAmount,
+			stake: singlePlayerConfig.stake
 		});
 
-		// when the turn advnace
-		events.on('turnAdvanced', function(data) {
-			if (!isPlayersTurn(data.game)) {
-				ai.playTurn(data.game);
-			}
-		});
+		roomService.startGame(room, players);
 
-		// Retrigger a hookable gameEnd event for AIs
-		// this allows easier `events.off('gameEndAI')`
-		events.on('gameEnd', function(data) {
-			events.trigger('gameEndAI', data);
-		});
+		bindAiHooks();
+
+		return room;
+	}
+
+	/**
+	 * Responsible for cleaning up a single player game/room
+	 */
+	function stopGame() {
+		unbindAiHooks();
 	}
 
 	return {
 		createPlayer: createPlayer,
 		createAiPlayers: createAiPlayers,
-		bindAiHooks: bindAiHooks
+		startGame: startGame,
+		stopGame: stopGame
 	};
 }]);

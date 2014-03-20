@@ -8,6 +8,8 @@ angular.module('tunk', ['ngRoute', 'firebase', 'btford.modal'])
 .constant('PICKUP_DISCARD_LIMIT', 2)
 .constant('DEFAULT_WIN_AMOUNT', 7)
 .constant('FIREBASE_URL', 'https://tunk.firebaseio.com/')
+.constant('GAME_TYPE_TOURNAMENT', 'tournament')
+.constant('GAME_TYPE_CASH', 'cash')
 .config(['$routeProvider', '$locationProvider',
 function($routeProvider, $locationProvider) {
 	$routeProvider
