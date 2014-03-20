@@ -4,8 +4,9 @@
  * Singleton that contains all of the state of all users and rooms which includes
  * all games
  */
-angular.module('tunk')
-.factory('hostService', ['$firebase', 'FIREBASE_URL',
+angular.module('tunk').factory('hostService', [
+	'$firebase',
+	'FIREBASE_URL',
 function($firebase, FIREBASE_URL) {
 	var exports = {};
 

@@ -234,7 +234,7 @@ function($filter, $interval, playerActions, gameService, $q, PICKUP_DISCARD_LIMI
 			} else {
 				actions.shift()(game, currentPlayer);
 			}
-		}, 500);
+		}, 5);
 
 		var stopInterval = function() {
 			console.log('gameEnd -> stopInterval');

@@ -3,13 +3,16 @@
 /**
  * Main application definition
  */
-angular.module('tunk', ['ngRoute', 'firebase', 'btford.modal'])
+angular.module('tunk', ['ngRoute', 'firebase', 'btford.modal', 'LocalStorageModule'])
 .constant('HAND_SIZE', 5)
 .constant('PICKUP_DISCARD_LIMIT', 2)
 .constant('DEFAULT_WIN_AMOUNT', 7)
 .constant('FIREBASE_URL', 'https://tunk.firebaseio.com/')
 .constant('GAME_TYPE_TOURNAMENT', 'tournament')
 .constant('GAME_TYPE_CASH', 'cash')
+.config(['localStorageServiceProvider', function(localStorageServiceProvider){
+  localStorageServiceProvider.setPrefix('tunk');
+}])
 .config(['$routeProvider', '$locationProvider',
 function($routeProvider, $locationProvider) {
 	$routeProvider

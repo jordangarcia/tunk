@@ -6,50 +6,25 @@
  * Manages the state of the current user and stores the current users user entity
  * Expose methods to do things such as rename the user
  */
-angular.module('tunk')
-.factory('userService', ['userFactory', 'hostService',
-function(userFactory, hostService) {
-	var exports = {};
+angular.module('tunk').factory('userService', [
+	'userFactory',
+	'localStorageService',
+function(userFactory, hostService, localStorage) {
+	// local storage keys
+	var LS_USER = 'user';
+
+	function saveUser(user) {
+		localStorage.add(LS_USER, user);
+	}
 
 	/**
-	 * Checks if the user is logged in
-	 *
-	 * @return {Boolean}
+	 * UserService object
 	 */
-	exports.isUserLoggedIn = function() {
-		return !!exports.user;
-	};
-
-	/**
-	 * Looks up a user by name or creates a user then saves reference
-	 *
-	 * @param {String} name
-	 */
-	exports.handleLogin = function(name) {
-		// get or create user
-		var user = hostService.getUserByName(name);
+	function UserService() {
+		this.user = localStorage.get(LS_USER);
 		if (!user) {
-			user = userFactory.create(name);
+			this.user = userFactory.create('Player');
+			saveUser(this.user);
 		}
-
-		// set the user on the hostService
-		hostService.addUser(user);
-
-		// set the current user reference
-		exports.user = user;
-	};
-
-	/**
-	 * Returns the user
-	 *
-	 * @param {String} name
-	 */
-	exports.renameUser = function(name) {
-		if (name) {
-			console.log('renaming user to %s', name);
-			exports.user.name = name;
-		}
-	};
-
-	return exports;
+	}
 }]);
