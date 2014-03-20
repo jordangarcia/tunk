@@ -23,6 +23,10 @@ function($routeProvider, $locationProvider) {
 			templateUrl: '/views/game.html',
 			controller: 'SinglePlayerCtrl'
 		})
+		.when('/user', {
+			templateUrl: '/views/user.html',
+			controller: 'UserCtrl'
+		})
 		.when('/login', {
 			templateUrl: '/views/login.html',
 			controller: 'LoginCtrl'

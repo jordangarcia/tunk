@@ -1,0 +1,14 @@
+<div class="container">
+	<h2 class="centered">
+		User Preferences
+	</h2>
+	<form ng-submit="saveData(formData)">
+		<div class="form-row">
+			<label for="username">Username</label>
+			<input id="username" type="text" ng-model="formData.username" name="username" />
+		</div>
+		<div class="form-row">
+			<input type="submit" value="Save" class="btn btn-primary"/>
+		</div>
+	</form>
+</div>

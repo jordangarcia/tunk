@@ -1,11 +1,11 @@
 @import '_base.scss';
 @import '_mixins.scss';
+@import '_buttons.scss';
+@import '_forms.scss';
 
 $navbar-height: 44px;
 
-
 .navbar {
-	@include box-shadow(1px 0px 15px #aaa);
 	color:             white;
 	background-color:  #444;
 	position:          fixed;
@@ -38,7 +38,12 @@ $navbar-height: 44px;
 
 .main-menu {
 	text-align: center;
-	margin: 30px 
+	margin: 30px;
+
+	.btn {
+		margin-bottom: 10px;
+		display: block;
+	}
 }
 
 .game {
