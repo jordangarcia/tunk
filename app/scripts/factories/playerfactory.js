@@ -7,6 +7,7 @@ angular.module('tunk')
 		this.playedSets = [];
 		this.score      = 0;
 		this.isFrozen   = false;
+		this.isHuman    = true;
 	};
 
 	return {

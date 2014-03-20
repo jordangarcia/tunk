@@ -9,7 +9,7 @@
 angular.module('tunk').factory('userService', [
 	'userFactory',
 	'localStorageService',
-function(userFactory, hostService, localStorage) {
+function(userFactory, localStorage) {
 	// local storage keys
 	var LS_USER = 'user';
 
@@ -22,9 +22,18 @@ function(userFactory, hostService, localStorage) {
 	 */
 	function UserService() {
 		this.user = localStorage.get(LS_USER);
-		if (!user) {
+		if (!this.user) {
 			this.user = userFactory.create('Player');
 			saveUser(this.user);
 		}
+
+		console.log('UserService instantiated ', this.user);
 	}
+
+	UserService.prototype.rename = function(newName) {
+		this.user.name = newName;
+		saveUser(this.user);
+	};
+
+	return new UserService();
 }]);

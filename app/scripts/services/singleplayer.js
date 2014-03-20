@@ -17,8 +17,8 @@ function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig
 	 * @param {String} username
 	 * @return {Array}
 	 */
-	function createPlayer(username) {
-		var player = playerFactory.create(userFactory.create(username));
+	function createPlayer(user) {
+		var player = playerFactory.create(user);
 		player.isHuman = true;
 		return player;
 	}

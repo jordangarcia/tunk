@@ -1,9 +1,8 @@
-angular.module('tunk')
-.factory('userFactory', [function() {
-	var id = 0;
-
+angular.module('tunk').factory('userFactory', [
+	'guid',
+function(guid) {
 	var User = function(name) {
-		this.id = id++;
+		this.id = guid();
 		this.name = name;
 		this.chips = 0;
 		this.stats = {};
