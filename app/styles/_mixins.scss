@@ -52,6 +52,11 @@ $active-player-bg: #E1EEF7;
 	border-radius: 6px;
 	border: 1px solid $card-border;
 	background-color: $card-bg;
+	letter-spacing: -1px;
+
+	span {
+		font-size: 80%;
+	}
 }
 
 @mixin card-shadow {
@@ -134,6 +139,7 @@ $active-player-bg: #E1EEF7;
 
 @mixin discard-pile($width, $height) {
 	@include clear;
+	@include border-box;
 	width: $width;
 
 	.card {

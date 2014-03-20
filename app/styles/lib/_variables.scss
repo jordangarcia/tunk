@@ -1,0 +1,18 @@
+// Media queries breakpoints
+// --------------------------------------------------
+
+// Extra small screen / phone
+$screen-xs-min:              300px !default;
+
+// Small screen / tablet
+$screen-sm-min:              480px !default;
+
+// Medium screen / desktop
+$screen-md-min:              768px !default;
+
+// Large screen / wide desktop
+$screen-lg-min:              960px !default;
+
+$screen-md-max:              ($screen-lg-min - 1) !default;
+$screen-sm-max:              ($screen-md-min - 1) !default;
+$screen-xs-max:              ($screen-sm-min - 1) !default;

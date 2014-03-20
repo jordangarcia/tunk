@@ -1,0 +1,58 @@
+@import 'lib/_variables.scss';
+@import 'lib/_reset.scss';
+@import 'lib/_mixins.scss';
+@import 'lib/_grid.scss';
+@import 'lib/_responsive-utilities.scss';
+@import '_typography.scss';
+@import '_buttons.scss';
+
+/**
+ * Global Styles
+ */
+.container {
+	position: relative;
+	width: $screen-lg-min;
+	margin: 0 auto;
+	padding: 30px 0;
+
+	@include grid($screen-lg-min, 16)
+}
+
+.row {
+	@include clear-fix;
+	margin-bottom: 20px;
+}
+
+.container:after {
+	@include clear-fix;
+}
+.clear-fix {
+	@include clear-fix;
+}
+
+@media only screen and (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+	.container {
+		width: $screen-md-min;
+		@include grid($screen-md-min, 16);
+	}
+}
+
+@media only screen and (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+	.container {
+		width: $screen-sm-min;
+		@include grid($screen-sm-min, 16);
+	}
+}
+
+@media only screen and (max-width: $screen-xs-max) {
+	.container {
+		width: $screen-xs-min;
+		padding: 1.75em 0;
+
+		.columns {
+			margin-bottom: 1.75em;
+		}
+
+		@include grid-fixed($screen-xs-min, 16);
+	}
+}

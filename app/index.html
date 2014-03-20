@@ -9,22 +9,17 @@
 	<title>Tunk!</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="/styles/bootstrap.css"></link>
-	<link rel="stylesheet" type="text/css" href="/styles/bootstrap-theme.css"></link>
 	<link rel="stylesheet" type="text/css" href="/styles/tunk.css"></link>
 </head>
 <body ng-app="tunk" ng-controller="MainCtrl">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-		<div class="container">
-			<h3 class="pull-left">
-				Tunk
-			</h3>
-			<a href="/#/" class="pull-right right btn btn-default">menu</a>
-		</div>
+		<h3 class="pull-left">
+			Tunk
+		</h3>
+		<a href="/#/" class="menu-btn btn">menu</a>
 	</nav>
 
 	<div class="container-fluid main-view" ng-view></div>
-
 	<!-- DEPS -->
 	<script type="text/javascript" src="/bower_components/firebase/firebase.js"></script>
 	<script type="text/javascript" src="/bower_components/underscore/underscore.js"></script>

@@ -1,0 +1,50 @@
+$numbers: one, two, three, four, five, six, seven, eight, nine, ten, elevent, twelve, thirteen, fourteen, fifteen, sixteen;
+
+@mixin _column($margin) {
+	.columns, .column {
+		float: left;
+		display: inline;
+		margin-left: $margin;
+		margin-right: $margin;
+	}
+}
+
+@mixin grid($width, $cols: 16, $margin: 10px) {
+	$x: $width / $cols;
+
+	@include _column($margin);
+
+	@for $i from 1 through $cols {
+		$num: nth($numbers, $i);
+		@if $i == 1 {
+			.column.#{$num} {
+				width: $x*$i - (2*$margin);
+			}
+		}
+		.columns.#{$num} {
+			width: $x*$i - (2*$margin);
+		}
+		.offset-by-#{$num} {
+			padding-left: $x*$i;
+		}
+	}
+}
+
+@mixin grid-fixed($width, $cols) {
+	@include _column(0);
+
+	@for $i from 1 through $cols {
+		$num: nth($numbers, $i);
+		@if $i == 1 {
+			.column.#{$num} {
+				width: $width;
+			}
+		}
+		.columns.#{$num} {
+			width: $width;
+		}
+		.offset-by-#{$num} {
+			padding-left: 0;
+		}
+	}
+}

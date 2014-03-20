@@ -1,0 +1,77 @@
+@mixin sans-serif {
+	font-family: Helvetica Neue, sans-serif;
+}
+@mixin serif {
+	font-family: serif;
+}
+
+body {
+	@include sans-serif;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #333;
+}
+
+a {
+	text-decoration: none;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight: normal;
+	line-height: 1.1;
+}
+
+h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
+	font-weight: inherit;
+}
+
+h1 {
+	font-size: 36px;
+	margin: .67em 0;
+}
+
+h2 {
+	font-size: 30px;
+	margin-bottom: 10px;
+	margin: 0.87em 0;
+}
+
+h3 {
+	font-size: 24px;
+	margin: 1em 0;
+}
+
+h4 {
+	font-size: 18px;
+	margin: 1.33em 0;
+}
+
+h5 {
+	font-size: 14px;
+	margin: 1.67em 0;
+}
+
+h6 {
+	font-size: 12px;
+	margin: 2.33em 0;
+}
+
+p {
+	margin: 0 0 10px;
+}
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: bold;
+}
+
+small {
+	font-size: 80%;
+}
+
+.centered {
+	text-align: center;
+}

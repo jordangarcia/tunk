@@ -1,11 +1,44 @@
+@import '_base.scss';
 @import '_mixins.scss';
 
-$navbar-height: 60px;
+$navbar-height: 44px;
+
+
+.navbar {
+	@include box-shadow(1px 0px 15px #aaa);
+	color:             white;
+	background-color:  #444;
+	position:          fixed;
+	top:               0;
+	left:              0;
+	right:             0;
+	position:          fixed;
+	z-index:           1000;
+	height:            $navbar-height;
+
+	h3 {
+		line-height: $navbar-height;
+		margin: 0 10px;
+		text-align: center;
+	}
+	.menu-btn {
+		position: absolute;
+		left: 5px;
+		top: 5px;
+	}
+}
 
 .main-view {
+	@include border-box();
+
 	padding-top: $navbar-height;
 	width: 100%;
 	height: 100vh;
+}
+
+.main-menu {
+	text-align: center;
+	margin: 30px 
 }
 
 .game {
