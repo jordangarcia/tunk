@@ -18,6 +18,6 @@ function($scope, singlePlayerService, roomService, singlePlayerConfig) {
 	$scope.room = room;
 
 	$scope.$on('$destroy', function() {
-		singlePlayerService.unbindAiHooks();
+		singlePlayerService.stopGame();
 	});
 }]);
