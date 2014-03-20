@@ -230,16 +230,18 @@ function($filter, $interval, playerActions, gameService, $q, PICKUP_DISCARD_LIMI
 		var stop = $interval(function() {
 			if (actions.length === 0) {
 				$interval.cancel(stop);
-				events.off('gameEndAI');
+				events.off('gameEnd', stopInterval);
 			} else {
 				actions.shift()(game, currentPlayer);
 			}
 		}, 500);
 
-		events.once('gameEndAI', function() {
-			console.log('cancelling $interval, ', stop);
+		var stopInterval = function() {
+			console.log('gameEnd -> stopInterval');
 			$interval.cancel(stop);
-		});
+		};
+
+		events.once('gameEnd', stopInterval);
 	}
 
 	return {
