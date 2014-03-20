@@ -84,7 +84,7 @@ function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig
 	 *
 	 * @param {Object} player
 	 */
-	function startGame(player) {
+	function newRoom(player) {
 		var aiPlayers = createAiPlayers(singlePlayerConfig.aiPlayers);
 		var players = [player].concat(aiPlayers);
 
@@ -113,7 +113,7 @@ function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig
 	return {
 		createPlayer: createPlayer,
 		createAiPlayers: createAiPlayers,
-		startGame: startGame,
+		newRoom: newRoom,
 		stopGame: stopGame
 	};
 }]);
