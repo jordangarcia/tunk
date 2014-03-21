@@ -9,10 +9,9 @@
 angular.module('tunk').factory('gameService', [
 	'$filter',
 	'HAND_SIZE',
-	'events',
 	'gameFactory',
 	'deckFactory',
-function($filter, HAND_SIZE, events, gameFactory, deckFactory) {
+function($filter, HAND_SIZE, gameFactory, deckFactory) {
 	var handScore = $filter('handScore');
 
 	/**
@@ -22,7 +21,7 @@ function($filter, HAND_SIZE, events, gameFactory, deckFactory) {
 	 * @param {Object} playerToGo
 	 */
 	function createGame(players, playerToGo) {
-		var game = gameFactory.createGame();
+		var game = gameFactory.create();
 		game.players = players;
 
 		resetGame(game, playerToGo);

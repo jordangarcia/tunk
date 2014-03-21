@@ -8,19 +8,13 @@ angular.module('tunk').controller('SinglePlayerCtrl', [
 	'singlePlayerService',
 	'userService',
 	'events',
-	'singlePlayerConfig',
 	'gameService',
-function($scope, singlePlayerService, userService, events, singlePlayerConfig, gameService) {
+function($scope, singlePlayerService, userService, events, gameService) {
 	var room = singlePlayerService.loadRoom();
 	var player;
 
-	if (!room) {
-		// no saved game create new room
-		player = singlePlayerService.createPlayer(userService.user);
-		room = singlePlayerService.newRoom(player);
-	} else {
-		player = gameService.getPlayerByUser(room.game, userService.user);
-	}
+	room   = room || singlePlayerService.createRoom(userService.user);
+	player = gameService.getPlayerByUser(room.game, userService.user);
 
 	singlePlayerService.initRoom(room);
 
@@ -35,7 +29,7 @@ function($scope, singlePlayerService, userService, events, singlePlayerConfig, g
 	events.on('gameUpdated', saveRoom);
 
 	$scope.$on('$destroy', function() {
-		singlePlayerService.stopGame();
+		singlePlayerService.teardownRoom($scope.room);
 		events.off('gameUpdated', saveRoom);
 	});
 }]);

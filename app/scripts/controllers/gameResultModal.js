@@ -2,10 +2,11 @@
 
 angular.module('tunk').controller('GameResultModalCtrl', [
 	'$scope',
+	'events',
 	'gameResultModal',
 	'bodyOverlay',
-	'gameService',
-function($scope, gameResultModal, bodyOverlay, gameService) {
+	'singlePlayerService',
+function($scope, events, gameResultModal, bodyOverlay, singlePlayerService) {
 	bodyOverlay.activate();
 
 	$scope.$on('$destroy', function() {
@@ -13,7 +14,7 @@ function($scope, gameResultModal, bodyOverlay, gameService) {
 	});
 
 	$scope.newGame = function(game, playerToGo) {
-		gameService.newGame(game, playerToGo);
+		singlePlayerService.newGame(game, playerToGo);
 		gameResultModal.deactivate();
 		$scope.$destroy();
 	};

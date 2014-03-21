@@ -1,11 +1,12 @@
-angular.module('tunk')
-.factory('roomFactory', [function() {
-	var rid = 0;
-	// TODO inject this
-	var DEFAULT_STAKE = 1;
+angular.module('tunk').factory('roomFactory', [
+	'guid',
+function(guid) {
+	var NOT_STARTED = 'notstarted';
+	var STARTED = 'started';
+	var FINISHED = 'finished';
 
 	var Room = function() {
-		this.id = ++rid;
+		this.id = guid();
 
 		this.name;
 
@@ -24,11 +25,11 @@ angular.module('tunk')
 		/**
 		 * The room's status (notstarted|running|completed)
 		 */
-		this.status = 'nonstarted';
+		this.status = NOT_STARTED;
 		/**
 		 * Minimum payout for non-tournament games
 		 */
-		this.stake = DEFAULT_STAKE;
+		this.stake;
 		/**
 		 * Amount of games needed to win in a tournament game
 		 */
@@ -36,9 +37,9 @@ angular.module('tunk')
 	};
 
 	return {
-		NOT_STARTED: 'notstarted',
-		STARTED: 'started',
-		FINISHED: 'finished',
+		NOT_STARTED: NOT_STARTED,
+		STARTED: STARTED,
+		FINISHED: FINISHED,
 		create: function() {
 			return new Room();
 		}

@@ -9,6 +9,63 @@
 angular.module('tunk')
 .factory('tournamentGame', ['gameHandlers', 'gameService', 'events',
 function(gameHandlers, gameService, events){
+	function handleOutOfCards(data){
+		var game = data.game;
+		var player = data.player;
+
+		player.score += 1;
+
+		events.trigger('gameEnd', {
+			game: game,
+			playerToGo: player
+		});
+	}
+
+	function handleTunkOut(data) {
+		var game = data.game;
+		var player = data.player;
+
+		player.score += 2;
+
+		events.trigger('gameEnd', {
+			game: game,
+			playerToGo: player
+		});
+	}
+
+	function handleGoDownResult(data) {
+		var result = data.result;
+		var game = data.game;
+		var winners = data.winners;
+		var player = data.player;
+
+		var playerToGo;
+
+		switch (result) {
+			case 'win':
+				player.score += 1;
+				break;
+
+			case 'tie':
+				winners = _.without(winners, player);
+				winners.forEach(function(winner) {
+					winner.score += 1;
+				});
+				break;
+
+			case 'lose':
+				winners.forEach(function(winner) {
+					winner.score += 2;
+				});
+				break;
+		}
+
+		events.trigger('gameEnd', {
+			game: game,
+			playerToGo: _.shuffle(winners)[0]
+		});
+	}
+
 	/**
 	 * Binds the game logic event handlers for tournament games
 	 */
@@ -21,65 +78,34 @@ function(gameHandlers, gameService, events){
 
 		events.on('goDown', gameHandlers.goDown);
 
-		events.on('outOfCards', function(data) {
-			var game = data.game;
-			var player = data.player;
+		events.on('outOfCards', handleOutOfCards);
 
-			player.score += 1;
+		events.on('tunkOut', handleTunkOut);
 
-			events.trigger('gameEnd', {
-				game: game,
-				playerToGo: player
-			});
-		});
+		events.on('goDownResult', handleGoDownResult);
+	}
 
-		events.on('tunkOut', function(data) {
-			var game = data.game;
-			var player = data.player;
+	/**
+	 * Unbinds the game logic event handlers for tournament games
+	 */
+	function unbindEvents() {
+		events.off('discard', gameHandlers.discard);
 
-			player.score += 2;
+		events.off('playSet', gameHandlers.playSet);
 
-			events.trigger('gameEnd', {
-				game: game,
-				playerToGo: player
-			});
-		});
+		events.off('playOnSet', gameHandlers.playOnSet);
 
-		events.on('goDownResult', function(data) {
-			var result = data.result;
-			var game = data.game;
-			var winners = data.winners;
-			var player = data.player;
+		events.off('goDown', gameHandlers.goDown);
 
-			var playerToGo;
+		events.off('outOfCards', handleOutOfCards);
 
-			switch (result) {
-				case 'win':
-					player.score += 1;
-					break;
+		events.off('tunkOut', handleTunkOut);
 
-				case 'tie':
-					winners = _.without(winners, player);
-					winners.forEach(function(winner) {
-						winner.score += 1;
-					});
-					break;
-
-				case 'lose':
-					winners.forEach(function(winner) {
-						winner.score += 2;
-					});
-					break;
-			}
-
-			events.trigger('gameEnd', {
-				game: game,
-				playerToGo: _.shuffle(winners)[0]
-			});
-		});
+		events.off('goDownResult', handleGoDownResult);
 	}
 
 	return {
-		bindEvents: bindEvents
+		bindEvents: bindEvents,
+		unbindEvents: unbindEvents,
 	};
 }]);

@@ -8,14 +8,10 @@
 angular.module('tunk')
 .factory('roomService', [
 	'roomFactory',
-	'gameFactory',
 	'GAME_TYPE_TOURNAMENT',
 	'GAME_TYPE_CASH',
-	'gameService',
-	'playerFactory',
-	'userFactory',
 	'tournamentGame',
-function(roomFactory, gameFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameService, playerFactory, userFactory, tournamentGame) {
+function(roomFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, tournamentGame) {
 	/**
 	 * Creates a room, initializes a game, persists to host
 	 *
@@ -62,6 +58,5 @@ function(roomFactory, gameFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameSer
 		createRoom: createRoom,
 		bindGameEvents: bindGameEvents,
 		unbindGameEvents: unbindGameEvents,
-		initRoom: initRoom,
 	};
 }]);

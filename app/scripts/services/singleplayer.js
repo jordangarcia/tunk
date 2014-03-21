@@ -9,9 +9,11 @@ angular.module('tunk').factory('singlePlayerService', [
 	'ai',
 	'events',
 	'roomService',
+	'gameService',
 	'persistence',
+	'roomFactory',
 	'singlePlayerConfig',
-function(playerFactory, userFactory, ai, events, roomService, persistence, singlePlayerConfig) {
+function(playerFactory, userFactory, ai, events, roomService, gameService, persistence, roomFactory, singlePlayerConfig) {
 	var SINGLEPLAYER_ROOM_ID = 'singleplayer';
 
 	/**
@@ -45,22 +47,26 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	}
 
 	/**
-	 * Check the game state and return whether the current player is human
+	 * Starts a new game and makes ai play if its their turn
 	 *
 	 * @param {Object} game
-	 * @return {Boolean}
+	 * @param {Object} playerToGo
 	 */
-	function isPlayersTurn(game) {
-		return game.turn.currentPlayer.isHuman;
+	function newGame(game, playerToGo) {
+		gameService.resetGame(game, playerToGo);
+
+		aiPlayTurn({
+			game: game
+		});
 	}
 
 	/**
-	 * If AI turn play game
+	 * Event handler for AI to play turn
 	 *
 	 * @param {Object} data
 	 */
-	function playTurn(data) {
-		if (!isPlayersTurn(data.game)) {
+	function aiPlayTurn(data) {
+		if (!data.game.turn.currentPlayer.isHuman) {
 			ai.playTurn(data.game);
 		}
 	}
@@ -70,38 +76,36 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	 */
 	function bindAiHooks() {
 		// if a new game starts check AI plays if its their turn
-		events.on('newGame', playTurn);
-		events.on('roomLoaded', playTurn);
-		events.on('turnAdvanced', playTurn);
+		events.on('turnAdvanced', aiPlayTurn);
 	}
 
 	/**
 	 * Unbind events
 	 */
 	function unbindAiHooks() {
-		events.off('newGame', playTurn);
-		events.off('roomLoaded', playTurn);
-		events.off('turnAdvanced', playTurn);
+		events.off('turnAdvanced', aiPlayTurn);
 	}
 
 	/**
-	 * Start a single player room and game
+	 * Creates and returns a room object with player and game
 	 *
-	 * @param {Object} player
+	 * @param {Object} user
+	 * @return {Object} room
 	 */
-	function newRoom(player) {
-		var aiPlayers = createAiPlayers(singlePlayerConfig.aiPlayers);
+	function createRoom(user) {
+		var player    = playerFactory.create(user);
+		var aiPlayers = createAiPlayers(singlePlayerConfig.numAiPlayers);
 		var players   = [player].concat(aiPlayers);
 		var game      = gameService.createGame(players, player);
 
 		// create the room
 		var room = roomService.createRoom({
-			name: 'singleplayer',
-			status: 'running',
-			game: game,
-			gameType: singlePlayerConfig.gameType,
-			winAmount: singlePlayerConfig.winAmount,
-			stake: singlePlayerConfig.stake
+			name:       'singleplayer',
+			status:     roomFactory.NOT_STARTED,
+			game:       game,
+			gameType:   singlePlayerConfig.gameType,
+			winAmount:  singlePlayerConfig.winAmount,
+			stake:      singlePlayerConfig.stake
 		});
 
 		return room;
@@ -113,9 +117,14 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	function initRoom(room) {
 		roomService.bindGameEvents(room);
 		bindAiHooks();
+		aiPlayTurn({
+			game: room.game
+		});
 	}
 
 	/**
+	 * Responsible for cleaning up a single player game/room
+	 *
 	 * @param {Object} room
 	 */
 	function teardownRoom(room) {
@@ -134,16 +143,7 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	 * @return {Object} room
 	 */
 	function loadRoom() {
-		var room = persistence.loadRoom(SINGLEPLAYER_ROOM_ID);
-		if (room) {
-			roomService.bindGameEvents(room);
-			bindAiHooks();
-			events.trigger('roomLoaded', {
-				room: room,
-				game: room.game,
-			});
-		}
-		return room;
+		return persistence.loadRoom(SINGLEPLAYER_ROOM_ID);
 	}
 
 	/**
@@ -153,20 +153,18 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 		return persistence.deleteRoom(SINGLEPLAYER_ROOM_ID);
 	}
 
-	/**
-	 * Responsible for cleaning up a single player game/room
-	 */
 	function stopGame() {
 		unbindAiHooks();
 	}
 
 	return {
 		createPlayer: createPlayer,
-		createAiPlayers: createAiPlayers,
-		newRoom: newRoom,
+		createRoom: createRoom,
+		newGame: newGame,
+		initRoom: initRoom,
+		teardownRoom: teardownRoom,
 		loadRoom: loadRoom,
 		saveRoom: saveRoom,
 		deleteSavedRoom: deleteSavedRoom,
-		stopGame: stopGame
 	};
 }]);
