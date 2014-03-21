@@ -65,6 +65,18 @@ function($filter, HAND_SIZE, events, deckFactory) {
 	}
 
 	/**
+	 * @param {Object} game
+	 * @param {Object} user
+	 *
+	 * @return {Object} player
+	 */
+	function getPlayerByUser(game, user) {
+		return _.findWhere(game.players, {
+			id: user.id
+		});
+	}
+
+	/**
 	 * Updates the game state to represent the turn advanced
 	 *
 	 * @param {Object} game
@@ -145,6 +157,7 @@ function($filter, HAND_SIZE, events, deckFactory) {
 		getCurrentPlayer: getCurrentPlayer,
 		restoreArrays: restoreArrays,
 		advanceTurn: advanceTurn,
-		getLowestScorers: getLowestScorers
+		getLowestScorers: getLowestScorers,
+		getPlayerByUser: getPlayerByUser
 	};
 }]);

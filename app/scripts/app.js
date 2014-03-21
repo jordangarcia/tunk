@@ -17,7 +17,8 @@ angular.module('tunk', ['ngRoute', 'firebase', 'btford.modal', 'LocalStorageModu
 function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {
-			templateUrl: '/views/menu.html'
+			templateUrl: '/views/menu.html',
+			controller: 'MenuCtrl'
 		})
 		.when('/singleplayer', {
 			templateUrl: '/views/game.html',

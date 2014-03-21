@@ -1,7 +1,10 @@
 <div class="main-menu">
 	<div class="menu-buttons">
-		<a href="/#/singleplayer" class="btn btn-primary">
-			Singleplayer
+		<a href="javascript:void()" class="btn btn-primary" ng-show="canContinue" ng-click="continueGame()">
+			Continue
+		</a>
+		<a href="javascript:void()" class="btn btn-primary" ng-click="newGame()">
+			New Game
 		</a>
 		<a href="/#/user" class="btn btn-primary">
 			User Prefs

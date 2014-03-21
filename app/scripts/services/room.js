@@ -7,18 +7,15 @@
  */
 angular.module('tunk')
 .factory('roomService', [
-	'hostService',
 	'roomFactory',
 	'gameFactory',
-	'DEFAULT_WIN_AMOUNT',
 	'GAME_TYPE_TOURNAMENT',
 	'GAME_TYPE_CASH',
 	'gameService',
-	'$q',
 	'playerFactory',
 	'userFactory',
 	'tournamentGame',
-function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameService, $q, playerFactory, userFactory, tournamentGame) {
+function(roomFactory, gameFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameService, playerFactory, userFactory, tournamentGame) {
 	/**
 	 * Creates a room, initializes a game, persists to host
 	 *
@@ -28,42 +25,6 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, GAME_TYPE_TO
 		var room = roomFactory.create();
 		_.extend(room, opts);
 		return room;
-	}
-
-	/**
-	 * Loads a game via the hostService
-	 * Wraps the room loading in a promise
-	 *
-	 * @param {String} roomName
-	 * @return {Promise}
-	 */
-	function loadRoom(roomName) {
-		var deferred = $q.defer();
-		var room = hostService.addRoom(roomName);
-
-		room.$on('loaded', function(data) {
-			if (!data) {
-				console.log('creating room');
-				var newRoom = createRoom(roomName);
-				startGame(newRoom, [
-					playerFactory.create(userFactory.create('jordan')),
-					playerFactory.create(userFactory.create('logan')),
-				]);
-				gameService.restoreArrays(room.game);
-
-				newRoom.game.players[0].hand = ['2h', '2c', '2d'];
-				room.$set(newRoom).then(function() {
-					deferred.resolve(room);
-				});
-			} else {
-				console.log('loading room');
-				gameService.restoreArrays(room.game);
-				tournamentGame.bindEvents();
-				deferred.resolve(room);
-			}
-		});
-
-		return deferred.promise;
 	}
 
 	/**
@@ -105,7 +66,6 @@ function(hostService, roomFactory, gameFactory, DEFAULT_WIN_AMOUNT, GAME_TYPE_TO
 
 	return {
 		createRoom: createRoom,
-		loadRoom: loadRoom,
 		startGame: startGame
 	};
 }]);

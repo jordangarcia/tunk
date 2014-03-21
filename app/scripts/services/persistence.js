@@ -13,11 +13,16 @@ function(localStorage) {
 	}
 
 	function loadRoom(id) {
-		localStorage.get(getRoomName(id));
+		return localStorage.get(getRoomName(id));
+	}
+
+	function deleteRoom(id) {
+		return localStorage.remove(getRoomName(id));
 	}
 
 	return {
 		saveRoom: saveRoom,
-		loadRoom: loadRoom
+		loadRoom: loadRoom,
+		deleteRoom: deleteRoom
 	};
 }])

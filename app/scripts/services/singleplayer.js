@@ -9,8 +9,11 @@ angular.module('tunk').factory('singlePlayerService', [
 	'ai',
 	'events',
 	'roomService',
+	'persistence',
 	'singlePlayerConfig',
-function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig) {
+function(playerFactory, userFactory, ai, events, roomService, persistence, singlePlayerConfig) {
+	var SINGLEPLAYER_ROOM_ID = 'singleplayer';
+
 	/**
 	 * Creates a playerlist
 	 *
@@ -104,6 +107,27 @@ function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig
 	}
 
 	/**
+	 * @param {Object} room
+	 */
+	function saveRoom(room) {
+		persistence.saveRoom(SINGLEPLAYER_ROOM_ID, room);
+	}
+
+	/**
+	 * @return {Object} room
+	 */
+	function loadRoom() {
+		return persistence.loadRoom(SINGLEPLAYER_ROOM_ID);
+	}
+
+	/**
+	 * @return {Object} room
+	 */
+	function deleteSavedRoom() {
+		return persistence.deleteRoom(SINGLEPLAYER_ROOM_ID);
+	}
+
+	/**
 	 * Responsible for cleaning up a single player game/room
 	 */
 	function stopGame() {
@@ -114,6 +138,9 @@ function(playerFactory, userFactory, ai, events, roomService, singlePlayerConfig
 		createPlayer: createPlayer,
 		createAiPlayers: createAiPlayers,
 		newRoom: newRoom,
+		loadRoom: loadRoom,
+		saveRoom: saveRoom,
+		deleteSavedRoom: deleteSavedRoom,
 		stopGame: stopGame
 	};
 }]);
