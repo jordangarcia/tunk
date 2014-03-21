@@ -10,9 +10,25 @@ angular.module('tunk').factory('gameService', [
 	'$filter',
 	'HAND_SIZE',
 	'events',
+	'gameFactory',
 	'deckFactory',
-function($filter, HAND_SIZE, events, deckFactory) {
+function($filter, HAND_SIZE, events, gameFactory, deckFactory) {
 	var handScore = $filter('handScore');
+
+	/**
+	 * Resets the game state for a new game
+	 *
+	 * @param {Array.<Object>} players
+	 * @param {Object} playerToGo
+	 */
+	function createGame(players, playerToGo) {
+		var game = gameFactory.createGame();
+		game.players = players;
+
+		resetGame(game, playerToGo);
+
+		return game
+	}
 
 	/**
 	 * Resets the game state for a new game
@@ -20,7 +36,7 @@ function($filter, HAND_SIZE, events, deckFactory) {
 	 * @param {Object} game
 	 * @param {Object} playerToGo
 	 */
-	function newGame(game, playerToGo) {
+	function resetGame(game, playerToGo) {
 		game.players.forEach(function(player) {
 			resetPlayer(player);
 		});
@@ -33,10 +49,6 @@ function($filter, HAND_SIZE, events, deckFactory) {
 		// shuffle a new deck
 		game.deck = _.shuffle(deckFactory.create());
 		deal(game, HAND_SIZE);
-
-		events.trigger('newGame', {
-			game: game
-		});
 	}
 
 	/**
@@ -152,7 +164,8 @@ function($filter, HAND_SIZE, events, deckFactory) {
 	}
 
 	return {
-		newGame: newGame,
+		createGame: createGame,
+		resetGame: resetGame,
 		getOpponents: getOpponents,
 		getCurrentPlayer: getCurrentPlayer,
 		restoreArrays: restoreArrays,

@@ -27,22 +27,18 @@ function(roomFactory, gameFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameSer
 		return room;
 	}
 
-	/**
-	 * Creates a game for a room
-	 * Takes a room with and initializes the game and players
-	 *
-	 * @param {Room} room
-	 * @param {Array} players
-	 */
-	function startGame(room, players) {
-		// create a game instance on the room
-		room.game = gameFactory.create();
-		// add players
-		room.game.players = players;
-		// initialize the game state
-		// the first player in the array goes first
-		gameService.newGame(room.game, players[0]);
+	function unbindGameEvents(room) {
+		if (room.gameType === GAME_TYPE_TOURNAMENT) {
+			// bind event handlers for tournament games
+			tournamentGame.unbindEvents();
+		} else if (room.gameType === GAME_TYPE_CASH){
+			throw "GAME_TYPE_CASH not implemented";
+		} else {
+			throw "Invalid gameType";
+		}
+	}
 
+	function bindGameEvents(room) {
 		if (room.gameType === GAME_TYPE_TOURNAMENT) {
 			// bind event handlers for tournament games
 			tournamentGame.bindEvents();
@@ -51,8 +47,6 @@ function(roomFactory, gameFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameSer
 		} else {
 			throw "Invalid gameType";
 		}
-		// mark the game as running
-		room.status = 'running';
 	}
 
 	/**
@@ -66,6 +60,8 @@ function(roomFactory, gameFactory, GAME_TYPE_TOURNAMENT, GAME_TYPE_CASH, gameSer
 
 	return {
 		createRoom: createRoom,
-		startGame: startGame
+		bindGameEvents: bindGameEvents,
+		unbindGameEvents: unbindGameEvents,
+		initRoom: initRoom,
 	};
 }]);

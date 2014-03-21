@@ -36,6 +36,9 @@ angular.module('tunk')
 	};
 
 	return {
+		NOT_STARTED: 'notstarted',
+		STARTED: 'started',
+		FINISHED: 'finished',
 		create: function() {
 			return new Room();
 		}

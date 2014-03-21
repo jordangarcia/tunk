@@ -71,6 +71,7 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	function bindAiHooks() {
 		// if a new game starts check AI plays if its their turn
 		events.on('newGame', playTurn);
+		events.on('roomLoaded', playTurn);
 		events.on('turnAdvanced', playTurn);
 	}
 
@@ -79,6 +80,7 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	 */
 	function unbindAiHooks() {
 		events.off('newGame', playTurn);
+		events.off('roomLoaded', playTurn);
 		events.off('turnAdvanced', playTurn);
 	}
 
@@ -89,21 +91,36 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	 */
 	function newRoom(player) {
 		var aiPlayers = createAiPlayers(singlePlayerConfig.aiPlayers);
-		var players = [player].concat(aiPlayers);
+		var players   = [player].concat(aiPlayers);
+		var game      = gameService.createGame(players, player);
 
 		// create the room
 		var room = roomService.createRoom({
-			name: 'room',
+			name: 'singleplayer',
+			status: 'running',
+			game: game,
 			gameType: singlePlayerConfig.gameType,
 			winAmount: singlePlayerConfig.winAmount,
 			stake: singlePlayerConfig.stake
 		});
 
-		roomService.startGame(room, players);
-
-		bindAiHooks();
-
 		return room;
+	}
+
+	/**
+	 * @param {Object} room
+	 */
+	function initRoom(room) {
+		roomService.bindGameEvents(room);
+		bindAiHooks();
+	}
+
+	/**
+	 * @param {Object} room
+	 */
+	function teardownRoom(room) {
+		roomService.unbindGameEvents(room);
+		unbindAiHooks();
 	}
 
 	/**
@@ -117,7 +134,16 @@ function(playerFactory, userFactory, ai, events, roomService, persistence, singl
 	 * @return {Object} room
 	 */
 	function loadRoom() {
-		return persistence.loadRoom(SINGLEPLAYER_ROOM_ID);
+		var room = persistence.loadRoom(SINGLEPLAYER_ROOM_ID);
+		if (room) {
+			roomService.bindGameEvents(room);
+			bindAiHooks();
+			events.trigger('roomLoaded', {
+				room: room,
+				game: room.game,
+			});
+		}
+		return room;
 	}
 
 	/**

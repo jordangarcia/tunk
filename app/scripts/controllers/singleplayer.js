@@ -22,6 +22,8 @@ function($scope, singlePlayerService, userService, events, singlePlayerConfig, g
 		player = gameService.getPlayerByUser(room.game, userService.user);
 	}
 
+	singlePlayerService.initRoom(room);
+
 	// bind to scope
 	$scope.player = player;
 	$scope.room = room;
