@@ -5,6 +5,8 @@ module.exports = function(config) {
 		files: [
 			'app/bower_components/firebase/firebase.js',
 			'app/bower_components/angular/angular.js',
+			'app/bower_components/angular-modal/modal.js',
+			'app/bower_components/angular-local-storage/angular-local-storage.js',
 			'app/bower_components/angularfire/angularfire.js',
 			'app/bower_components/angular-sanitize/angular-sanitize.js',
 			'app/bower_components/angular-route/angular-route.js',
